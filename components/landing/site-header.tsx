@@ -16,7 +16,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80">
       <div className="section-shell">
         <div className="flex h-18 items-center justify-between gap-6">
-          <Link href="/" className="shrink-0" aria-label="Community Ride home">
+          <Link href="/" className="shrink-0" aria-label="Kawing Ride home">
             <Logo />
           </Link>
 

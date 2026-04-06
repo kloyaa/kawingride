@@ -6,9 +6,10 @@ import "./globals.css";
 
 const themeScript = `
 (() => {
-  const storageKey = "community-ride-theme";
+  const storageKey = "kawing-ride-theme";
+  const legacyStorageKey = "community-ride-theme";
   const root = document.documentElement;
-  const storedTheme = window.localStorage.getItem(storageKey);
+  const storedTheme = window.localStorage.getItem(storageKey) || window.localStorage.getItem(legacyStorageKey);
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const theme = storedTheme === "light" || storedTheme === "dark"
     ? storedTheme
@@ -18,6 +19,7 @@ const themeScript = `
 
   root.classList.toggle("dark", theme === "dark");
   root.style.colorScheme = theme;
+  window.localStorage.setItem(storageKey, theme);
 })();
 `;
 
@@ -34,10 +36,10 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://communityride.app"),
   title: {
-    default: "Community Ride | Private Community Ride Coordination",
-    template: "%s | Community Ride",
+    default: "Kawing Ride | Private Community Ride Coordination",
+    template: "%s | Kawing Ride",
   },
-  applicationName: "Community Ride",
+  applicationName: "Kawing Ride",
   description:
     "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
   keywords: [
@@ -54,20 +56,20 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   category: "transportation",
-  authors: [{ name: "Community Ride" }],
-  creator: "Community Ride",
-  publisher: "Community Ride",
+  authors: [{ name: "Kawing Ride" }],
+  creator: "Kawing Ride",
+  publisher: "Kawing Ride",
   referrer: "origin-when-cross-origin",
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: "Community Ride | Private Community Ride Coordination",
+    title: "Kawing Ride | Private Community Ride Coordination",
     description:
       "Private ride requests for trusted local communities, with structured negotiation, optional safety updates, and clearer accountability.",
     url: "https://communityride.app",
-    siteName: "Community Ride",
+    siteName: "Kawing Ride",
     type: "website",
     locale: "en_US",
     images: [
@@ -75,13 +77,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Community Ride platform preview",
+        alt: "Kawing Ride platform preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Community Ride | Private Community Ride Coordination",
+    title: "Kawing Ride | Private Community Ride Coordination",
     description:
       "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
     images: ["/twitter-image"],

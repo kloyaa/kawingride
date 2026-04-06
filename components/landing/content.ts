@@ -28,15 +28,29 @@ export type TimelineItem = {
 };
 
 export type PricingPlan = {
-  badge?: string;
-  description?: string;
-  discount: string;
-  features: string[];
-  featured?: boolean;
+  description: string;
   icon: IconName;
   name: string;
-  price: string;
+  tiers: PricingTier[];
   tone: Tone;
+};
+
+export type PricingTier = {
+  badge?: string;
+  ctaLabel?: string;
+  description?: string;
+  discount: string;
+  featured?: boolean;
+  sections: PricingTierSection[];
+  name: string;
+  note?: string;
+  price: string;
+};
+
+export type PricingTierSection = {
+  items: string[];
+  style?: "default" | "muted";
+  title: string;
 };
 
 export type RewardHighlight = {
@@ -92,7 +106,10 @@ export const missionStatement =
   "Private ride requests for trusted local communities, with structured negotiation, optional safety updates, and stronger accountability.";
 
 export const missionDescription =
-  "Community Ride exists to help communities keep the flexibility they already value while improving trust, privacy, and clarity for every trip.";
+  "Built for communities that already rely on local riders, with better privacy, clearer decisions, and stronger accountability for every trip.";
+
+export const brandMeaning =
+  "Kawing is a Filipino word for a link or connection, reflecting how the platform brings riders, customers, and communities together with more clarity and trust.";
 
 export const missionPillars: MissionPillar[] = [
   {
@@ -131,7 +148,7 @@ export const whyNowPoints = [
 ];
 
 export const platformIdentity =
-  "Community Ride is a safety-first coordination platform for community-based transport. It is not an open marketplace that matches strangers by default, and it is not trying to replace the human relationships that local ride communities already rely on.";
+  "Kawing Ride is a safety-first coordination platform for community-based transport. It is not an open marketplace that matches strangers by default, and it is not trying to replace the human relationships that local ride communities already rely on.";
 
 export const founderNote = {
   quote:
@@ -326,6 +343,27 @@ export const whyPlatformItems = [
   "A clearer and more dependable experience for both sides",
 ];
 
+export const comparisonHighlights = [
+  {
+    title: "Time",
+    social: "Free tools push the work into long chats, repeated follow-ups, and manual coordination.",
+    platform: "Structured requests and clearer next actions reduce wasted time for both customers and riders.",
+  },
+  {
+    title: "Privacy",
+    social: "Ride details are easier to expose because requests live in feeds and group threads.",
+    platform: "Requests stay in a controlled flow designed around community access and clearer visibility rules.",
+  },
+  {
+    title: "Trust",
+    social: "Communities rely on guesswork, memory, and screenshots to judge reliability.",
+    platform: "Ratings, outcomes, and role-based accountability give communities stronger signals over time.",
+  },
+];
+
+export const pricingValueStatement =
+  "Social media groups may be free in cash, but communities still pay in time, uncertainty, privacy exposure, and trust repair. Kawing Ride turns those hidden costs into a clearer operating system for local transport.";
+
 export const trustPillars: TrustPillar[] = [
   {
     title: "Community-led onboarding",
@@ -384,43 +422,106 @@ export const trustBoundaries = [
 export const pricingPlans: PricingPlan[] = [
   {
     name: "Customer",
-    price: "₱60",
-    discount: "Good reputation may reduce this to ₱40 per month.",
-    features: [
-      "Book rides within your community",
-      "Earn points and access rewards",
-      "Enable emergency contact notifications",
-    ],
+    description: "Choose between basic access or the full customer experience depending on how often you book and what safety and rewards features you need.",
     icon: "user",
     tone: "brand",
+    tiers: [
+      {
+        name: "Free",
+        price: "₱0",
+        description: "Basic community customer access",
+        discount: "Ideal for occasional riders who need essential request and negotiation tools.",
+        sections: [
+          {
+            title: "Included access",
+            items: [
+              "Create ride requests within approved communities",
+              "Receive rider offers and respond to negotiations",
+              "Maintain a customer profile and rating history",
+            ],
+          },
+          {
+            title: "Paid features not included",
+            style: "muted",
+            items: [
+              "Emergency contact notifications",
+              "Points and monthly rewards",
+              "Customer pricing reductions based on reputation",
+            ],
+          },
+        ],
+        ctaLabel: "Start Free",
+      },
+      {
+        name: "Standard",
+        price: "₱60",
+        discount: "Good reputation may reduce this to ₱40 per month.",
+        sections: [
+          {
+            title: "Everything in Free, plus",
+            items: [
+              "Emergency contact notifications",
+              "Reward points and redemptions",
+              "Priority access to customer incentives tied to strong community standing",
+            ],
+          },
+        ],
+        ctaLabel: "Choose Standard",
+      },
+    ],
   },
   {
     name: "Rider",
-    price: "₱270",
-    description: "₱250 per month after the first month",
-    discount: "Good reputation may reduce this to ₱200 per month.",
-    features: [
-      "Accept and bid on ride requests",
-      "Earn points and access rewards",
-      "Maintain a full rider and vehicle profile",
-    ],
+    description: "Rider membership is built for active operators who need a complete profile, full bidding access, and trust-building tools inside the community.",
     icon: "bolt",
     tone: "brand",
-    // featured: true,
-    // badge: "Most common",
+    tiers: [
+      {
+        name: "Operator",
+        price: "₱270",
+        description: "₱250 per month after the first month",
+        discount: "Good reputation may reduce this to ₱200 per month.",
+        badge: "Most common",
+        featured: true,
+        sections: [
+          {
+            title: "Included access",
+            items: [
+              "Accept and bid on ride requests",
+              "Earn points and access rewards",
+              "Maintain a full rider and vehicle profile",
+              "Build trust through ride history and ratings",
+            ],
+          },
+        ],
+        ctaLabel: "Apply As Rider",
+      },
+    ],
   },
   {
     name: "Admin",
-    price: "₱500",
-    discount: "Strong community performance may reduce this to ₱300 per month.",
-    features: [
-      "Manage community operations",
-      "Oversee riders and customers",
-      "Control community-wide settings and access",
-      "Incentives based on community performance and growth",
-    ],
+    description: "Admin membership supports community leads who manage access, standards, and local coordination inside the platform.",
     icon: "shield",
     tone: "violet",
+    tiers: [
+      {
+        name: "Community Admin",
+        price: "₱500",
+        discount: "Strong community performance may reduce this to ₱300 per month.",
+        sections: [
+          {
+            title: "Included access",
+            items: [
+              "Manage community operations",
+              "Oversee riders and customers",
+              "Control community-wide settings and access",
+              "Receive incentives based on community performance and growth",
+            ],
+          },
+        ],
+        ctaLabel: "Manage A Community",
+      },
+    ],
   },
 ];
 
@@ -468,7 +569,7 @@ export const faqItems: FaqItem[] = [
       "The first focus is trusted local communities that already coordinate rides informally, including neighborhoods, schools, workplace groups, and rider-led networks.",
   },
   {
-    question: "Is Community Ride an open ride-hailing marketplace?",
+    question: "Is Kawing Ride an open ride-hailing marketplace?",
     answer:
       "No. The platform is designed as a coordination layer for community-based transport, with community controls and clearer trust signals rather than stranger-first matching.",
   },

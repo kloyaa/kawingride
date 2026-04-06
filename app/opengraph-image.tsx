@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Community Ride platform preview";
+export const alt = "Kawing Ride platform preview";
 export const size = {
   width: 1200,
   height: 630,
@@ -54,7 +54,7 @@ export default function OpenGraphImage() {
               C
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: "36px", fontWeight: 800 }}>Community Ride</div>
+              <div style={{ fontSize: "36px", fontWeight: 800 }}>Kawing Ride</div>
               <div style={{ fontSize: "22px", color: "#0f766e", fontWeight: 700 }}>
                 Private community ride coordination
               </div>

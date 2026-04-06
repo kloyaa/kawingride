@@ -8,7 +8,7 @@ export function SiteFooter() {
         <p className="text-center text-xs sm:text-left">
           Safety first coordination for trusted local ride communities.
         </p>
-        <p className="text-xs">© 2026 Community Ride Platform by Niks</p>
+        <p className="text-xs">© 2026 Kawing Ride by Niks</p>
       </div>
     </footer>
   );

@@ -1,4 +1,4 @@
-import { Icon } from "./icons";
+import Image from "next/image";
 
 type LogoProps = {
   inverted?: boolean;
@@ -7,18 +7,18 @@ type LogoProps = {
 export function Logo({ inverted = false }: LogoProps) {
   return (
     <span className="flex items-center gap-2.5">
-      <span
-        className={[
-          "flex h-9 w-9 items-center justify-center rounded-xl shadow-sm",
-          inverted ? "bg-white/10 text-white ring-1 ring-white/20" : "bg-brand-700 text-white",
-        ].join(" ")}
-      >
-        <Icon name="bolt" className="h-4 w-4" />
+      <span className="overflow-hidden rounded-xl shadow-sm ring-1 ring-slate-200/70 dark:ring-white/10">
+        <Image
+          src="/test-logo.png"
+          alt="Kawing Ride logo"
+          width={55}
+          height={55}
+          className="h-11 w-11 object-cover"
+        />
       </span>
-      <span className="font-display text-sm font-extrabold leading-none tracking-tight">
-        <span className={inverted ? "text-white" : "text-slate-900 dark:text-white"}>Community</span>
-        <br />
-        <span className={inverted ? "text-brand-200" : "text-brand-700"}>Ride</span>
+      <span className="font-display text-base font-extrabold leading-none tracking-tight">
+        <span className={inverted ? "text-white" : "text-slate-900 dark:text-white"}>Kawing</span>
+        <span className={inverted ? "text-brand-200" : "text-brand-700"}> Ride</span>
       </span>
     </span>
   );

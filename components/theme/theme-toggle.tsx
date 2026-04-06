@@ -4,8 +4,9 @@ import { useSyncExternalStore } from "react";
 
 import { Icon } from "@/components/landing/icons";
 
-const STORAGE_KEY = "community-ride-theme";
-const EVENT_NAME = "community-ride-theme-change";
+const STORAGE_KEY = "kawing-ride-theme";
+const LEGACY_STORAGE_KEY = "community-ride-theme";
+const EVENT_NAME = "kawing-ride-theme-change";
 
 type ThemeMode = "light" | "dark";
 
@@ -15,8 +16,15 @@ function getPreferredTheme(): ThemeMode {
   }
 
   const storedTheme = window.localStorage.getItem(STORAGE_KEY);
-  if (storedTheme === "light" || storedTheme === "dark") {
-    return storedTheme;
+  const legacyTheme = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+  const resolvedTheme = storedTheme ?? legacyTheme;
+
+  if (resolvedTheme === "light" || resolvedTheme === "dark") {
+    if (!storedTheme && legacyTheme) {
+      window.localStorage.setItem(STORAGE_KEY, legacyTheme);
+    }
+
+    return resolvedTheme;
   }
 
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -38,13 +46,13 @@ function subscribe(onStoreChange: () => void) {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
   const handleStorage = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY) {
+    if (event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) {
       onStoreChange();
     }
   };
 
   const handleMedia = () => {
-    if (!window.localStorage.getItem(STORAGE_KEY)) {
+    if (!window.localStorage.getItem(STORAGE_KEY) && !window.localStorage.getItem(LEGACY_STORAGE_KEY)) {
       onStoreChange();
     }
   };
