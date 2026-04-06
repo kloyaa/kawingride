@@ -16,7 +16,7 @@ export function Logo({ inverted = false }: LogoProps) {
         <Icon name="bolt" className="h-4 w-4" />
       </span>
       <span className="font-display text-sm font-extrabold leading-none tracking-tight">
-        <span className={inverted ? "text-white" : "text-slate-900"}>Community</span>
+        <span className={inverted ? "text-white" : "text-slate-900 dark:text-white"}>Community</span>
         <br />
         <span className={inverted ? "text-brand-200" : "text-brand-700"}>Ride</span>
       </span>
