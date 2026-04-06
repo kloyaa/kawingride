@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="section-shell flex flex-col items-center justify-between gap-4 sm:flex-row">
         <Logo inverted />
         <p className="text-center text-xs sm:text-left">
-          Community driven. Privacy first. Built for trusted local rides.
+          Safety first coordination for trusted local ride communities.
         </p>
         <p className="text-xs">© 2026 Community Ride Platform by Niks</p>
       </div>

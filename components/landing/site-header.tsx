@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -15,9 +16,9 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80">
       <div className="section-shell">
         <div className="flex h-18 items-center justify-between gap-6">
-          <a href="#" className="shrink-0" aria-label="Community Ride home">
+          <Link href="/" className="shrink-0" aria-label="Community Ride home">
             <Logo />
-          </a>
+          </Link>
 
           <div className="hidden items-center gap-3 md:flex">
             <nav className="flex items-center gap-1" aria-label="Primary">
@@ -34,7 +35,7 @@ export function SiteHeader() {
                 href="#cta"
                 className="ml-2 inline-flex items-center rounded-full bg-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800"
               >
-                Get Started
+                Request Access
               </a>
             </nav>
             <ThemeToggle />
@@ -76,7 +77,7 @@ export function SiteHeader() {
               className="mt-1 inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800"
               onClick={() => setIsMenuOpen(false)}
             >
-              Get Started
+              Request Access
             </a>
           </nav>
         ) : null}

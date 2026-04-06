@@ -98,15 +98,22 @@ body {
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.92) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.18);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .dark .glass-panel {
   background: rgba(15, 23, 42, 0.72);
   border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow:
+    0 24px 56px rgba(2, 6, 23, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .card-lift {
@@ -152,6 +159,42 @@ body {
   100% {
     transform: scale(1.9);
     opacity: 0;
+  }
+}
+
+.faq-accordion-content {
+  overflow: hidden;
+}
+
+.faq-accordion-content[data-state="open"] {
+  animation: faq-down 220ms ease-out;
+}
+
+.faq-accordion-content[data-state="closed"] {
+  animation: faq-up 180ms ease-in;
+}
+
+@keyframes faq-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes faq-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 }
 

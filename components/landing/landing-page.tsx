@@ -1,8 +1,17 @@
 import {
+  audienceGroups,
   ctaExpectations,
+  ctaPaths,
+  communityRoles,
+  faqItems,
+  founderNote,
   heroHighlights,
   howItWorksSteps,
   legacyFlowQuotes,
+  missionDescription,
+  missionPillars,
+  missionStatement,
+  platformIdentity,
   pricingPlans,
   problemCards,
   rewardAuditPoints,
@@ -12,10 +21,15 @@ import {
   solutionChecklist,
   solutionPillars,
   structuredFlowItems,
+  trustBoundaries,
+  trustPillars,
+  whyNowPoints,
   whyLegacyItems,
   whyPlatformItems,
 } from "./content";
+import { FaqAccordion } from "./faq-accordion";
 import { Icon } from "./icons";
+import { Reveal } from "./reveal";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -112,7 +126,7 @@ export function LandingPage() {
 
           <div className="section-shell relative">
             <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
-              <div className="space-y-8">
+              <Reveal className="space-y-8">
                 <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-brand-800 shadow-sm backdrop-blur dark:border-brand-500/20 dark:bg-slate-900/70 dark:text-brand-200">
                   <span className="inline-flex h-2 w-2 rounded-full bg-brand-500 shadow-[0_0_0_6px_rgba(20,184,166,0.15)]" />
                   A smarter alternative to community ride booking
@@ -171,9 +185,9 @@ export function LandingPage() {
                   </div>
                   <p>Trusted by local community riders</p>
                 </div>
-              </div>
+              </Reveal>
 
-              <div className="glass-panel rounded-[2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+              <Reveal delay={0.08} className="rounded-[2rem] p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-6">
                 <div className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-800">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
@@ -235,7 +249,89 @@ export function LandingPage() {
                     </div>
                   </div>
                 </article>
-              </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        <section id="mission" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+          <div className="section-shell">
+            <SectionHeader
+              badge="Mission"
+              icon="users"
+              tone="brand"
+              title={
+                <>
+                  Community Ride exists to make trusted local mobility
+                  <span className="gradient-text"> more private, clear, and accountable.</span>
+                </>
+              }
+              description={missionDescription}
+            />
+
+            <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+              <Reveal className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-amber-50 p-6 shadow-sm dark:border-brand-500/20 dark:from-brand-500/10 dark:via-slate-900 dark:to-amber-500/10 sm:p-8">
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                  In one sentence
+                </p>
+                <p className="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
+                  {missionStatement}
+                </p>
+                <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
+                  {platformIdentity}
+                </p>
+              </Reveal>
+
+              <Reveal delay={0.06} className="rounded-[2rem] border border-slate-100 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  Founder note
+                </p>
+                <blockquote className="mt-4 font-display text-2xl font-bold leading-tight text-slate-950 dark:text-white">
+                  “{founderNote.quote}”
+                </blockquote>
+                <p className="mt-5 text-sm font-medium text-slate-500 dark:text-slate-400">
+                  {founderNote.attribution}
+                </p>
+              </Reveal>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {missionPillars.map((item, index) => (
+                <Reveal key={item.title} delay={index * 0.04}>
+                  <article className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                    <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              <article className="rounded-[2rem] border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white">Who we serve first</h3>
+                <div className="mt-6 grid gap-4">
+                  {audienceGroups.map((item) => (
+                    <div key={item.title} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-800/70">
+                      <h4 className="font-display text-base font-bold text-slate-950 dark:text-white">{item.title}</h4>
+                      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </article>
+
+              <article className="rounded-[2rem] border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white">Why now</h3>
+                <div className="mt-6 space-y-4">
+                  {whyNowPoints.map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                        <Icon name="check" className="h-4 w-4" />
+                      </span>
+                      <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </article>
             </div>
           </div>
         </section>
@@ -491,6 +587,92 @@ export function LandingPage() {
           </div>
         </section>
 
+        <section id="trust" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+          <div className="section-shell">
+            <SectionHeader
+              badge="Trust Model"
+              icon="shield"
+              tone="brand"
+              title={
+                <>
+                  Communities need governance,
+                  <span className="gradient-text"> not just features.</span>
+                </>
+              }
+              description="The platform is designed to support trusted local operations with defined roles, clearer review paths, and realistic safety boundaries."
+            />
+
+            <div className="mt-14 rounded-[2rem] border border-slate-100 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-900/70">
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                    What kind of platform this is
+                  </p>
+                  <p className="mt-4 text-lg leading-8 text-slate-700 dark:text-slate-200">
+                    Community Ride is a managed coordination platform for community-based transport. It is
+                    built for networks that already know each other, already move together, and now need a
+                    more professional operating layer.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                    How communities work
+                  </p>
+                  <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
+                    Communities define who joins, who moderates, and how trust is earned. The platform
+                    supports that structure through role-based access, clearer ride history, and more visible
+                    accountability.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {trustPillars.map((item) => (
+                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-8 grid gap-4 lg:grid-cols-3">
+              {communityRoles.map((item) => (
+                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                  <ul className="mt-4 space-y-2">
+                    {item.responsibilities.map((responsibility) => (
+                      <li key={responsibility} className="flex items-start gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                          <Icon name="check" className="h-3.5 w-3.5" />
+                        </span>
+                        <span>{responsibility}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+
+            <article className="mt-8 rounded-[2rem] border border-amber-100 bg-amber-50 p-7 dark:border-amber-500/20 dark:bg-amber-500/10">
+              <h3 className="font-display text-lg font-bold text-amber-900 dark:text-amber-100">
+                Honest safety boundaries
+              </h3>
+              <div className="mt-4 space-y-3">
+                {trustBoundaries.map((item) => (
+                  <div key={item} className="flex items-start gap-3 text-sm leading-6 text-amber-800 dark:text-amber-200">
+                    <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                      <Icon name="info" className="h-3.5 w-3.5" />
+                    </span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </div>
+        </section>
+
         <section className="bg-white py-20 dark:bg-slate-950 md:py-28">
           <div className="section-shell">
             <SectionHeader
@@ -735,30 +917,47 @@ export function LandingPage() {
           </div>
         </section>
 
+        <section id="faq" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+          <div className="section-shell">
+            <SectionHeader
+              badge="FAQ"
+              icon="info"
+              tone="slate"
+              title={
+                <>
+                  Common questions,
+                  <span className="gradient-text"> answered clearly.</span>
+                </>
+              }
+              description="These answers explain how the platform works, how communities are managed, and what day-to-day operations should look like in practice."
+            />
+
+            <Reveal delay={0.04} className="mt-14">
+              <FaqAccordion items={faqItems} />
+            </Reveal>
+          </div>
+        </section>
+
         <section id="cta" className="cta-surface relative overflow-hidden py-20 md:py-28">
           <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/2 translate-y-1/2 rounded-full bg-amber-400/10" />
 
           <div className="section-shell relative">
             <div className="grid items-center gap-10 lg:grid-cols-5">
-              <div className="lg:col-span-3">
+              <Reveal className="lg:col-span-3">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/90">
                   <Icon name="bolt" className="h-3.5 w-3.5" />
-                  Get Started
+                  Production ready
                 </div>
                 <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
-                  From chaos
+                  Choose the right
                   <br />
-                  to clarity.
+                  starting point.
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-7 text-brand-100">
-                  The goal is straightforward: preserve the community driven nature of local rides, while
-                  making the experience more private, more structured, safer, and easier to trust.
+                  The goal is to operate with aligned communities, aligned expectations, and a clear day to
+                  day model. Start where your group needs the most clarity.
                 </p>
-              </div>
-
-              <article className="rounded-[2rem] border border-white/20 bg-white/10 p-7 text-white lg:col-span-2">
-                <h3 className="font-display text-xl font-extrabold">What users can expect</h3>
                 <ul className="mt-6 space-y-3">
                   {ctaExpectations.map((item) => (
                     <li key={item} className="flex items-center gap-3 text-sm text-brand-100">
@@ -769,14 +968,25 @@ export function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="#"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 text-sm font-bold text-brand-800 shadow-lg transition hover:bg-brand-50"
-                >
-                  Join Your Community
-                  <Icon name="arrow-right" className="h-4 w-4" />
-                </a>
-              </article>
+              </Reveal>
+
+              <div className="space-y-4 lg:col-span-2">
+                {ctaPaths.map((item, index) => (
+                  <Reveal key={item.title} delay={0.08 + index * 0.05}>
+                    <article className="rounded-[2rem] border border-white/20 bg-white/10 p-6 text-white">
+                      <h3 className="font-display text-xl font-extrabold">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-brand-100">{item.description}</p>
+                      <a
+                        href={item.href}
+                        className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold text-brand-800 shadow-lg transition hover:bg-brand-50"
+                      >
+                        {item.label}
+                        <Icon name="arrow-right" className="h-4 w-4" />
+                      </a>
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
