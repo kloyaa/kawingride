@@ -176,9 +176,9 @@ export const howItWorksSteps: StepCard[] = [
 ];
 
 export const legacyFlowQuotes = [
-  "Can you share your rate for this trip?",
-  "Please send your offer.",
-  "What budget are you working with?",
+  "Pila pangayo?",
+  "HM? SM to Gaisano Downtown?",
+  "Kaya P120?",
   "Long message threads just to settle one fare",
 ];
 
