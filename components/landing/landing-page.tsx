@@ -212,25 +212,23 @@ export function LandingPage() {
                       Live
                     </span>
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-start">
-                    <div className="flex items-start gap-3">
-                      <div className="flex flex-col items-center pt-1">
-                        <span className="h-3 w-3 rounded-full border-2 border-brand-200 bg-brand-500" />
-                        <span className="my-1 h-10 w-px bg-slate-200 dark:bg-slate-700" />
-                        <span className="h-3 w-3 rounded-sm bg-slate-900 dark:bg-slate-200" />
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-3">
+                      <div className="relative row-span-2 w-3 self-stretch">
+                        <span className="absolute left-1/2 top-3 bottom-3 w-px -translate-x-1/2 bg-slate-200 dark:bg-slate-700" />
                       </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div>
+                      <div className="relative">
+                        <span className="route-pulse-dot absolute -left-7 top-2.5 h-3 w-3 rounded-full border-2 border-brand-200 bg-brand-500" />
                         <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Pickup</p>
                         <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Gaisano Capital Mall</p>
                       </div>
-                      <div>
+                      <div className="relative">
+                        <span className="absolute -left-7 top-2.5 h-3 w-3 rounded-sm bg-slate-900 dark:bg-slate-200" />
                         <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Drop-off</p>
                         <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">SM City Cagayan</p>
                       </div>
                     </div>
-                    <div className="text-left sm:text-right">
+                    <div className="pl-7 text-left sm:pl-0 sm:text-right">
                       <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Offer</p>
                       <p className="font-display text-2xl font-extrabold text-brand-700">₱120</p>
                       <p className="text-xs text-slate-400 dark:text-slate-500">2 bids received</p>
@@ -759,7 +757,7 @@ export function LandingPage() {
                 </p>
               </div>
 
-              <article className="glass-panel rounded-[2rem] border border-white/20 bg-white/10 p-7 text-white lg:col-span-2">
+              <article className="rounded-[2rem] border border-white/20 bg-white/10 p-7 text-white lg:col-span-2">
                 <h3 className="font-display text-xl font-extrabold">What users can expect</h3>
                 <ul className="mt-6 space-y-3">
                   {ctaExpectations.map((item) => (
