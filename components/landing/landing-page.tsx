@@ -178,7 +178,7 @@ export function LandingPage() {
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  <span className="ml-2 text-xs font-medium text-slate-400 dark:text-slate-500">community-ride.app</span>
+                  <span className="ml-2 text-xs font-medium text-slate-400 dark:text-slate-500">community-ride.vercel.app (BETA)</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
