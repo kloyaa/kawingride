@@ -18,7 +18,7 @@ const toneClasses: Record<Tone, { badge: string; icon: string }> = {
     icon: "text-amber-600",
   },
   brand: {
-    badge: "border-brand-100 bg-brand-50 text-brand-800 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200",
+    badge: "border-brand-200 bg-brand-100/90 text-brand-950 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-100",
     icon: "text-brand-700",
   },
   danger: {

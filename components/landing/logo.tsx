@@ -16,7 +16,7 @@ export function Logo({ inverted = false }: LogoProps) {
           className="h-11 w-11 object-cover"
         />
       </span>
-      <span className="font-display text-base font-extrabold leading-none tracking-tight">
+      <span className="font-logo text-[0.95rem] font-bold uppercase leading-none tracking-[0.18em]">
         <span className={inverted ? "text-white" : "text-slate-900 dark:text-white"}>Kawing</span>
         <span className={inverted ? "text-brand-200" : "text-brand-700"}> Ride</span>
       </span>

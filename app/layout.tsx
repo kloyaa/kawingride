@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import { DM_Sans, Sora } from "next/font/google";
+import { Manrope, Sora, Space_Grotesk } from "next/font/google";
 
 import { APP_DOMAIN, APP_NAME, THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
@@ -11,9 +11,14 @@ const sora = Sora({
   variable: "--font-sora",
 });
 
-const dmSans = DM_Sans({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-manrope",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
 });
 
 export const metadata: Metadata = {
@@ -105,7 +110,12 @@ export default async function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={[sora.variable, dmSans.variable, theme === "dark" ? "dark" : ""].filter(Boolean).join(" ")}
+      className={[
+        sora.variable,
+        manrope.variable,
+        spaceGrotesk.variable,
+        theme === "dark" ? "dark" : "",
+      ].filter(Boolean).join(" ")}
       style={{ colorScheme: theme }}
     >
       <body>

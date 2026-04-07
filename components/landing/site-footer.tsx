@@ -21,6 +21,9 @@ export function SiteFooter() {
                 <Link href="/" className="text-slate-300 transition hover:text-white">
                   Home
                 </Link>
+                <Link href="/our-story" className="text-slate-300 transition hover:text-white">
+                  Our Story
+                </Link>
                 <Link href="/#mission" className="text-slate-300 transition hover:text-white">
                   Mission
                 </Link>

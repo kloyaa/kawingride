@@ -10,22 +10,22 @@ export const metadata: Metadata = {
 
 const privacySections = [
   {
-    title: "Information we collect",
+    title: "What information may be collected",
     body:
       "Kawing Ride may collect account details, ride request information, rider profile details, ratings, and operational activity needed to support community ride coordination.",
   },
   {
-    title: "How information is used",
+    title: "How that information may be used",
     body:
       "Information is used to operate the platform, support customer and rider onboarding, manage communities, improve trust signals, and maintain safer coordination workflows.",
   },
   {
-    title: "Community visibility",
+    title: "What may be visible inside a community",
     body:
       "Ride and profile information may be visible within the relevant community flow, according to the access and moderation rules set for that community.",
   },
   {
-    title: "Operational and safety use",
+    title: "Safety and operational use",
     body:
       "Information may be used for status updates, trust and moderation reviews, incident handling, and optional safety-related notifications where enabled.",
   },
@@ -48,9 +48,19 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
-            This page outlines the general privacy approach for {APP_NAME}. It is intended to explain how platform
-            information may be handled in support of community ride coordination.
+            This page explains the general privacy approach for {APP_NAME} and how information may be handled to
+            support community ride coordination.
           </p>
+
+          <div className="mt-6 rounded-[1.5rem] border border-brand-100 bg-brand-50/80 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+              What this page is for
+            </p>
+            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+              It is a short overview of what may be collected, how information may be used, and where privacy limits
+              and community visibility may apply.
+            </p>
+          </div>
 
           <div className="mt-8 space-y-5">
             {privacySections.map((section) => (

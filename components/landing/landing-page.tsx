@@ -2,14 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 import {
-  audienceGroups,
   ctaExpectations,
   ctaPaths,
   communityRoles,
-  comparisonHighlights,
   dataHandlingGroups,
   faqItems,
-  founderNote,
   heroHighlights,
   howItWorksSummary,
   legacyFlowQuotes,
@@ -17,7 +14,6 @@ import {
   launchAreas,
   missionDescription,
   missionPillars,
-  missionStatement,
   platformIdentity,
   pricingPlans,
   pricingValueStatement,
@@ -32,9 +28,6 @@ import {
   privacyAssurances,
   trustBoundaries,
   trustPillars,
-  whyNowPoints,
-  whyLegacyItems,
-  whyPlatformItems,
 } from "./content";
 import { FaqAccordion } from "./faq-accordion";
 import { HowItWorksFlow } from "./how-it-works-flow";
@@ -234,13 +227,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </article>
 
                 <div className="pointer-events-none absolute -right-3 -top-12 z-10 sm:-right-5 sm:-top-14">
-                  <Image
-                    src="/images/kawing-glasses.png"
-                    alt=""
-                    width={236}
-                    height={236}
-                    className="h-auto w-36 rotate-[11deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)] sm:w-44"
-                  />
+                  <div className="kawing-float kawing-float-delay-1">
+                    <Image
+                      src="/images/kawing-glasses.png"
+                      alt=""
+                      width={236}
+                      height={236}
+                      className="h-auto w-36 rotate-[11deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)] sm:w-44"
+                    />
+                  </div>
                 </div>
               </Reveal>
             </div>
@@ -249,25 +244,29 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
         <section id="mission" className="section-band bg-white py-20 dark:bg-slate-950 md:py-28">
           <div className="section-shell">
-            <SectionHeader
-              badge="Mission"
-              icon="users"
-              tone="brand"
-              title={
-                <>
-                  Trusted local mobility,
-                  <span className="gradient-text"> more private, clear, and accountable.</span>
-                </>
-              }
-              description={missionDescription}
-            />
+            <div className="max-w-3xl space-y-5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-100/90 px-4 py-1.5 text-xs font-semibold text-brand-950 shadow-sm">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white text-brand-700">
+                  <Icon name="users" className="h-3.5 w-3.5" />
+                </span>
+                <span>Mission</span>
+              </div>
+              <h2 className="max-w-4xl font-display text-3xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-[2.9rem]">
+                Trusted local mobility,
+                <span className="text-brand-800 dark:text-brand-200"> more private, clear, and accountable.</span>
+              </h2>
+              <div className="flex items-start gap-4">
+                <span className="mt-1 hidden h-12 w-px rounded-full bg-gradient-to-b from-brand-500 to-transparent sm:block" />
+                <p className="max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{missionDescription}</p>
+              </div>
+            </div>
 
-            <div className="mt-14 space-y-6">
-              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)]">
-                <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                  <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
-                  <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
-                  <div className="pointer-events-none absolute -bottom-5 -left-4 w-16 -rotate-[16deg] sm:-bottom-6 sm:-left-6 sm:w-20 lg:-bottom-10 lg:-left-12 lg:w-30">
+            <div className="mt-14 grid gap-6 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
+              <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
+                <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
+                <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
+                <div className="pointer-events-none absolute -bottom-5 -left-4 w-16 -rotate-[16deg] sm:-bottom-6 sm:-left-6 sm:w-20 lg:-bottom-10 lg:-left-12 lg:w-30">
+                  <div className="kawing-float kawing-float-soft">
                     <Image
                       src="/images/kawing-glasses.png"
                       alt=""
@@ -276,176 +275,85 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       className="h-auto w-full object-contain"
                     />
                   </div>
-
-                  <div className="relative">
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Mission in practice
-                    </p>
-                    <p className="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2.5rem]">
-                      {missionStatement}
-                    </p>
-                    <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
-                      {platformIdentity}
-                    </p>
-
-                    <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                      {[
-                        "Private trip coordination",
-                        "Clear decision making",
-                        "Shared community accountability",
-                      ].map((item, index) => (
-                        <div
-                          key={item}
-                          className="rounded-[1.4rem] border border-white/80 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
-                        >
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                            {String(index + 1).padStart(2, "0")}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold leading-6 text-slate-700 dark:text-slate-200">
-                            {item}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)]">
-                      <div className="rounded-[1.6rem] border border-brand-100 bg-white/88 p-5 dark:border-brand-500/20 dark:bg-slate-950/55">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
-                          Why Kawing
-                        </p>
-                        <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
-                      </div>
-                      <div className="rounded-[1.6rem] border border-slate-200/80 bg-slate-50/85 p-5 dark:border-slate-800 dark:bg-slate-900/70">
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                          What the mission changes
-                        </p>
-                        <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                          The goal is not to replace local relationships. The goal is to give those relationships a more
-                          respectful system for booking, agreeing, and following through.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-
-                <div className="grid gap-6">
-                  <Reveal className="rounded-[2rem] border border-slate-100 bg-slate-50/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/75">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                      <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                          Who we serve first
-                        </p>
-                        <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                          Start with communities that already move together.
-                        </h3>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 space-y-3">
-                      {audienceGroups.map((item, index) => (
-                        <article
-                          key={item.title}
-                          className="rounded-[1.4rem] border border-white bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950/70"
-                        >
-                          <div className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
-                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
-                              {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <div>
-                              <h4 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h4>
-                              <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                            </div>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  </Reveal>
-
-                  <Reveal delay={0.08} className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900">
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Why this matters now
-                    </p>
-                    <div className="mt-6 space-y-4">
-                      {whyNowPoints.map((item, index) => (
-                        <div key={item} className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
-                          <div className="flex items-start gap-3">
-                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
-                              {index + 1}
-                            </span>
-                            {index < whyNowPoints.length - 1 ? (
-                              <span className="hidden h-14 w-px bg-gradient-to-b from-brand-300 via-brand-200 to-transparent sm:block" />
-                            ) : null}
-                          </div>
-                          <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </Reveal>
-                </div>
-              </div>
-
-              <Reveal delay={0.12} className="rounded-[2rem] border border-slate-100 bg-slate-50/85 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/75 sm:p-6">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Mission pillars
-                    </p>
-                    <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                      Design principles that guide every decision.
-                    </h3>
-                  </div>
                 </div>
 
-                <div className="mt-6 grid gap-4 lg:grid-cols-3">
-                  {missionPillars.map((item, index) => (
-                    <article
-                      key={item.title}
-                      className="card-lift rounded-[1.6rem] border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/70"
-                    >
-                      <div className="h-1.5 w-16 rounded-full bg-gradient-to-r from-brand-400 to-brand-700" />
-                      <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                        Principle {String(index + 1).padStart(2, "0")}
-                      </p>
-                      <h4 className="mt-2 font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h4>
-                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                    </article>
-                  ))}
+                <div className="relative">
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                    What the mission means on the product
+                  </p>
+                  <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
+                    {platformIdentity}
+                  </p>
+
+                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                    {[
+                      "Private trip coordination",
+                      "Clear decision making",
+                      "Shared accountability",
+                    ].map((item, index) => (
+                      <div
+                        key={item}
+                        className="rounded-[1.4rem] border border-white/80 bg-white/85 p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
+                      >
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                          {String(index + 1).padStart(2, "0")}
+                        </p>
+                        <p className="mt-2 text-sm font-semibold leading-6 text-slate-700 dark:text-slate-200">
+                          {item}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 rounded-[1.6rem] border border-brand-100 bg-white/88 p-5 dark:border-brand-500/20 dark:bg-slate-950/55">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
+                      Why Kawing
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
+                  </div>
                 </div>
               </Reveal>
-            </div>
-          </div>
-        </section>
 
-        <section className="section-band bg-slate-50 py-16 dark:bg-slate-900/60 md:py-20">
-          <div className="section-shell">
-            <Reveal>
-              <article className="cta-surface relative overflow-hidden rounded-[2rem] p-8 text-white md:p-10">
-                <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5" />
-                <div className="pointer-events-none absolute bottom-0 left-0 h-48 w-48 -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-400/10" />
-
-                <div className="relative grid gap-6 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
-                  <div className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-white">
-                    <Icon name="users" className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-100">
-                      Founder Note
-                    </p>
-                    <blockquote className="mt-4 max-w-4xl font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl">
-                      “{founderNote.quote}”
-                    </blockquote>
-                    <div className="mt-5 flex flex-wrap items-center gap-3">
-                      <p className="text-sm font-medium text-brand-100/90">{founderNote.attribution}</p>
-                      {["Community-first", "Trust-led", "Built for local networks"].map((item) => (
-                        <span key={item} className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/90">
-                          {item}
+              <div className="grid gap-4">
+                {missionPillars.map((item, index) => (
+                  <Reveal key={item.title} delay={0.04 + index * 0.04}>
+                    <article className="card-lift rounded-[1.8rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                      <div className="flex items-start gap-4">
+                        <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
+                          {String(index + 1).padStart(2, "0")}
                         </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Reveal>
+                        <div>
+                          <h3 className="font-display text-xl font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                          <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
+                        </div>
+                      </div>
+                    </article>
+                  </Reveal>
+                ))}
+
+                <Reveal delay={0.16}>
+                  <article className="rounded-[1.8rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10">
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700 dark:text-amber-300">
+                      Our Story
+                    </p>
+                    <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                      A simpler introduction now lives on its own page.
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                      We moved the founder note and brand context into a lighter page so the homepage can stay focused
+                      on the product and booking flow.
+                    </p>
+                    <Link
+                      href="/our-story"
+                      className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50 dark:bg-slate-950 dark:text-brand-200 dark:hover:bg-slate-900"
+                    >
+                      Read Our Story
+                      <Icon name="arrow-right" className="h-4 w-4" />
+                    </Link>
+                  </article>
+                </Reveal>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -501,13 +409,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5" />
               <div className="pointer-events-none absolute bottom-0 left-0 h-56 w-56 -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-400/10" />
               <div className="pointer-events-none absolute -right-3 -top-8 w-18 rotate-[10deg] sm:-right-4 sm:-top-10 sm:w-24 lg:right-0 lg:top-50 lg:w-55">
-                <Image
-                  src="/images/kawing-idea.png"
-                  alt=""
-                  width={228}
-                  height={228}
-                  className="h-auto w-full object-contain"
-                />
+                <div className="kawing-float kawing-float-slow kawing-float-delay-2">
+                  <Image
+                    src="/images/kawing-idea.png"
+                    alt=""
+                    width={228}
+                    height={228}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
               </div>
 
               <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
@@ -737,13 +647,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
                 <div className="pointer-events-none absolute -right-4 -top-6 w-18 -rotate-[15deg] sm:-right-6 sm:-top-8 sm:w-22 lg:-right-20 lg:top-22 lg:w-50">
-                  <Image
-                    src="/images/kawing-glasses.png"
-                    alt=""
-                    width={172}
-                    height={172}
-                    className="h-auto w-full object-contain"
-                  />
+                  <div className="kawing-float kawing-float-delay-3">
+                    <Image
+                      src="/images/kawing-glasses.png"
+                      alt=""
+                      width={172}
+                      height={172}
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
                 </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-start">
                   <div>
@@ -868,13 +780,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               <div className="grid gap-6 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
                 <Reveal className="relative rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
                   <div className="pointer-events-none absolute -left-5 -top-7 w-14 rotate-[14deg] sm:-left-6 sm:-top-8 sm:w-18 lg:-left-20 lg:top-40 lg:w-38">
-                    <Image
-                      src="/images/kawing-detective.png"
-                      alt=""
-                      width={264}
-                      height={264}
-                      className="h-auto w-full object-contain"
-                    />
+                    <div className="kawing-float kawing-float-soft kawing-float-delay-1">
+                      <Image
+                        src="/images/kawing-detective.png"
+                        alt=""
+                        width={264}
+                        height={264}
+                        className="h-auto w-full object-contain"
+                      />
+                    </div>
                   </div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                     How trust becomes operational
@@ -905,14 +819,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </Reveal>
 
                 <Reveal delay={0.08} className="relative rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
-                  <div className="pointer-events-none absolute -right-4 -bottom-6 w-18 -rotate-[15deg] sm:-right-6 sm:-bottom-8 sm:w-22 lg:-right-30 lg:top-52 lg:w-50">
-                    <Image
-                      src="/images/kawing-detective.png"
-                      alt=""
-                      width={212}
-                      height={212}
-                      className="h-auto w-full object-contain"
-                    />
+                  <div className="pointer-events-none absolute -right-24 -bottom-6 w-18 -rotate-[15deg] sm:-right-6 sm:-bottom-8 sm:w-22 lg:-right-50 lg:top-52 lg:w-50">
+                    <div className="kawing-float kawing-float-slow kawing-float-delay-2">
+                      <Image
+                        src="/images/kawing-detective.png"
+                        alt=""
+                        width={212}
+                        height={212}
+                        className="h-auto w-full object-contain"
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
@@ -954,130 +870,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           </div>
         </section>
 
-        <section className="section-band bg-white py-20 dark:bg-slate-950 md:py-28">
-          <div className="section-shell">
-            <SectionHeader
-              badge="Why Choose This"
-              icon="info"
-              tone="slate"
-              title={
-                <>
-                  Why choose this
-                  <span className="gradient-text"> if social media groups are free?</span>
-                </>
-              }
-              description="Because free coordination still creates real costs. Communities already pay through wasted time, exposed details, weak trust signals, and preventable confusion."
-            />
-
-            <div className="mt-14 space-y-6">
-              <Reveal className="surface-panel relative rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute -left-4 -bottom-5 w-18 -rotate-[12deg] sm:-left-6 sm:-bottom-6 sm:w-22 lg:-left-10 lg:-bottom-12 lg:w-36">
-                  <Image
-                    src="/images/kawing-curious.png"
-                    alt=""
-                    width={228}
-                    height={228}
-                    className="h-auto w-full object-contain"
-                  />
-                </div>
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-end">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      The real comparison
-                    </p>
-                    <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
-                      Free only looks cheaper when the hidden costs stay invisible.
-                    </h3>
-                  </div>
-                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{pricingValueStatement}</p>
-                </div>
-
-                <div className="mt-8 grid gap-4 lg:grid-cols-2">
-                  <article className="rounded-[1.7rem] border border-red-100 bg-red-50/90 p-5 shadow-sm dark:border-red-500/20 dark:bg-red-500/10">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
-                      Hidden costs in free groups
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {whyLegacyItems.map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full border border-red-100 bg-white px-3 py-1.5 text-xs leading-5 text-red-700 dark:border-red-500/20 dark:bg-slate-950 dark:text-red-100"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </article>
-
-                  <article className="rounded-[1.7rem] border border-brand-100 bg-brand-50/85 p-5 shadow-sm dark:border-brand-500/20 dark:bg-brand-500/10">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                      What Kawing Ride gives back
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {whyPlatformItems.map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full border border-brand-100 bg-white px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-slate-950 dark:text-brand-300"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </article>
-                </div>
-              </Reveal>
-
-              <div className="grid gap-4">
-                {comparisonHighlights.map((item, index) => (
-                  <Reveal key={item.title} delay={0.04 + index * 0.04}>
-                    <article className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-                      <div className="grid gap-4 xl:grid-cols-[auto_minmax(0,0.85fr)_minmax(0,1.15fr)] xl:items-stretch">
-                        <div className="flex items-center gap-4 xl:flex-col xl:items-start xl:justify-between">
-                          <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-950 font-display text-lg font-extrabold text-white dark:bg-white dark:text-slate-950">
-                            {item.title.slice(0, 1)}
-                          </span>
-                          <div>
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                              Comparison {String(index + 1).padStart(2, "0")}
-                            </p>
-                            <h3 className="mt-1 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                              {item.title}
-                            </h3>
-                          </div>
-                        </div>
-
-                        <div className="rounded-[1.6rem] border border-red-100 bg-red-50/80 p-5 dark:border-red-500/20 dark:bg-red-500/10">
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
-                              Social media cost
-                            </p>
-                            <span className="h-2.5 w-20 rounded-full bg-red-100 dark:bg-red-500/20">
-                              <span className="block h-full w-4/5 rounded-full bg-red-500" />
-                            </span>
-                          </div>
-                          <p className="mt-4 text-sm leading-7 text-red-800 dark:text-red-100">{item.social}</p>
-                        </div>
-
-                        <div className="rounded-[1.6rem] border border-brand-100 bg-brand-50/80 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                              Platform return
-                            </p>
-                            <span className="h-2.5 w-20 rounded-full bg-brand-100 dark:bg-brand-500/20">
-                              <span className="block h-full w-11/12 rounded-full bg-brand-600" />
-                            </span>
-                          </div>
-                          <p className="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-200">{item.platform}</p>
-                        </div>
-                      </div>
-                    </article>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section id="pricing" className="section-band bg-slate-50/60 py-20 dark:bg-slate-900/60 md:py-28">
           <div className="section-shell">
             <SectionHeader
@@ -1090,19 +882,21 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   <span className="gradient-text"> rewards strong community behavior.</span>
                 </>
               }
-              description="Platform fees support operations and product development, while reputation can lower monthly costs over time."
+              description="Choose the level that fits how your community books today, then let stronger participation lower costs over time."
             />
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
                 <div className="pointer-events-none absolute -right-3 -top-4 w-18 -rotate-[19deg] sm:-right-4 sm:-top-5 sm:w-24 lg:-right-10 lg:-top-5 lg:w-42">
-                  <Image
-                    src="/images/kawing-glasses.png"
-                    alt=""
-                    width={296}
-                    height={296}
-                    className="h-auto w-full object-contain"
-                  />
+                  <div className="kawing-float kawing-float-slow">
+                    <Image
+                      src="/images/kawing-glasses.png"
+                      alt=""
+                      width={296}
+                      height={296}
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
                 </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
                   <div>
@@ -1113,10 +907,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       Start with essential access, then unlock more value as participation grows.
                     </h3>
                   </div>
-                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">
-                    Pricing supports operations and product development, while stronger community behavior can lower
-                    monthly costs over time.
-                  </p>
+                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{pricingValueStatement}</p>
                 </div>
 
                 <div className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -1462,7 +1253,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   <span className="gradient-text"> answered clearly.</span>
                 </>
               }
-              description="These answers explain how the platform works, how communities are managed, and what day-to-day operations should look like in practice."
+              description="These are the key things people usually want to know before joining or bringing a community into Kawing Ride."
             />
 
             <Reveal delay={0.04} className="mt-14">
@@ -1480,7 +1271,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               title={
                 <>
                   Starting with
-                  <span className="gradient-text"> Cagayan de Oro and Butuan City.</span>
+                  <span className="gradient-text"> Cagayan de Oro City and Butuan City.</span>
                 </>
               }
               description="Kawing Ride is being positioned for communities that need a clearer launch path, stronger onboarding, and better day-to-day transport coordination in these first operating areas."
@@ -1531,7 +1322,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                     Community and partnership path
                   </p>
                   <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                    For community onboarding, local rollout discussions, or partnership conversations in Cagayan de Oro
+                    For community onboarding, local rollout discussions, or partnership conversations in Cagayan de Oro City
                     and Butuan City, the next step is to use the request access path and align the right admin,
                     rider, and customer setup from the start.
                   </p>

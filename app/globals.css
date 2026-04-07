@@ -159,8 +159,9 @@
   --color-violet-600: var(--palette-violet-600);
   --color-violet-700: var(--palette-violet-700);
 
-  --font-sans: var(--font-dm-sans);
+  --font-sans: var(--font-manrope);
   --font-display: var(--font-sora);
+  --font-logo: var(--font-space-grotesk);
 }
 
 html {
@@ -173,7 +174,7 @@ body {
     radial-gradient(circle at top left, rgb(var(--rgb-brand-500) / 0.08) 0, transparent 26%),
     linear-gradient(180deg, #fcfdfb 0%, var(--background) 30%, var(--background) 100%);
   color: var(--foreground);
-  font-family: var(--font-dm-sans), sans-serif;
+  font-family: var(--font-sans), sans-serif;
   transition:
     background-color 180ms ease,
     color 180ms ease;
@@ -430,6 +431,68 @@ body {
   to {
     opacity: 0;
     transform: translateY(-8px);
+  }
+}
+
+@keyframes kawing-float {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kawing-float-soft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.kawing-float {
+  display: inline-block;
+  animation: kawing-float var(--kawing-float-duration, 5.8s) ease-in-out infinite;
+  animation-delay: var(--kawing-float-delay, 0s);
+  will-change: transform;
+}
+
+.kawing-float-soft {
+  animation-name: kawing-float-soft;
+  --kawing-float-duration: 6.6s;
+}
+
+.kawing-float-slow {
+  --kawing-float-duration: 7.2s;
+}
+
+.kawing-float-delay-1 {
+  --kawing-float-delay: 0.8s;
+}
+
+.kawing-float-delay-2 {
+  --kawing-float-delay: 1.6s;
+}
+
+.kawing-float-delay-3 {
+  --kawing-float-delay: 2.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kawing-float {
+    animation: none;
   }
 }
 

@@ -122,6 +122,7 @@ export const navigationItems: NavigationItem[] = [
   { href: "/#how-it-works", label: "Flow" },
   { href: "/#trust", label: "Trust" },
   { href: "/#pricing", label: "Pricing" },
+  { href: "/our-story", label: "Our Story" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -172,8 +173,8 @@ export const platformIdentity =
 
 export const founderNote = {
   quote:
-    "Our mission is not to industrialize community rides. It is to make trusted local mobility feel more respectful, more transparent, and more dependable for everyone involved.",
-  attribution: "Founding vision",
+    "We want booking a community ride to feel calm, private, and respectful from the start.",
+  attribution: "A note from the founder",
 };
 
 export const heroHighlights: FeatureCard[] = [
@@ -656,7 +657,7 @@ export const rewardAuditPoints = [
 
 export const launchAreas: LaunchArea[] = [
   {
-    title: "Cagayan de Oro",
+    title: "Cagayan de Oro City",
     description:
       "An initial focus area for community ride coordination, local onboarding, and early operational standards.",
   },
@@ -674,87 +675,70 @@ export const launchAreaNotes = [
 ];
 
 export const ctaExpectations = [
-  "A clearer and more respectful way to coordinate rides",
-  "Shared expectations for customers, riders, and admins",
-  "A trust model built for real community use",
+  "Private requests and clearer booking decisions",
   "Safer coordination with stronger accountability",
   "A practical next step for organized local transport",
 ];
 
 export const faqItems: FaqItem[] = [
   {
-    question: "Who is this platform for first?",
+    question: "What is Kawing Ride?",
     answer:
-      "The first focus is trusted local communities that already coordinate rides informally, including neighborhoods, schools, workplace groups, and rider-led networks.",
+      "Kawing Ride is a private ride coordination platform for trusted local communities. It gives customers and riders a clearer way to post requests, negotiate fares, confirm rides, and follow updates without relying on messy group chats.",
   },
   {
-    question: "Is Kawing Ride an open ride-hailing marketplace?",
+    question: "Who is it for?",
     answer:
-      "No. The platform is designed as a coordination layer for community-based transport, with community controls and clearer trust signals rather than stranger-first matching.",
+      "It is built first for neighborhoods, schools, workplaces, and local rider groups that already arrange rides informally and want a more organized, private, and trustworthy process.",
   },
   {
-    question: "How are riders and communities managed?",
+    question: "How does booking work?",
     answer:
-      "Admins and community leads are expected to manage membership, review access, and define standards locally. The platform supports that structure instead of replacing it.",
+      "A customer posts a request, riders can accept the fare or send an offer, and the customer chooses what to accept, decline, or counter. A ride only becomes confirmed when both sides clearly agree inside the platform.",
   },
   {
-    question: "What customer information do riders see?",
+    question: "Does the app automatically assign a rider?",
     answer:
-      "Customer onboarding only requires a name and mobile number, but riders do not see the actual customer name during negotiation. They see a system-generated username instead, and contact details are only shared after both sides agree and the customer allows rider contact in settings.",
+      "No. Kawing Ride is not a stranger-first ride-hailing marketplace. It helps communities coordinate rides more clearly, but the final decision still stays with the customer and the rider.",
   },
   {
-    question: "How is rider onboarding information handled?",
+    question: "What stays private during booking?",
     answer:
-      "Rider onboarding can include plate number, valid IDs, selfie, and supporting background information. Those records are collected for verification and moderation purposes, and access is restricted to admins rather than exposed across the community.",
+      "Ride requests stay inside the intended community instead of a public social feed. During negotiation, riders see a system username rather than the customer's actual name, and contact details are only shared after both sides agree and the customer allows contact sharing.",
   },
   {
-    question: "Where is Kawing Ride launching first?",
+    question: "Are there safety features?",
     answer:
-      "The initial launch focus is Cagayan de Oro and Butuan City, starting with communities that already coordinate rides and need a clearer operating model.",
+      "Yes. Kawing Ride can send optional ride status updates to a trusted contact when a ride is confirmed, cancelled, expires, or is marked complete.",
   },
   {
-    question: "What happens when disputes or suspicious activity appear?",
+    question: "Is Kawing Ride available to everyone now?",
     answer:
-      "The system is designed to give communities better review paths, clearer history, and more structure for moderation than informal chat threads can offer.",
+      "Not yet. The platform is launching through selected communities first, with early focus on Cagayan de Oro City and Butuan City.",
   },
   {
-    question: "What does the platform not guarantee?",
+    question: "How do I join or bring my community in?",
     answer:
-      "The platform improves coordination, visibility, and accountability, but it does not eliminate risk or replace local judgment, moderation, and due diligence.",
-  },
-  {
-    question: "How is sensitive information protected?",
-    answer:
-      "Personally identifiable information is encrypted in the database, sensitive onboarding access is limited by role, and key platform activity is logged for audit and review purposes.",
-  },
-  {
-    question: "What should an interested group do next?",
-    answer:
-      "The best next step is to review the operating model, confirm the right membership plan, and align your customer, rider, and admin expectations before adoption.",
-  },
-  {
-    question: "How should communities or partners start the conversation?",
-    answer:
-      "The clearest path is to review the trust model, confirm the right setup for customers and riders, and use the request access path to begin launch and onboarding discussions.",
+      "Use the Request Access path to start the conversation. That is the best way to express interest, ask about launch fit, or explore how your community can come on board.",
   },
 ];
 
 export const ctaPaths: CtaPath[] = [
   {
     title: "Launch a community",
-    description: "Set up the standards, admin structure, and operating model your local community needs from day one.",
+    description: "Review the trust model and decide how your community should be organized from day one.",
     label: "Explore Trust Model",
     href: "#trust",
   },
   {
     title: "Plan rider onboarding",
-    description: "Review rider access, pricing, and accountability so operators join with the right expectations.",
+    description: "Check the pricing and rider expectations before inviting operators into the platform.",
     label: "View Pricing Options",
     href: "#pricing",
   },
   {
-    title: "Align your community",
-    description: "Use the mission and FAQ sections to bring members together around scope, safety, and day-to-day use.",
+    title: "Start the conversation",
+    description: "Use the common questions and access path to decide whether Kawing Ride fits your community.",
     label: "Read Common Questions",
     href: "#faq",
   },
