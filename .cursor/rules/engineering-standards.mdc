@@ -1,0 +1,30 @@
+---
+description: Core engineering standards for simplicity, TypeScript, reusability, and file organization
+alwaysApply: true
+---
+
+# Engineering Standards
+
+## KISS first
+
+- Prefer the simplest solution that fully satisfies requirements.
+- Avoid over-engineering, premature abstractions, and unnecessary configuration.
+- Keep components, functions, and modules small and focused.
+
+## TypeScript by default
+
+- Write application code in TypeScript (`.ts` / `.tsx`) for type safety and maintainability.
+- Avoid introducing plain JavaScript files unless required by tooling or third-party constraints.
+- Add explicit types for public interfaces, component props, and shared utilities.
+
+## Reusable component mindset
+
+- When UI is likely reusable, extract it into a shared/global component instead of keeping it page-local.
+- Keep shared components generic and configurable through typed props.
+- Do not duplicate similar UI patterns across features when a shared component can cover them.
+
+## Separation of concerns and folder conventions
+
+- Keep constants in `const/` (or `constants/`) folders and utilities in `utils/` folders.
+- Place shared types/interfaces in dedicated `types/` folders when reused across modules.
+- Organize code by responsibility (UI, constants, utils, services, hooks, types) and avoid mixing concerns in one file.
