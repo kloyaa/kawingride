@@ -46,8 +46,8 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                 </div>
               </div>
 
-              <div className="relative xl:pt-10">
-                <div className="pointer-events-none absolute right-0 -top-8 z-10 hidden w-34 xl:block">
+              <div className="relative pt-6 sm:pt-8 xl:pt-10">
+                <div className="pointer-events-none absolute right-1 -top-6 z-10 w-20 sm:right-0 sm:-top-8 sm:w-24 lg:w-28 xl:w-34">
                   <Image
                     src="/images/basic-icon.png"
                     alt=""
@@ -57,22 +57,7 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                   />
                 </div>
 
-                <div className="pointer-events-none absolute -right-16 bottom-6 z-20 hidden w-52 xl:block">
-                  <div className="absolute inset-0 scale-100 rounded-full bg-brand-300/25 blur-3xl dark:bg-brand-400/12" />
-
-                </div>
-
                 <article className="surface-panel relative overflow-hidden rounded-[2.2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-8">
-                  <div className="pointer-events-none absolute -right-6 -top-7 w-28 sm:w-32 xl:hidden">
-                    <Image
-                      src="/images/basic-icon.png"
-                      alt=""
-                      width={196}
-                      height={196}
-                      className="h-auto w-full rotate-[16deg] object-contain"
-                    />
-                  </div>
-
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">

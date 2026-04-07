@@ -267,7 +267,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
                   <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
                   <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
-                  <div className="pointer-events-none absolute -bottom-10 -left-12 hidden w-30 -rotate-[16deg] lg:block">
+                  <div className="pointer-events-none absolute -bottom-5 -left-4 w-16 -rotate-[16deg] sm:-bottom-6 sm:-left-6 sm:w-20 lg:-bottom-10 lg:-left-12 lg:w-30">
                     <Image
                       src="/images/kawing-glasses.png"
                       alt=""
@@ -500,7 +500,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             <div className="cta-surface relative mt-14 overflow-hidden rounded-[2rem] p-8 text-white md:p-10">
               <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5" />
               <div className="pointer-events-none absolute bottom-0 left-0 h-56 w-56 -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-400/10" />
-              <div className="pointer-events-none absolute -right-0 top-50 hidden w-55 rotate-[10deg] lg:block">
+              <div className="pointer-events-none absolute -right-3 -top-8 w-18 rotate-[10deg] sm:-right-4 sm:-top-10 sm:w-24 lg:right-0 lg:top-50 lg:w-55">
                 <Image
                   src="/images/kawing-idea.png"
                   alt=""
@@ -736,7 +736,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute -right-20 top-22 hidden w-50 -rotate-[15deg] lg:block">
+                <div className="pointer-events-none absolute -right-4 -top-6 w-18 -rotate-[15deg] sm:-right-6 sm:-top-8 sm:w-22 lg:-right-20 lg:top-22 lg:w-50">
                   <Image
                     src="/images/kawing-glasses.png"
                     alt=""
@@ -867,7 +867,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
               <div className="grid gap-6 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
                 <Reveal className="relative rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-                  <div className="pointer-events-none absolute -left-20 top-40 hidden w-38 rotate-[14deg] lg:block">
+                  <div className="pointer-events-none absolute -left-5 -top-7 w-14 rotate-[14deg] sm:-left-6 sm:-top-8 sm:w-18 lg:-left-20 lg:top-40 lg:w-38">
                     <Image
                       src="/images/kawing-detective.png"
                       alt=""
@@ -905,7 +905,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </Reveal>
 
                 <Reveal delay={0.08} className="relative rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
-                  <div className="pointer-events-none absolute -right-30 top-52 hidden w-50 -rotate-[15deg] lg:block">
+                  <div className="pointer-events-none absolute -right-4 -bottom-6 w-18 -rotate-[15deg] sm:-right-6 sm:-bottom-8 sm:w-22 lg:-right-30 lg:top-52 lg:w-50">
                     <Image
                       src="/images/kawing-detective.png"
                       alt=""
@@ -971,7 +971,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute -left-10 -bottom-12 hidden w-36 -rotate-[12deg] lg:block">
+                <div className="pointer-events-none absolute -left-4 -bottom-5 w-18 -rotate-[12deg] sm:-left-6 sm:-bottom-6 sm:w-22 lg:-left-10 lg:-bottom-12 lg:w-36">
                   <Image
                     src="/images/kawing-curious.png"
                     alt=""
@@ -1095,7 +1095,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute  -right-10 -top-5 hidden w-42 -rotate-[19deg] lg:block">
+                <div className="pointer-events-none absolute -right-3 -top-4 w-18 -rotate-[19deg] sm:-right-4 sm:-top-5 sm:w-24 lg:-right-10 lg:-top-5 lg:w-42">
                   <Image
                     src="/images/kawing-glasses.png"
                     alt=""
