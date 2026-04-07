@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   audienceGroups,
   ctaExpectations,
@@ -1153,13 +1155,13 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                         </div>
 
                         {tier.ctaLabel ? (
-                          <a
-                            href="#cta"
+                          <Link
+                            href="/access"
                             className={tier.featured ? "mt-5 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-brand-800 transition hover:bg-brand-50" : "mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"}
                           >
                             {tier.ctaLabel}
                             <Icon name="arrow-right" className="h-4 w-4" />
-                          </a>
+                          </Link>
                         ) : null}
                       </article>
                     ))}
@@ -1270,13 +1272,13 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                         </div>
 
                         {tier?.ctaLabel ? (
-                          <a
-                            href="#cta"
+                          <Link
+                            href="/access"
                             className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
                           >
                             {tier.ctaLabel}
                             <Icon name="arrow-right" className="h-4 w-4" />
-                          </a>
+                          </Link>
                         ) : null}
                       </article>
                     </Reveal>
@@ -1462,13 +1464,13 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                     and Butuan City, the next step is to use the request access path and align the right admin,
                     rider, and customer setup from the start.
                   </p>
-                  <a
-                    href="#cta"
+                  <Link
+                    href="/access"
                     className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
                   >
                     Request Access
                     <Icon name="arrow-right" className="h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
               </Reveal>
             </div>

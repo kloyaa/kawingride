@@ -41,7 +41,7 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
                   </Link>
                 ))}
                 <Link
-                  href="/#cta"
+                  href="/access"
                   className="ml-1 inline-flex items-center rounded-full bg-brand-700 px-3.5 py-2 text-[0.82rem] font-semibold text-white shadow-sm transition hover:bg-brand-800"
                 >
                   Request Access
@@ -82,7 +82,7 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
                 </Link>
               ))}
               <Link
-                href="/#cta"
+                href="/access"
                 className="mt-1 inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800"
                 onClick={() => setIsMenuOpen(false)}
               >
