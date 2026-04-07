@@ -9,7 +9,7 @@ export function Logo({ inverted = false }: LogoProps) {
     <span className="flex items-center gap-2.5">
       <span className="overflow-hidden rounded-xl shadow-sm ring-1 ring-slate-200/70 dark:ring-white/10">
         <Image
-          src="/test-logo.png"
+          src="/images/kawing-logo.png"
           alt="Kawing Ride logo"
           width={55}
           height={55}

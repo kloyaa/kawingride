@@ -43,6 +43,16 @@ export const metadata: Metadata = {
   creator: APP_NAME,
   publisher: APP_NAME,
   referrer: "origin-when-cross-origin",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "1024x1024" },
+      { url: "/images/kawing-logo.png", type: "image/png", sizes: "1024x1024" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", type: "image/png", sizes: "1024x1024" },
+    ],
+    shortcut: ["/icon.png"],
+  },
   robots: {
     index: true,
     follow: true,
@@ -93,6 +103,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={[sora.variable, dmSans.variable, theme === "dark" ? "dark" : ""].filter(Boolean).join(" ")}
       style={{ colorScheme: theme }}

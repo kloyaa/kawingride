@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
@@ -43,26 +44,52 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                     Share your contact details, verify the one-time code, and we will send your access link to email.
                   </p>
                 </div>
-
               </div>
 
-              <article className="surface-panel rounded-[2.2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-8">
-                <div className="mb-6 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Access form
-                    </p>
-                    <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                      Enter your details
-                    </h2>
-                  </div>
-                  <span className="rounded-full bg-brand-100 px-3 py-1.5 text-xs font-semibold text-brand-800 dark:bg-brand-500/10 dark:text-brand-200">
-                    Secure flow
-                  </span>
+              <div className="relative xl:pt-10">
+                <div className="pointer-events-none absolute right-0 -top-8 z-10 hidden w-34 xl:block">
+                  <Image
+                    src="/images/basic-icon.png"
+                    alt=""
+                    width={640}
+                    height={640}
+                    className="h-auto w-full -rotate-[18deg] object-contain drop-shadow-[0_20px_34px_rgba(29,42,45,0.14)]"
+                  />
                 </div>
 
-                <AccessRequestForm />
-              </article>
+                <div className="pointer-events-none absolute -right-16 bottom-6 z-20 hidden w-52 xl:block">
+                  <div className="absolute inset-0 scale-100 rounded-full bg-brand-300/25 blur-3xl dark:bg-brand-400/12" />
+
+                </div>
+
+                <article className="surface-panel relative overflow-hidden rounded-[2.2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-8">
+                  <div className="pointer-events-none absolute -right-6 -top-7 w-28 sm:w-32 xl:hidden">
+                    <Image
+                      src="/images/basic-icon.png"
+                      alt=""
+                      width={196}
+                      height={196}
+                      className="h-auto w-full rotate-[16deg] object-contain"
+                    />
+                  </div>
+
+                  <div className="mb-6 flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                        Access form
+                      </p>
+                      <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                        Enter your details
+                      </h2>
+                    </div>
+                    <span className="rounded-full bg-brand-100 px-3 py-1.5 text-xs font-semibold text-brand-800 dark:bg-brand-500/10 dark:text-brand-200">
+                      Secure flow
+                    </span>
+                  </div>
+
+                  <AccessRequestForm />
+                </article>
+              </div>
             </div>
           </div>
         </section>

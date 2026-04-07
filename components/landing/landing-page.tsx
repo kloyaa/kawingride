@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import {
   audienceGroups,
@@ -169,7 +170,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </div>
               </Reveal>
 
-              <Reveal delay={0.08} className="rounded-[2rem] p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-6">
+              <Reveal delay={0.08} className="relative rounded-[2rem] p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-6">
                 <div className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-800">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
@@ -231,6 +232,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                     </div>
                   </div>
                 </article>
+
+                <div className="pointer-events-none absolute -right-3 -top-12 z-10 sm:-right-5 sm:-top-14">
+                  <Image
+                    src="/images/kawing-glasses.png"
+                    alt=""
+                    width={236}
+                    height={236}
+                    className="h-auto w-36 rotate-[11deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)] sm:w-44"
+                  />
+                </div>
               </Reveal>
             </div>
           </div>
@@ -256,6 +267,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
                   <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
                   <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
+                  <div className="pointer-events-none absolute -bottom-10 -left-12 hidden w-30 -rotate-[16deg] lg:block">
+                    <Image
+                      src="/images/kawing-glasses.png"
+                      alt=""
+                      width={180}
+                      height={180}
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
 
                   <div className="relative">
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
@@ -319,9 +339,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                           Start with communities that already move together.
                         </h3>
                       </div>
-                      <span className="rounded-full bg-white px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-700">
-                        Focused launch audience
-                      </span>
                     </div>
 
                     <div className="mt-6 space-y-3">
@@ -483,6 +500,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             <div className="cta-surface relative mt-14 overflow-hidden rounded-[2rem] p-8 text-white md:p-10">
               <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5" />
               <div className="pointer-events-none absolute bottom-0 left-0 h-56 w-56 -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-400/10" />
+              <div className="pointer-events-none absolute -right-0 top-50 hidden w-55 rotate-[10deg] lg:block">
+                <Image
+                  src="/images/kawing-idea.png"
+                  alt=""
+                  width={228}
+                  height={228}
+                  className="h-auto w-full object-contain"
+                />
+              </div>
 
               <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
                 <div>
@@ -545,31 +571,31 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 rounded-[2rem] border border-slate-100 bg-slate-50/80 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 sm:p-6">
               <div className="grid gap-4 lg:grid-cols-3">
-              {howItWorksSummary.map((item, index) => {
-                const palette = featureToneClasses[item.tone];
+                {howItWorksSummary.map((item, index) => {
+                  const palette = featureToneClasses[item.tone];
 
-                return (
-                  <article key={item.title} className="rounded-3xl border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={[
-                          "flex h-10 w-10 items-center justify-center rounded-2xl font-display text-base font-extrabold text-white",
-                          palette.icon.split(" ")[0],
-                        ].join(" ")}
-                      >
-                        {index + 1}
+                  return (
+                    <article key={item.title} className="rounded-3xl border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={[
+                            "flex h-10 w-10 items-center justify-center rounded-2xl font-display text-base font-extrabold text-white",
+                            palette.icon.split(" ")[0],
+                          ].join(" ")}
+                        >
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                            Summary
+                          </p>
+                          <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                          Summary
-                        </p>
-                        <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                      </div>
-                    </div>
-                    <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                  </article>
-                );
-              })}
+                      <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                    </article>
+                  );
+                })}
               </div>
             </div>
 
@@ -709,7 +735,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             />
 
             <div className="mt-14 space-y-6">
-              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+              <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
+                <div className="pointer-events-none absolute -right-20 top-22 hidden w-50 -rotate-[15deg] lg:block">
+                  <Image
+                    src="/images/kawing-glasses.png"
+                    alt=""
+                    width={172}
+                    height={172}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-start">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
@@ -831,7 +866,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               </Reveal>
 
               <div className="grid gap-6 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
-                <Reveal className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+                <Reveal className="relative rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+                  <div className="pointer-events-none absolute -left-20 top-40 hidden w-38 rotate-[14deg] lg:block">
+                    <Image
+                      src="/images/kawing-detective.png"
+                      alt=""
+                      width={264}
+                      height={264}
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                     How trust becomes operational
                   </p>
@@ -860,7 +904,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   </div>
                 </Reveal>
 
-                <Reveal delay={0.08} className="rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
+                <Reveal delay={0.08} className="relative rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
+                  <div className="pointer-events-none absolute -right-30 top-52 hidden w-50 -rotate-[15deg] lg:block">
+                    <Image
+                      src="/images/kawing-detective.png"
+                      alt=""
+                      width={212}
+                      height={212}
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
                   <div className="flex items-center gap-3">
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
                       <Icon name="warning" className="h-5 w-5" />
@@ -917,7 +970,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             />
 
             <div className="mt-14 space-y-6">
-              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+              <Reveal className="surface-panel relative rounded-[2.2rem] p-7 sm:p-9">
+                <div className="pointer-events-none absolute -left-10 -bottom-12 hidden w-36 -rotate-[12deg] lg:block">
+                  <Image
+                    src="/images/kawing-curious.png"
+                    alt=""
+                    width={228}
+                    height={228}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-end">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
@@ -1032,7 +1094,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             />
 
             <div className="mt-14 space-y-6">
-              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+              <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
+                <div className="pointer-events-none absolute  -right-10 -top-5 hidden w-42 -rotate-[19deg] lg:block">
+                  <Image
+                    src="/images/kawing-glasses.png"
+                    alt=""
+                    width={296}
+                    height={296}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
