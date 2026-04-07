@@ -1,27 +1,29 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
+import {
+  LEGACY_THEME_STORAGE_KEY,
+  THEME_COOKIE_NAME,
+  THEME_STORAGE_KEY,
+  type ThemeMode,
+} from "@/constants/branding";
 import { Icon } from "@/components/landing/icons";
 
-const STORAGE_KEY = "kawing-ride-theme";
-const LEGACY_STORAGE_KEY = "community-ride-theme";
 const EVENT_NAME = "kawing-ride-theme-change";
-
-type ThemeMode = "light" | "dark";
 
 function getPreferredTheme(): ThemeMode {
   if (typeof window === "undefined") {
     return "light";
   }
 
-  const storedTheme = window.localStorage.getItem(STORAGE_KEY);
-  const legacyTheme = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  const legacyTheme = window.localStorage.getItem(LEGACY_THEME_STORAGE_KEY);
   const resolvedTheme = storedTheme ?? legacyTheme;
 
   if (resolvedTheme === "light" || resolvedTheme === "dark") {
     if (!storedTheme && legacyTheme) {
-      window.localStorage.setItem(STORAGE_KEY, legacyTheme);
+      window.localStorage.setItem(THEME_STORAGE_KEY, legacyTheme);
     }
 
     return resolvedTheme;
@@ -34,7 +36,8 @@ function applyTheme(theme: ThemeMode) {
   const root = document.documentElement;
   root.classList.toggle("dark", theme === "dark");
   root.style.colorScheme = theme;
-  window.localStorage.setItem(STORAGE_KEY, theme);
+  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  document.cookie = `${THEME_COOKIE_NAME}=${theme}; path=/; max-age=31536000; samesite=lax`;
   window.dispatchEvent(new Event(EVENT_NAME));
 }
 
@@ -46,13 +49,13 @@ function subscribe(onStoreChange: () => void) {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
   const handleStorage = (event: StorageEvent) => {
-    if (event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) {
+    if (event.key === THEME_STORAGE_KEY || event.key === LEGACY_THEME_STORAGE_KEY) {
       onStoreChange();
     }
   };
 
   const handleMedia = () => {
-    if (!window.localStorage.getItem(STORAGE_KEY) && !window.localStorage.getItem(LEGACY_STORAGE_KEY)) {
+    if (!window.localStorage.getItem(THEME_STORAGE_KEY) && !window.localStorage.getItem(LEGACY_THEME_STORAGE_KEY)) {
       onStoreChange();
     }
   };
@@ -80,13 +83,26 @@ function getSnapshot(): ThemeMode {
   return document.documentElement.classList.contains("dark") ? "dark" : getPreferredTheme();
 }
 
-function getServerSnapshot(): ThemeMode {
-  return "light";
+function getServerSnapshot(initialTheme: ThemeMode): ThemeMode {
+  return initialTheme;
 }
 
-export function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+type ThemeToggleProps = {
+  initialTheme?: ThemeMode;
+};
+
+export function ThemeToggle({ initialTheme = "light" }: ThemeToggleProps) {
+  const theme = useSyncExternalStore(subscribe, getSnapshot, () => getServerSnapshot(initialTheme));
   const isDark = theme === "dark";
+
+  useEffect(() => {
+    const preferredTheme = getPreferredTheme();
+    const rootIsDark = document.documentElement.classList.contains("dark");
+
+    if (rootIsDark !== (preferredTheme === "dark") || window.localStorage.getItem(THEME_STORAGE_KEY) !== preferredTheme) {
+      applyTheme(preferredTheme);
+    }
+  }, []);
 
   return (
     <button

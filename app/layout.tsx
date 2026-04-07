@@ -1,27 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { DM_Sans, Sora } from "next/font/google";
-import Script from "next/script";
+
+import { APP_DOMAIN, APP_NAME, THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
 import "./globals.css";
-
-const themeScript = `
-(() => {
-  const storageKey = "kawing-ride-theme";
-  const legacyStorageKey = "community-ride-theme";
-  const root = document.documentElement;
-  const storedTheme = window.localStorage.getItem(storageKey) || window.localStorage.getItem(legacyStorageKey);
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const theme = storedTheme === "light" || storedTheme === "dark"
-    ? storedTheme
-    : prefersDark
-      ? "dark"
-      : "light";
-
-  root.classList.toggle("dark", theme === "dark");
-  root.style.colorScheme = theme;
-  window.localStorage.setItem(storageKey, theme);
-})();
-`;
 
 const sora = Sora({
   subsets: ["latin"],
@@ -34,12 +17,12 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://communityride.app"),
+  metadataBase: new URL(APP_DOMAIN),
   title: {
-    default: "Kawing Ride | Private Community Ride Coordination",
-    template: "%s | Kawing Ride",
+    default: `${APP_NAME} | Private Community Ride Coordination`,
+    template: `%s | ${APP_NAME}`,
   },
-  applicationName: "Kawing Ride",
+  applicationName: APP_NAME,
   description:
     "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
   keywords: [
@@ -56,20 +39,20 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   category: "transportation",
-  authors: [{ name: "Kawing Ride" }],
-  creator: "Kawing Ride",
-  publisher: "Kawing Ride",
+  authors: [{ name: APP_NAME }],
+  creator: APP_NAME,
+  publisher: APP_NAME,
   referrer: "origin-when-cross-origin",
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: "Kawing Ride | Private Community Ride Coordination",
+    title: `${APP_NAME} | Private Community Ride Coordination`,
     description:
       "Private ride requests for trusted local communities, with structured negotiation, optional safety updates, and clearer accountability.",
-    url: "https://communityride.app",
-    siteName: "Kawing Ride",
+    url: APP_DOMAIN,
+    siteName: APP_NAME,
     type: "website",
     locale: "en_US",
     images: [
@@ -83,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kawing Ride | Private Community Ride Coordination",
+    title: `${APP_NAME} | Private Community Ride Coordination`,
     description:
       "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
     images: ["/twitter-image"],
@@ -93,22 +76,28 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+    { media: "(prefers-color-scheme: light)", color: "#ecf4e8" },
+    { media: "(prefers-color-scheme: dark)", color: "#182326" },
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const cookieTheme = cookieStore.get(THEME_COOKIE_NAME)?.value;
+  const theme: ThemeMode = cookieTheme === "dark" ? "dark" : "light";
+
   return (
-    <html lang="en" suppressHydrationWarning className={`${sora.variable} ${dmSans.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={[sora.variable, dmSans.variable, theme === "dark" ? "dark" : ""].filter(Boolean).join(" ")}
+      style={{ colorScheme: theme }}
+    >
       <body>
-        <Script id="theme-script" strategy="beforeInteractive">
-          {themeScript}
-        </Script>
         {children}
       </body>
     </html>

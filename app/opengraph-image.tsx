@@ -1,6 +1,20 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kawing Ride platform preview";
+import { APP_NAME } from "@/constants/branding";
+
+const ogImagePalette = {
+  pageBackground:
+    "radial-gradient(circle at top left, rgba(171,231,178,0.34), transparent 34%), radial-gradient(circle at top right, rgba(147,191,199,0.24), transparent 26%), linear-gradient(135deg, #ecf4e8 0%, #f8fbf6 55%, #ffffff 100%)",
+  textPrimary: "#1d2a2d",
+  textMuted: "#52656a",
+  badgeBackground: "#486f79",
+  badgeText: "#ffffff",
+  accentText: "#578792",
+  pillBackground: "rgba(255,255,255,0.82)",
+  pillBorder: "rgba(87,135,146,0.14)",
+} as const;
+
+export const alt = `${APP_NAME} platform preview`;
 export const size = {
   width: 1200,
   height: 630,
@@ -15,9 +29,8 @@ export default function OpenGraphImage() {
           display: "flex",
           height: "100%",
           width: "100%",
-          background:
-            "radial-gradient(circle at top left, rgba(20,184,166,0.28), transparent 34%), radial-gradient(circle at top right, rgba(245,158,11,0.2), transparent 26%), linear-gradient(135deg, #f0fdf9 0%, #f8fafc 55%, #ffffff 100%)",
-          color: "#0f172a",
+          background: ogImagePalette.pageBackground,
+          color: ogImagePalette.textPrimary,
           fontFamily: "sans-serif",
         }}
       >
@@ -45,17 +58,17 @@ export default function OpenGraphImage() {
                 width: "72px",
                 height: "72px",
                 borderRadius: "22px",
-                background: "#0f766e",
-                color: "#ffffff",
+                background: ogImagePalette.badgeBackground,
+                color: ogImagePalette.badgeText,
                 fontSize: "34px",
                 fontWeight: 800,
               }}
             >
-              C
+              K
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: "36px", fontWeight: 800 }}>Kawing Ride</div>
-              <div style={{ fontSize: "22px", color: "#0f766e", fontWeight: 700 }}>
+              <div style={{ fontSize: "36px", fontWeight: 800 }}>{APP_NAME}</div>
+              <div style={{ fontSize: "22px", color: ogImagePalette.accentText, fontWeight: 700 }}>
                 Private community ride coordination
               </div>
             </div>
@@ -72,9 +85,9 @@ export default function OpenGraphImage() {
               }}
             >
               Trusted local mobility,
-              <span style={{ color: "#0f766e" }}> with more clarity.</span>
+              <span style={{ color: ogImagePalette.accentText }}> with more clarity.</span>
             </div>
-            <div style={{ fontSize: "28px", lineHeight: 1.4, color: "#475569" }}>
+            <div style={{ fontSize: "28px", lineHeight: 1.4, color: ogImagePalette.textMuted }}>
               Private ride requests, structured negotiation, optional safety updates, and stronger
               accountability for community-based transport.
             </div>
@@ -89,10 +102,10 @@ export default function OpenGraphImage() {
                   alignItems: "center",
                   padding: "14px 20px",
                   borderRadius: "9999px",
-                  background: "rgba(255,255,255,0.82)",
-                  border: "1px solid rgba(15,118,110,0.12)",
+                  background: ogImagePalette.pillBackground,
+                  border: `1px solid ${ogImagePalette.pillBorder}`,
                   fontSize: "22px",
-                  color: "#0f172a",
+                  color: ogImagePalette.textPrimary,
                 }}
               >
                 {item}

@@ -1,5 +1,5 @@
 {
-  "name": "community-ride",
+  "name": "kawing-ride",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-tabs": "^1.1.13",
     "motion": "^12.38.0",
     "next": "16.2.2",
     "react": "19.2.4",

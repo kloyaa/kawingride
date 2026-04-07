@@ -1,6 +1,5 @@
 import {
   audienceGroups,
-  brandMeaning,
   ctaExpectations,
   ctaPaths,
   communityRoles,
@@ -36,90 +35,61 @@ import { Reveal } from "./reveal";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { brandMeaning, type ThemeMode } from "@/constants/branding";
+import { featureToneClasses, pricingToneClasses, timelineToneClasses } from "@/constants/landing";
 
-const featureToneClasses = {
-  amber: {
-    card: "border-amber-200/60 bg-amber-50/80 dark:border-amber-500/20 dark:bg-amber-500/10",
-    icon: "bg-amber-500 text-white",
-    text: "text-amber-950 dark:text-amber-100",
-  },
-  brand: {
-    card: "border-brand-200/60 bg-brand-50/80 dark:border-brand-500/20 dark:bg-brand-500/10",
-    icon: "bg-brand-700 text-white",
-    text: "text-brand-950 dark:text-brand-100",
-  },
-  emerald: {
-    card: "border-emerald-200/60 bg-emerald-50/80 dark:border-emerald-500/20 dark:bg-emerald-500/10",
-    icon: "bg-emerald-600 text-white",
-    text: "text-emerald-950 dark:text-emerald-100",
-  },
-  slate: {
-    card: "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/80",
-    icon: "bg-slate-700 text-white",
-    text: "text-slate-950 dark:text-slate-100",
-  },
-  violet: {
-    card: "border-violet-200/60 bg-violet-50/80 dark:border-violet-500/20 dark:bg-violet-500/10",
-    icon: "bg-violet-600 text-white",
-    text: "text-violet-950 dark:text-violet-100",
-  },
+type LandingPageProps = {
+  initialTheme?: ThemeMode;
 };
 
-const timelineToneClasses = {
-  amber: {
-    badge: "bg-amber-500 text-white",
-    panel: "border-amber-100 bg-amber-50 dark:border-amber-500/20 dark:bg-amber-500/10",
-    text: "text-amber-900 dark:text-amber-100",
-  },
-  brand: {
-    badge: "bg-brand-700 text-white",
-    panel: "border-brand-100 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10",
-    text: "text-brand-900 dark:text-brand-100",
-  },
-  emerald: {
-    badge: "bg-emerald-600 text-white",
-    panel: "border-emerald-100 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10",
-    text: "text-emerald-900 dark:text-emerald-100",
-  },
-  slate: {
-    badge: "bg-slate-400 text-white",
-    panel: "border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/80",
-    text: "text-slate-900 dark:text-slate-100",
-  },
-  violet: {
-    badge: "bg-violet-600 text-white",
-    panel: "border-violet-100 bg-violet-50 dark:border-violet-500/20 dark:bg-violet-500/10",
-    text: "text-violet-900 dark:text-violet-100",
-  },
-};
+export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
+  const communityRoleIcons = {
+    Admins: "shield",
+    Customers: "user",
+    Riders: "bolt",
+  } as const;
 
-const pricingToneClasses = {
-  amber: {
-    badge: "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300",
-    text: "text-amber-700 dark:text-amber-300",
-  },
-  brand: {
-    badge: "bg-brand-100 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300",
-    text: "text-brand-700 dark:text-brand-300",
-  },
-  emerald: {
-    badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300",
-    text: "text-emerald-700 dark:text-emerald-300",
-  },
-  slate: {
-    badge: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
-    text: "text-slate-700 dark:text-slate-200",
-  },
-  violet: {
-    badge: "bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300",
-    text: "text-violet-700 dark:text-violet-300",
-  },
-};
+  const customerPlan = pricingPlans.find((plan) => plan.name === "Customer");
+  const operatorPlans = pricingPlans.filter((plan) => plan.name !== "Customer");
 
-export function LandingPage() {
+  const customerTierAvailability = customerPlan
+    ? (() => {
+        let inheritedFeatures = new Set<string>();
+
+        return customerPlan.tiers.map((tier) => {
+          const included = new Set(inheritedFeatures);
+
+          tier.sections.forEach((section) => {
+            if (section.style !== "muted") {
+              section.items.forEach((item) => included.add(item));
+            }
+          });
+
+          const excluded = new Set(
+            tier.sections
+              .filter((section) => section.style === "muted")
+              .flatMap((section) => section.items),
+          );
+
+          inheritedFeatures = included;
+
+          return { excluded, included, tier };
+        });
+      })()
+    : [];
+
+  const customerFeatureRows = Array.from(
+    new Set(
+      customerTierAvailability.flatMap(({ excluded, included }) => [
+        ...Array.from(included),
+        ...Array.from(excluded),
+      ]),
+    ),
+  );
+
   return (
     <div className="landing-page min-h-screen bg-background text-foreground">
-      <SiteHeader />
+      <SiteHeader initialTheme={initialTheme} />
 
       <main>
         <section className="hero-surface noise-overlay relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-24">
@@ -257,7 +227,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="mission" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+        <section id="mission" className="section-band bg-white py-20 dark:bg-slate-950 md:py-28">
           <div className="section-shell">
             <SectionHeader
               badge="Mission"
@@ -272,69 +242,158 @@ export function LandingPage() {
               description={missionDescription}
             />
 
-            <div className="mt-14 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-              <Reveal className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-amber-50 p-6 shadow-sm dark:border-brand-500/20 dark:from-brand-500/10 dark:via-slate-900 dark:to-amber-500/10 sm:p-8">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                  In one sentence
-                </p>
-                <p className="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
-                  {missionStatement}
-                </p>
-                <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
-                  {platformIdentity}
-                </p>
+            <div className="mt-14 space-y-6">
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)]">
+                <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
+                  <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
+                  <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
 
-                <div className="mt-6 rounded-[1.5rem] border border-white/70 bg-white/80 p-4 dark:border-white/10 dark:bg-slate-950/40">
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                    Why Kawing
-                  </p>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                    {brandMeaning}
-                  </p>
-                </div>
-              </Reveal>
+                  <div className="relative">
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Mission in practice
+                    </p>
+                    <p className="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2.5rem]">
+                      {missionStatement}
+                    </p>
+                    <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
+                      {platformIdentity}
+                    </p>
 
-              <Reveal delay={0.08} className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">Who we serve first</h3>
-                    <ul className="mt-4 space-y-3">
-                      {audienceGroups.map((item) => (
-                        <li key={item.title} className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-                          <span className="font-semibold text-slate-900 dark:text-white">{item.title}:</span> {item.description}
-                        </li>
+                    <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                      {[
+                        "Private trip coordination",
+                        "Clear decision making",
+                        "Shared community accountability",
+                      ].map((item, index) => (
+                        <div
+                          key={item}
+                          className="rounded-[1.4rem] border border-white/80 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
+                        >
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                            {String(index + 1).padStart(2, "0")}
+                          </p>
+                          <p className="mt-2 text-sm font-semibold leading-6 text-slate-700 dark:text-slate-200">
+                            {item}
+                          </p>
+                        </div>
                       ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">Why now</h3>
-                    <ul className="mt-4 space-y-3">
-                      {whyNowPoints.map((item) => (
-                        <li key={item} className="flex items-start gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+                    </div>
 
-            <div className="mt-6 grid gap-3 md:grid-cols-3">
-              {missionPillars.map((item, index) => (
-                <Reveal key={item.title} delay={index * 0.04}>
-                  <article className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                    <h3 className="font-display text-base font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                  </article>
+                    <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)]">
+                      <div className="rounded-[1.6rem] border border-brand-100 bg-white/88 p-5 dark:border-brand-500/20 dark:bg-slate-950/55">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
+                          Why Kawing
+                        </p>
+                        <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
+                      </div>
+                      <div className="rounded-[1.6rem] border border-slate-200/80 bg-slate-50/85 p-5 dark:border-slate-800 dark:bg-slate-900/70">
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                          What the mission changes
+                        </p>
+                        <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                          The goal is not to replace local relationships. The goal is to give those relationships a more
+                          respectful system for booking, agreeing, and following through.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </Reveal>
-              ))}
+
+                <div className="grid gap-6">
+                  <Reveal className="rounded-[2rem] border border-slate-100 bg-slate-50/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/75">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                          Who we serve first
+                        </p>
+                        <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                          Start with communities that already move together.
+                        </h3>
+                      </div>
+                      <span className="rounded-full bg-white px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 ring-1 ring-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-700">
+                        Focused launch audience
+                      </span>
+                    </div>
+
+                    <div className="mt-6 space-y-3">
+                      {audienceGroups.map((item, index) => (
+                        <article
+                          key={item.title}
+                          className="rounded-[1.4rem] border border-white bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950/70"
+                        >
+                          <div className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                            <div>
+                              <h4 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h4>
+                              <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </Reveal>
+
+                  <Reveal delay={0.08} className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900">
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Why this matters now
+                    </p>
+                    <div className="mt-6 space-y-4">
+                      {whyNowPoints.map((item, index) => (
+                        <div key={item} className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
+                          <div className="flex items-start gap-3">
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
+                              {index + 1}
+                            </span>
+                            {index < whyNowPoints.length - 1 ? (
+                              <span className="hidden h-14 w-px bg-gradient-to-b from-brand-300 via-brand-200 to-transparent sm:block" />
+                            ) : null}
+                          </div>
+                          <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </Reveal>
+                </div>
+              </div>
+
+              <Reveal delay={0.12} className="rounded-[2rem] border border-slate-100 bg-slate-50/85 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/75 sm:p-6">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Mission pillars
+                    </p>
+                    <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                      Design principles that guide every decision.
+                    </h3>
+                  </div>
+                  <p className="max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
+                    Each pillar supports the same goal: a cleaner community transport experience from request to ride completion.
+                  </p>
+                </div>
+
+                <div className="mt-6 grid gap-4 lg:grid-cols-3">
+                  {missionPillars.map((item, index) => (
+                    <article
+                      key={item.title}
+                      className="card-lift rounded-[1.6rem] border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/70"
+                    >
+                      <div className="h-1.5 w-16 rounded-full bg-gradient-to-r from-brand-400 to-brand-700" />
+                      <p className="mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                        Principle {String(index + 1).padStart(2, "0")}
+                      </p>
+                      <h4 className="mt-2 font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h4>
+                      <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
-        <section className="bg-slate-50 py-16 dark:bg-slate-900/60 md:py-20">
+        <section className="section-band bg-slate-50 py-16 dark:bg-slate-900/60 md:py-20">
           <div className="section-shell">
             <Reveal>
               <article className="cta-surface relative overflow-hidden rounded-[2rem] p-8 text-white md:p-10">
@@ -352,9 +411,14 @@ export function LandingPage() {
                     <blockquote className="mt-4 max-w-4xl font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl">
                       “{founderNote.quote}”
                     </blockquote>
-                    <p className="mt-5 text-sm font-medium text-brand-100/90">
-                      {founderNote.attribution}
-                    </p>
+                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                      <p className="text-sm font-medium text-brand-100/90">{founderNote.attribution}</p>
+                      {["Community-first", "Trust-led", "Built for local networks"].map((item) => (
+                        <span key={item} className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/90">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </article>
@@ -613,7 +677,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="trust" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+        <section id="trust" className="section-band bg-slate-50/70 py-20 dark:bg-slate-900/70 md:py-28">
           <div className="section-shell">
             <SectionHeader
               badge="Trust Model"
@@ -628,78 +692,155 @@ export function LandingPage() {
               description="The platform is designed to support trusted local operations with defined roles, clearer review paths, and realistic safety boundaries."
             />
 
-            <div className="mt-14 rounded-[2rem] border border-slate-100 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-900/70">
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                    What kind of platform this is
-                  </p>
-                  <p className="mt-4 text-lg leading-8 text-slate-700 dark:text-slate-200">
-                    Kawing Ride is a managed coordination platform for community-based transport. It is
-                    built for networks that already know each other, already move together, and now need a
-                    more professional operating layer.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-                    How communities work
-                  </p>
-                  <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-                    Communities define who joins, who moderates, and how trust is earned. The platform
-                    supports that structure through role-based access, clearer ride history, and more visible
-                    accountability.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <div className="mt-14 space-y-6">
+              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-start">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Trust by design
+                    </p>
+                    <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
+                      Governance makes community transport feel consistent, not improvised.
+                    </h3>
+                    <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">{platformIdentity}</p>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {trustPillars.map((item) => (
-                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              {communityRoles.map((item) => (
-                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                  <ul className="mt-4 space-y-2">
-                    {item.responsibilities.map((responsibility) => (
-                      <li key={responsibility} className="flex items-start gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                        <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
-                          <Icon name="check" className="h-3.5 w-3.5" />
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {["Access with approval", "Reputation with history", "Escalation with review"].map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-brand-100 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 shadow-sm dark:border-brand-500/20 dark:bg-slate-950 dark:text-brand-300"
+                        >
+                          {item}
                         </span>
-                        <span>{responsibility}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-
-            <article className="mt-8 rounded-[2rem] border border-amber-100 bg-amber-50 p-7 dark:border-amber-500/20 dark:bg-amber-500/10">
-              <h3 className="font-display text-lg font-bold text-amber-900 dark:text-amber-100">
-                Honest safety boundaries
-              </h3>
-              <div className="mt-4 space-y-3">
-                {trustBoundaries.map((item) => (
-                  <div key={item} className="flex items-start gap-3 text-sm leading-6 text-amber-800 dark:text-amber-200">
-                    <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
-                      <Icon name="info" className="h-3.5 w-3.5" />
-                    </span>
-                    <span>{item}</span>
+                      ))}
+                    </div>
                   </div>
-                ))}
+
+                  <div className="rounded-[1.8rem] border border-brand-100 bg-brand-50/70 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
+                      What trust looks like in product terms
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                      Members are not dropped into a loose feed. They enter a community system with clear roles,
+                      visible standards, and better ways to review how people actually behave over time.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-8 grid gap-4 lg:grid-cols-3">
+                  {communityRoles.map((item) => {
+                    const roleIcon =
+                      item.title === "Customers"
+                        ? communityRoleIcons.Customers
+                        : item.title === "Riders"
+                          ? communityRoleIcons.Riders
+                          : communityRoleIcons.Admins;
+
+                    return (
+                      <article
+                        key={item.title}
+                        className="card-lift rounded-[1.7rem] border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                            <Icon name={roleIcon} className="h-5 w-5" />
+                          </span>
+                          <div>
+                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                              Community role
+                            </p>
+                            <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                          </div>
+                        </div>
+                        <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                        <div className="mt-5 flex flex-wrap gap-2">
+                          {item.responsibilities.map((responsibility) => (
+                            <span
+                              key={responsibility}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs leading-5 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+                            >
+                              {responsibility}
+                            </span>
+                          ))}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </Reveal>
+
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
+                <Reveal className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                    How trust becomes operational
+                  </p>
+                  <div className="mt-6 space-y-4">
+                    {trustPillars.map((item, index) => (
+                      <article
+                        key={item.title}
+                        className="rounded-[1.5rem] border border-slate-100 bg-slate-50/85 p-5 dark:border-slate-800 dark:bg-slate-950/70"
+                      >
+                        <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
+                          <div className="flex items-start gap-3">
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
+                              {index + 1}
+                            </span>
+                            {index < trustPillars.length - 1 ? (
+                              <span className="hidden h-16 w-px bg-gradient-to-b from-brand-300 to-transparent sm:block" />
+                            ) : null}
+                          </div>
+                          <div>
+                            <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.08} className="rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                      <Icon name="warning" className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700 dark:text-amber-300">
+                        Safety boundaries
+                      </p>
+                      <h3 className="font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                        Better guardrails, honest expectations.
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    Kawing Ride can reduce uncertainty with structure, visibility, and clearer signals. Communities still
+                    need sound judgment, local moderation, and standards that people actually follow.
+                  </p>
+
+                  <div className="mt-6 space-y-3">
+                    {trustBoundaries.map((item, index) => (
+                      <article
+                        key={item}
+                        className="rounded-[1.45rem] border border-white/80 bg-white/85 p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-100 font-display text-sm font-bold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                            {index + 1}
+                          </span>
+                          <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item}</p>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </Reveal>
               </div>
-            </article>
+            </div>
           </div>
         </section>
 
-        <section className="bg-white py-20 dark:bg-slate-950 md:py-28">
+        <section className="section-band bg-white py-20 dark:bg-slate-950 md:py-28">
           <div className="section-shell">
             <SectionHeader
               badge="Why Choose This"
@@ -714,92 +855,107 @@ export function LandingPage() {
               description="Because free coordination still creates real costs. Communities already pay through wasted time, exposed details, weak trust signals, and preventable confusion."
             />
 
-            <article className="mt-14 rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-amber-50 p-6 shadow-sm dark:border-brand-500/20 dark:from-brand-500/10 dark:via-slate-900 dark:to-amber-500/10 md:p-8">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                <div className="max-w-3xl">
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                    The real comparison
-                  </p>
-                  <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
-                    Free only works when time, privacy, and trust have no value.
-                  </h3>
-                  <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-                    {pricingValueStatement}
-                  </p>
+            <div className="mt-14 space-y-6">
+              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-end">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      The real comparison
+                    </p>
+                    <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
+                      Free only looks cheaper when the hidden costs stay invisible.
+                    </h3>
+                  </div>
+                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{pricingValueStatement}</p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-                  The platform is not charging for messages.
-                  <br />
-                  It is charging for better operations.
+
+                <div className="mt-8 grid gap-4 lg:grid-cols-2">
+                  <article className="rounded-[1.7rem] border border-red-100 bg-red-50/90 p-5 shadow-sm dark:border-red-500/20 dark:bg-red-500/10">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
+                      Hidden costs in free groups
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {whyLegacyItems.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-red-100 bg-white px-3 py-1.5 text-xs leading-5 text-red-700 dark:border-red-500/20 dark:bg-slate-950 dark:text-red-100"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="rounded-[1.7rem] border border-brand-100 bg-brand-50/85 p-5 shadow-sm dark:border-brand-500/20 dark:bg-brand-500/10">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                      What Kawing Ride gives back
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {whyPlatformItems.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full border border-brand-100 bg-white px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-slate-950 dark:text-brand-300"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
                 </div>
+              </Reveal>
+
+              <div className="grid gap-4">
+                {comparisonHighlights.map((item, index) => (
+                  <Reveal key={item.title} delay={0.04 + index * 0.04}>
+                    <article className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+                      <div className="grid gap-4 xl:grid-cols-[auto_minmax(0,0.85fr)_minmax(0,1.15fr)] xl:items-stretch">
+                        <div className="flex items-center gap-4 xl:flex-col xl:items-start xl:justify-between">
+                          <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-950 font-display text-lg font-extrabold text-white dark:bg-white dark:text-slate-950">
+                            {item.title.slice(0, 1)}
+                          </span>
+                          <div>
+                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                              Comparison {String(index + 1).padStart(2, "0")}
+                            </p>
+                            <h3 className="mt-1 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <div className="rounded-[1.6rem] border border-red-100 bg-red-50/80 p-5 dark:border-red-500/20 dark:bg-red-500/10">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
+                              Social media cost
+                            </p>
+                            <span className="h-2.5 w-20 rounded-full bg-red-100 dark:bg-red-500/20">
+                              <span className="block h-full w-4/5 rounded-full bg-red-500" />
+                            </span>
+                          </div>
+                          <p className="mt-4 text-sm leading-7 text-red-800 dark:text-red-100">{item.social}</p>
+                        </div>
+
+                        <div className="rounded-[1.6rem] border border-brand-100 bg-brand-50/80 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                              Platform return
+                            </p>
+                            <span className="h-2.5 w-20 rounded-full bg-brand-100 dark:bg-brand-500/20">
+                              <span className="block h-full w-11/12 rounded-full bg-brand-600" />
+                            </span>
+                          </div>
+                          <p className="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-200">{item.platform}</p>
+                        </div>
+                      </div>
+                    </article>
+                  </Reveal>
+                ))}
               </div>
-            </article>
-
-            <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              {comparisonHighlights.map((item) => (
-                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <div className="inline-flex rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
-                    {item.title}
-                  </div>
-                  <div className="mt-5 space-y-4">
-                    <div className="rounded-2xl border border-red-100 bg-red-50 p-4 dark:border-red-500/15 dark:bg-red-500/10">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
-                        Social media cost
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-red-800 dark:text-red-100">{item.social}</p>
-                    </div>
-                    <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4 dark:border-brand-500/20 dark:bg-brand-500/10">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                        Platform return
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-brand-900 dark:text-brand-100">{item.platform}</p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
-              <article className="rounded-3xl border border-red-100 bg-red-50 p-6 dark:border-red-500/15 dark:bg-red-500/10">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-red-600">
-                    <Icon name="close" className="h-3.5 w-3.5" />
-                  </span>
-                  <h3 className="font-display text-base font-bold text-red-900 dark:text-red-100">What free social media coordination often gives you</h3>
-                </div>
-                <ul className="mt-5 space-y-3">
-                  {whyLegacyItems.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm leading-6 text-red-800 dark:text-red-100">
-                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-400" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-
-              <article className="rounded-3xl border border-brand-100 bg-brand-50 p-6 dark:border-brand-500/20 dark:bg-brand-500/10">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700">
-                    <Icon name="check" className="h-3.5 w-3.5" />
-                  </span>
-                  <h3 className="font-display text-base font-bold text-brand-900 dark:text-brand-100">What this platform gives communities in return</h3>
-                </div>
-                <ul className="mt-5 space-y-3">
-                  {whyPlatformItems.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm leading-6 text-brand-900 dark:text-brand-100">
-                      <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-100 text-brand-700">
-                        <Icon name="check-circle" className="h-4 w-4" />
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
             </div>
           </div>
         </section>
 
-        <section id="pricing" className="bg-white py-20 dark:bg-slate-950 md:py-28">
+        <section id="pricing" className="section-band bg-slate-50/60 py-20 dark:bg-slate-900/60 md:py-28">
           <div className="section-shell">
             <SectionHeader
               badge="Pricing"
@@ -814,151 +970,260 @@ export function LandingPage() {
               description="Platform fees support operations and product development, while reputation can lower monthly costs over time."
             />
 
-            <div className="mt-14 space-y-5">
-              {pricingPlans.map((plan) => {
-                const palette = pricingToneClasses[plan.tone];
+            <div className="mt-14 space-y-6">
+              <Reveal className="surface-panel rounded-[2.2rem] p-7 sm:p-9">
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Membership that scales with trust
+                    </p>
+                    <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
+                      Start with essential access, then unlock more value as participation grows.
+                    </h3>
+                  </div>
+                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">
+                    Pricing supports operations and product development, while stronger community behavior can lower
+                    monthly costs over time.
+                  </p>
+                </div>
 
-                return (
-                  <article
-                    key={plan.name}
-                    className="overflow-hidden rounded-[1.75rem] border border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
-                  >
-                    <div className="border-b border-slate-100 bg-slate-50/80 p-5 dark:border-slate-800 dark:bg-slate-950/60 sm:p-6">
-                      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div className="max-w-2xl">
-                          <div className="flex items-center gap-3">
-                            <span className={["inline-flex h-10 w-10 items-center justify-center rounded-2xl", palette.badge].join(" ")}>
-                              <Icon name={plan.icon} className="h-5 w-5" />
-                            </span>
-                            <div>
-                              <p className={["text-[0.7rem] font-semibold uppercase tracking-[0.22em]", palette.text].join(" ")}>{plan.name}</p>
-                              <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white sm:text-2xl">
-                                {plan.name} Plans
-                              </h3>
-                            </div>
-                          </div>
-                          <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{plan.description}</p>
-                        </div>
-                        <div className="rounded-full bg-white px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-slate-600 ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700">
-                          {plan.tiers.length} tier{plan.tiers.length > 1 ? "s" : ""}
-                        </div>
-                      </div>
+                <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                  {["Free customer entry", "Operator and admin plans", "Discounts tied to reputation"].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-[1.35rem] border border-white/80 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:border-white/10 dark:bg-slate-950/45 dark:text-slate-200"
+                    >
+                      {item}
                     </div>
+                  ))}
+                </div>
+              </Reveal>
 
-                    <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                      {plan.tiers.map((tier) => {
-                        const totalItems = tier.sections.reduce((sum, section) => sum + section.items.length, 0);
+              {customerPlan ? (
+                <Reveal className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                        Customer plans
+                      </p>
+                      <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                        Pick the right level of access for how often you book.
+                      </h3>
+                      <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-300">
+                        {customerPlan.description}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-slate-100 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                      Compare Free and Standard
+                    </span>
+                  </div>
 
-                        return (
-                          <article
-                            key={`${plan.name}-${tier.name}`}
-                            className={tier.featured ? "bg-brand-950/[0.03] dark:bg-brand-500/5" : ""}
-                          >
-                            <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.2fr)_auto] lg:items-start">
-                              <div className="min-w-0">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <h4 className="font-display text-xl font-bold text-slate-950 dark:text-white">
-                                    {tier.name}
-                                  </h4>
-                                  {tier.badge ? (
-                                    <span
-                                      className={
-                                        tier.featured
-                                          ? "rounded-full bg-brand-700 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white"
-                                          : "rounded-full bg-amber-100 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
-                                      }
-                                    >
-                                      {tier.badge}
-                                    </span>
-                                  ) : null}
-                                </div>
+                  <div className="mt-6 grid gap-4 md:grid-cols-2">
+                    {customerTierAvailability.map(({ tier }) => (
+                      <article
+                        key={`${customerPlan.name}-${tier.name}`}
+                        className={
+                          tier.featured
+                            ? "rounded-[1.8rem] border border-brand-600 bg-gradient-to-br from-brand-700 to-brand-900 p-5 text-white shadow-lg"
+                            : "rounded-[1.8rem] border border-slate-100 bg-slate-50/85 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80"
+                        }
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h4 className={tier.featured ? "font-display text-xl font-bold text-white" : "font-display text-xl font-bold text-slate-950 dark:text-white"}>
+                                {tier.name}
+                              </h4>
+                              {tier.badge ? (
+                                <span className={tier.featured ? "rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white" : "rounded-full bg-brand-50 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"}>
+                                  {tier.badge}
+                                </span>
+                              ) : null}
+                            </div>
+                            {tier.description ? (
+                              <p className={tier.featured ? "mt-2 text-sm leading-6 text-brand-100" : "mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400"}>
+                                {tier.description}
+                              </p>
+                            ) : null}
+                          </div>
+                          <div className="text-right">
+                            <p className={tier.featured ? "font-display text-3xl font-extrabold text-white" : "font-display text-3xl font-extrabold text-slate-950 dark:text-white"}>
+                              {tier.price}
+                            </p>
+                            <p className={tier.featured ? "text-xs text-brand-100" : "text-xs text-slate-400 dark:text-slate-500"}>/month</p>
+                          </div>
+                        </div>
 
-                                {tier.description ? (
-                                  <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                                    {tier.description}
-                                  </p>
-                                ) : null}
+                        <p className={tier.featured ? "mt-4 text-sm leading-6 text-brand-100" : "mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300"}>
+                          {tier.discount}
+                        </p>
 
-                                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                                  {tier.discount}
-                                </p>
-                              </div>
-
-                              <div className="space-y-3">
-                                {tier.sections.map((section) => (
-                                  <div
-                                    key={section.title}
-                                    className={
-                                      section.style === "muted"
-                                        ? "rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/70"
-                                        : "rounded-2xl border border-brand-100 bg-brand-50/50 px-4 py-3 dark:border-brand-500/20 dark:bg-brand-500/10"
-                                    }
-                                  >
-                                    <div className="grid gap-2 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4">
-                                      <p
-                                        className={
-                                          section.style === "muted"
-                                            ? "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400"
-                                            : "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300"
-                                        }
-                                      >
-                                        {section.title}
-                                      </p>
-                                      <p
-                                        className={
-                                          section.style === "muted"
-                                            ? "text-sm leading-6 text-slate-500 dark:text-slate-400"
-                                            : "text-sm leading-6 text-slate-700 dark:text-slate-200"
-                                        }
-                                      >
-                                        {section.items.join(", ")}
-                                      </p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-
-                              <div className="flex flex-col gap-3 lg:items-end">
-                                <div className="flex items-end gap-2 lg:flex-col lg:items-end lg:gap-0">
-                                  <div className="flex items-baseline gap-2">
-                                    <span className="font-display text-3xl font-extrabold text-slate-950 dark:text-white">
-                                      {tier.price}
-                                    </span>
-                                    <span className="text-xs text-slate-400 dark:text-slate-500">/month</span>
-                                  </div>
-                                  <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                                    {totalItems} feature{totalItems > 1 ? "s" : ""}
-                                  </span>
-                                </div>
-
-                                {tier.ctaLabel ? (
-                                  <a
-                                    href="#cta"
+                        <div className="mt-5 space-y-3">
+                          {tier.sections.map((section) => (
+                            <div
+                              key={section.title}
+                              className={
+                                tier.featured
+                                  ? "rounded-[1.3rem] border border-white/10 bg-white/5 p-4"
+                                  : section.style === "muted"
+                                    ? "rounded-[1.3rem] border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
+                                    : "rounded-[1.3rem] border border-brand-100 bg-white p-4 dark:border-brand-500/20 dark:bg-slate-950"
+                              }
+                            >
+                              <p className={tier.featured ? "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-100" : section.style === "muted" ? "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400" : "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300"}>
+                                {section.title}
+                              </p>
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {section.items.map((item) => (
+                                  <span
+                                    key={item}
                                     className={
                                       tier.featured
-                                        ? "inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-brand-800"
-                                        : "inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                                        ? "rounded-full bg-white/10 px-3 py-1.5 text-xs leading-5 text-white"
+                                        : section.style === "muted"
+                                          ? "rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs leading-5 text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400"
+                                          : "rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300"
                                     }
                                   >
-                                    {tier.ctaLabel}
-                                    <Icon name="arrow-right" className="h-4 w-4" />
-                                  </a>
-                                ) : null}
-
-                                {tier.note ? (
-                                  <p className="max-w-xs text-xs leading-6 text-slate-500 dark:text-slate-400 lg:text-right">
-                                    {tier.note}
-                                  </p>
-                                ) : null}
+                                    {item}
+                                  </span>
+                                ))}
                               </div>
                             </div>
-                          </article>
-                        );
-                      })}
+                          ))}
+                        </div>
+
+                        {tier.ctaLabel ? (
+                          <a
+                            href="#cta"
+                            className={tier.featured ? "mt-5 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-brand-800 transition hover:bg-brand-50" : "mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"}
+                          >
+                            {tier.ctaLabel}
+                            <Icon name="arrow-right" className="h-4 w-4" />
+                          </a>
+                        ) : null}
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 overflow-x-auto rounded-[1.7rem] border border-slate-100 dark:border-slate-800">
+                    <div className="min-w-[38rem]">
+                      <div className="grid grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,0.8fr))] bg-slate-50/90 dark:bg-slate-950/90">
+                        <div className="px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                          Feature access
+                        </div>
+                        {customerTierAvailability.map(({ tier }) => (
+                          <div
+                            key={`${tier.name}-heading`}
+                            className="border-l border-slate-200 px-4 py-3 text-center text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:border-slate-800 dark:text-slate-300"
+                          >
+                            {tier.name}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                        {customerFeatureRows.map((item) => (
+                          <div
+                            key={item}
+                            className="grid grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,0.8fr))] bg-white dark:bg-slate-900"
+                          >
+                            <div className="px-4 py-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item}</div>
+                            {customerTierAvailability.map(({ excluded, included, tier }) => {
+                              const isIncluded = included.has(item) && !excluded.has(item);
+
+                              return (
+                                <div
+                                  key={`${tier.name}-${item}`}
+                                  className="flex items-center justify-center border-l border-slate-100 px-4 py-3 dark:border-slate-800"
+                                >
+                                  <span
+                                    className={[
+                                      "inline-flex h-8 w-8 items-center justify-center rounded-2xl",
+                                      isIncluded
+                                        ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
+                                        : "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500",
+                                    ].join(" ")}
+                                  >
+                                    <Icon name={isIncluded ? "check" : "close"} className="h-4 w-4" />
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+                </Reveal>
+              ) : null}
+
+              <div className="grid gap-4 xl:grid-cols-2">
+                {operatorPlans.map((plan, index) => {
+                  const palette = pricingToneClasses[plan.tone];
+                  const tier = plan.tiers[0];
+                  const includedItems = tier?.sections.flatMap((section) => section.items) ?? [];
+
+                  return (
+                    <Reveal key={plan.name} delay={0.04 + index * 0.04}>
+                      <article className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                        <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div className="max-w-2xl">
+                            <div className="flex items-center gap-3">
+                              <span className={["inline-flex h-11 w-11 items-center justify-center rounded-2xl", palette.badge].join(" ")}>
+                                <Icon name={plan.icon} className="h-5 w-5" />
+                              </span>
+                              <div>
+                                <p className={["text-[0.68rem] font-semibold uppercase tracking-[0.2em]", palette.text].join(" ")}>
+                                  {plan.name}
+                                </p>
+                                <h3 className="font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                                  {tier?.name ?? plan.name}
+                                </h3>
+                              </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{plan.description}</p>
+                          </div>
+
+                          <div className="rounded-[1.3rem] border border-slate-200 bg-slate-50 px-4 py-3 text-right dark:border-slate-800 dark:bg-slate-950">
+                            <p className="font-display text-3xl font-extrabold text-slate-950 dark:text-white">{tier?.price}</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500">/month</p>
+                          </div>
+                        </div>
+
+                        {tier?.description ? (
+                          <p className="mt-4 text-sm leading-6 text-slate-500 dark:text-slate-400">{tier.description}</p>
+                        ) : null}
+
+                        {tier?.discount ? (
+                          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{tier.discount}</p>
+                        ) : null}
+
+                        <div className="mt-5 flex flex-wrap gap-2">
+                          {includedItems.map((item) => (
+                            <span
+                              key={item}
+                              className="rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+
+                        {tier?.ctaLabel ? (
+                          <a
+                            href="#cta"
+                            className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                          >
+                            {tier.ctaLabel}
+                            <Icon name="arrow-right" className="h-4 w-4" />
+                          </a>
+                        ) : null}
+                      </article>
+                    </Reveal>
+                  );
+                })}
+              </div>
             </div>
 
             <article className="mt-8 flex items-start gap-4 rounded-3xl border border-amber-100 bg-amber-50 p-5 dark:border-amber-500/20 dark:bg-amber-500/10">
@@ -1081,18 +1346,15 @@ export function LandingPage() {
           <div className="section-shell relative">
             <div className="grid items-center gap-10 lg:grid-cols-5">
               <Reveal className="lg:col-span-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/90">
-                  <Icon name="bolt" className="h-3.5 w-3.5" />
-                  Production ready
-                </div>
-                <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
-                  Choose the right
+                <h2 className="font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+                  Bring your community
                   <br />
-                  starting point.
+                  into a better ride experience.
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-7 text-brand-100">
-                  The goal is to operate with aligned communities, aligned expectations, and a clear day to
-                  day model. Start where your group needs the most clarity.
+                  Kawing Ride works best when communities start with shared standards, clear responsibilities,
+                  and a better way to coordinate every request. Begin with the path that helps your group move
+                  with more confidence.
                 </p>
                 <ul className="mt-6 space-y-3">
                   {ctaExpectations.map((item) => (

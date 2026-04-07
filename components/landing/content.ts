@@ -94,12 +94,12 @@ export type CtaPath = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  { href: "#mission", label: "Mission" },
-  { href: "#problem", label: "Problem" },
-  { href: "#solution", label: "Solution" },
-  { href: "#trust", label: "Trust" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#mission", label: "Mission" },
+  { href: "/#problem", label: "Problem" },
+  { href: "/#solution", label: "Solution" },
+  { href: "/#trust", label: "Trust" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 export const missionStatement =
@@ -107,9 +107,6 @@ export const missionStatement =
 
 export const missionDescription =
   "Built for communities that already rely on local riders, with better privacy, clearer decisions, and stronger accountability for every trip.";
-
-export const brandMeaning =
-  "Kawing is a Filipino word for a link or connection, reflecting how the platform brings riders, customers, and communities together with more clarity and trust.";
 
 export const missionPillars: MissionPillar[] = [
   {
@@ -555,11 +552,11 @@ export const rewardAuditPoints = [
 ];
 
 export const ctaExpectations = [
-  "A mission centered on trust, privacy, and clarity",
-  "A production-ready model designed for real communities first",
-  "Defined roles for customers, riders, and admins",
-  "Stronger governance and safety expectations",
-  "A clearer path to community adoption",
+  "A clearer and more respectful way to coordinate rides",
+  "Shared expectations for customers, riders, and admins",
+  "A trust model built for real community use",
+  "Safer coordination with stronger accountability",
+  "A practical next step for organized local transport",
 ];
 
 export const faqItems: FaqItem[] = [
@@ -598,20 +595,20 @@ export const faqItems: FaqItem[] = [
 export const ctaPaths: CtaPath[] = [
   {
     title: "Launch a community",
-    description: "Start by reviewing the trust and governance model, then prepare the admin structure your local group will need.",
-    label: "Review Trust Model",
+    description: "Set up the standards, admin structure, and operating model your local community needs from day one.",
+    label: "Explore Trust Model",
     href: "#trust",
   },
   {
     title: "Plan rider onboarding",
-    description: "Understand the rider path, pricing, and accountability model before inviting active operators into the platform.",
-    label: "See Membership Options",
+    description: "Review rider access, pricing, and accountability so operators join with the right expectations.",
+    label: "View Pricing Options",
     href: "#pricing",
   },
   {
     title: "Align your community",
-    description: "Use the FAQ and mission sections to align members around scope, safety, and community expectations.",
-    label: "Read The FAQ",
+    description: "Use the mission and FAQ sections to bring members together around scope, safety, and day-to-day use.",
+    label: "Read Common Questions",
     href: "#faq",
   },
 ];

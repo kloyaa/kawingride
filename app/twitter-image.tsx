@@ -1,6 +1,18 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kawing Ride social preview";
+import { APP_NAME } from "@/constants/branding";
+
+const twitterImagePalette = {
+  background: "linear-gradient(135deg, #486f79 0%, #578792 40%, #2b4249 100%)",
+  text: "#ffffff",
+  subtitle: "#cbf3bb",
+  bodyMuted: "#ecf4e8",
+  logoTile: "rgba(255,255,255,0.14)",
+  pillBackground: "rgba(255,255,255,0.1)",
+  pillBorder: "rgba(255,255,255,0.16)",
+} as const;
+
+export const alt = `${APP_NAME} social preview`;
 export const size = {
   width: 1200,
   height: 630,
@@ -15,8 +27,8 @@ export default function TwitterImage() {
           display: "flex",
           height: "100%",
           width: "100%",
-          background: "linear-gradient(135deg, #0f766e 0%, #115e59 40%, #134e4a 100%)",
-          color: "#ffffff",
+          background: twitterImagePalette.background,
+          color: twitterImagePalette.text,
           fontFamily: "sans-serif",
         }}
       >
@@ -44,17 +56,17 @@ export default function TwitterImage() {
                 width: "72px",
                 height: "72px",
                 borderRadius: "22px",
-                background: "rgba(255,255,255,0.14)",
-                color: "#ffffff",
+                background: twitterImagePalette.logoTile,
+                color: twitterImagePalette.text,
                 fontSize: "34px",
                 fontWeight: 800,
               }}
             >
-              C
+              K
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: "36px", fontWeight: 800 }}>Kawing Ride</div>
-              <div style={{ fontSize: "22px", color: "#ccfbef", fontWeight: 700 }}>
+              <div style={{ fontSize: "36px", fontWeight: 800 }}>{APP_NAME}</div>
+              <div style={{ fontSize: "22px", color: twitterImagePalette.subtitle, fontWeight: 700 }}>
                 Safety-first community transport
               </div>
             </div>
@@ -64,7 +76,7 @@ export default function TwitterImage() {
             <div style={{ fontSize: "62px", lineHeight: 1.05, fontWeight: 800 }}>
               Private ride coordination for trusted local communities.
             </div>
-            <div style={{ fontSize: "28px", lineHeight: 1.4, color: "#d1fae5" }}>
+            <div style={{ fontSize: "28px", lineHeight: 1.4, color: twitterImagePalette.bodyMuted }}>
               More privacy, clearer negotiation, optional safety updates, and stronger accountability
               for customer, rider, and admin communities.
             </div>
@@ -79,10 +91,10 @@ export default function TwitterImage() {
                   alignItems: "center",
                   padding: "14px 20px",
                   borderRadius: "9999px",
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.16)",
+                  background: twitterImagePalette.pillBackground,
+                  border: `1px solid ${twitterImagePalette.pillBorder}`,
                   fontSize: "22px",
-                  color: "#ffffff",
+                  color: twitterImagePalette.text,
                 }}
               >
                 {item}

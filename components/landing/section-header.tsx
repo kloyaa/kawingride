@@ -49,20 +49,25 @@ export function SectionHeader({
   const palette = toneClasses[tone];
 
   return (
-    <div className="max-w-2xl space-y-4">
+    <div className="max-w-3xl space-y-5">
       <div
         className={[
-          "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-semibold",
+          "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-semibold shadow-sm",
           palette.badge,
         ].join(" ")}
       >
-        <Icon name={icon} className={["h-3.5 w-3.5", palette.icon].join(" ")} />
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/80 dark:bg-slate-950/40">
+          <Icon name={icon} className={["h-3.5 w-3.5", palette.icon].join(" ")} />
+        </span>
         <span>{badge}</span>
       </div>
-      <h2 className="font-display text-3xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+      <h2 className="max-w-3xl font-display text-3xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-[2.8rem]">
         {title}
       </h2>
-      <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{description}</p>
+      <div className="flex items-start gap-4">
+        <span className="mt-1 hidden h-12 w-px rounded-full bg-gradient-to-b from-brand-500 to-transparent sm:block" />
+        <p className="max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{description}</p>
+      </div>
     </div>
   );
 }
