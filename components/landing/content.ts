@@ -27,6 +27,17 @@ export type TimelineItem = {
   tone: Tone;
 };
 
+export type ProcessFlowActor = "customer" | "rider" | "system";
+
+export type ProcessFlowStep = {
+  actor: ProcessFlowActor;
+  description: string;
+  detail: string;
+  id: string;
+  note?: string;
+  title: string;
+};
+
 export type PricingPlan = {
   description: string;
   icon: IconName;
@@ -81,6 +92,12 @@ export type CommunityRole = {
   title: string;
 };
 
+export type DataHandlingGroup = {
+  items: string[];
+  summary: string;
+  title: string;
+};
+
 export type FaqItem = {
   answer: string;
   question: string;
@@ -93,10 +110,16 @@ export type CtaPath = {
   title: string;
 };
 
+export type LaunchArea = {
+  description: string;
+  title: string;
+};
+
 export const navigationItems: NavigationItem[] = [
   { href: "/#mission", label: "Mission" },
   { href: "/#problem", label: "Problem" },
   { href: "/#solution", label: "Solution" },
+  { href: "/#how-it-works", label: "Flow" },
   { href: "/#trust", label: "Trust" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
@@ -215,7 +238,7 @@ export const problemCards = [
 
 export const solutionChecklist = [
   "Requests stay inside a controlled environment instead of a public feed.",
-  "Riders can accept the posted fare or submit an offer that fits the route.",
+  "Riders can accept the posted fare or submit an offer, while the customer still decides which response to confirm.",
   "Customers can accept, decline, or counter without relying on unstructured chat.",
   "Each negotiation follows a visible sequence of actions with less ambiguity.",
   "Safety notifications can be sent automatically when ride status changes.",
@@ -240,35 +263,20 @@ export const solutionPillars = [
   },
 ];
 
-export const howItWorksSteps: StepCard[] = [
+export const howItWorksSummary: StepCard[] = [
   {
-    title: "Customer submits a request",
-    description: "Add the pickup point, destination, and an optional opening fare to start the request.",
+    title: "Request",
+    description: "The customer posts the trip details and riders respond with fare acceptance or an offer.",
     tone: "brand",
   },
   {
-    title: "Riders accept or bid",
-    description: "Riders can accept the posted amount or send a different offer based on the trip.",
-    tone: "brand",
-  },
-  {
-    title: "Customer reviews offers",
-    description: "The request owner can compare responses, then accept, decline, or counter.",
-    tone: "brand",
-  },
-  {
-    title: "Rider responds to the counter",
-    description: "If a counteroffer is sent, the rider can accept, decline, or respond with a final decision.",
+    title: "Review",
+    description: "The customer compares responses and either accepts one or sends a counteroffer for the rider to review.",
     tone: "amber",
   },
   {
-    title: "Booking is confirmed",
-    description: "The trip becomes official only after both sides clearly agree inside the platform.",
-    tone: "emerald",
-  },
-  {
-    title: "Safety and completion updates follow",
-    description: "Confirmed, cancelled, expired, and completed rides can trigger status updates when enabled.",
+    title: "Confirm",
+    description: "The booking becomes official only after both sides clearly agree, then updates can follow the ride.",
     tone: "emerald",
   },
 ];
@@ -281,10 +289,62 @@ export const legacyFlowQuotes = [
 ];
 
 export const structuredFlowItems = [
-  "Accept the posted fare",
+  "Accept the posted fare and wait for customer confirmation",
   "Submit an offer",
   "Counter the offer",
   "Confirm the final agreement inside the platform",
+];
+
+export const processFlowSteps: ProcessFlowStep[] = [
+  {
+    id: "customer-request",
+    actor: "customer",
+    title: "Customer posts a ride request",
+    description: "Pickup, destination, and an optional opening fare are added to start the request.",
+    detail:
+      "The request stays inside the community instead of becoming another public post in a group feed.",
+  },
+  {
+    id: "rider-response",
+    actor: "rider",
+    title: "Rider responds with fare acceptance or an offer",
+    description: "The rider can accept the posted fare or send a different amount based on the trip.",
+    detail:
+      "This is a rider response, not an automatic booking. The customer still reviews all responses before choosing what to do next.",
+    note: "Important: rider acceptance does not finalize the trip by itself.",
+  },
+  {
+    id: "customer-review",
+    actor: "customer",
+    title: "Customer reviews the responses",
+    description: "The customer compares riders, fares, and reputation before making a decision.",
+    detail:
+      "The customer can accept one response, decline it, or send a counteroffer instead of being forced into a first-come, first-served decision.",
+  },
+  {
+    id: "rider-counter",
+    actor: "rider",
+    title: "Rider answers the counteroffer if needed",
+    description: "If a counter is sent, the rider can accept it, decline it, or reply with a final decision.",
+    detail:
+      "This keeps the negotiation structured while still allowing riders and customers to agree on terms that fit the trip.",
+  },
+  {
+    id: "system-confirmed",
+    actor: "system",
+    title: "Booking becomes confirmed",
+    description: "The trip only becomes official when both sides clearly agree inside the platform.",
+    detail:
+      "Confirmation is the point where the request moves from negotiation into an active ride arrangement.",
+  },
+  {
+    id: "system-updates",
+    actor: "system",
+    title: "Safety and ride updates follow",
+    description: "Optional notifications and ride status updates can continue through cancellation, expiry, and completion.",
+    detail:
+      "Once the ride is confirmed, the platform can keep the right people informed without relying on scattered chat updates.",
+  },
 ];
 
 export const safetyTimeline: TimelineItem[] = [
@@ -336,6 +396,7 @@ export const whyPlatformItems = [
   "Structured interaction between customer and rider",
   "Fairer decisions supported by bids, counters, and ratings",
   "Time-aware negotiation that reduces ghosting",
+  "Easier onboarding and management of customers and riders",
   "Optional safety notifications for trusted contacts",
   "A clearer and more dependable experience for both sides",
 ];
@@ -344,7 +405,8 @@ export const comparisonHighlights = [
   {
     title: "Time",
     social: "Free tools push the work into long chats, repeated follow-ups, and manual coordination.",
-    platform: "Structured requests and clearer next actions reduce wasted time for both customers and riders.",
+    platform:
+      "Structured requests, clearer next actions, and easier onboarding reduce wasted time for both customers and riders.",
   },
   {
     title: "Privacy",
@@ -354,7 +416,8 @@ export const comparisonHighlights = [
   {
     title: "Trust",
     social: "Communities rely on guesswork, memory, and screenshots to judge reliability.",
-    platform: "Ratings, outcomes, and role-based accountability give communities stronger signals over time.",
+    platform:
+      "Ratings, outcomes, role-based accountability, and easier member management give communities stronger signals over time.",
   },
 ];
 
@@ -364,11 +427,17 @@ export const pricingValueStatement =
 export const trustPillars: TrustPillar[] = [
   {
     title: "Community-led onboarding",
-    description: "Communities decide who joins, who moderates, and what standards apply to their local network.",
+    description:
+      "Communities decide who joins, who moderates, and what standards apply, making onboarding and member management easier to run with consistency.",
   },
   {
     title: "Role-based governance",
     description: "Customers, riders, and admins each have clear responsibilities so the platform supports order instead of confusion.",
+  },
+  {
+    title: "Privacy-aware identity handling",
+    description:
+      "Customer identity is protected during early negotiation, while rider verification data is limited to the admins who need it for onboarding and moderation.",
   },
   {
     title: "Visible history and accountability",
@@ -383,31 +452,65 @@ export const trustPillars: TrustPillar[] = [
 export const communityRoles: CommunityRole[] = [
   {
     title: "Customers",
-    description: "Customers post requests, compare offers, and decide whether to accept, decline, or counter.",
+    description:
+      "Customers post requests, compare offers, and decide whether to accept, decline, or counter while keeping their personal identity more private during negotiation.",
     responsibilities: [
       "Provide accurate trip details",
+      "Manage contact-sharing preferences in settings",
       "Respond within the negotiation window",
       "Rate completed rides fairly",
     ],
   },
   {
     title: "Riders",
-    description: "Riders review requests, submit offers, complete trips, and build trust through consistent performance.",
+    description:
+      "Riders review requests, accept posted fares or submit offers, and go through verified onboarding before serving the community.",
     responsibilities: [
-      "Keep rider and vehicle details current",
+      "Keep rider, vehicle, and onboarding details current",
       "Respond honestly to offers and counters",
       "Maintain reliable service and conduct",
     ],
   },
   {
     title: "Admins",
-    description: "Admins help set standards, oversee access, and support moderation for the community.",
+    description:
+      "Admins help set standards, oversee access, manage protected onboarding records, and support moderation for the community.",
     responsibilities: [
       "Approve or remove access when needed",
+      "Handle verification records with appropriate care",
       "Review incidents and suspicious activity",
       "Protect community standards over time",
     ],
   },
+];
+
+export const dataHandlingGroups: DataHandlingGroup[] = [
+  {
+    title: "Customer privacy by default",
+    summary:
+      "Customer onboarding stays lightweight while early-stage negotiation keeps personal identity more private.",
+    items: [
+      "We collect only the customer name and mobile number.",
+      "Riders see a system-generated username instead of the customer's actual name during negotiation.",
+      "The customer's mobile number is only shared after both sides pass negotiation and only when the customer allows rider contact in settings.",
+    ],
+  },
+  {
+    title: "Verified rider onboarding",
+    summary:
+      "Rider onboarding is more detailed so communities can be managed by properly identified operators.",
+    items: [
+      "We collect plate number, valid IDs, selfie, and background information for onboarding purposes.",
+      "Sensitive rider verification records are restricted to admins and are not openly visible across the community.",
+      "The goal is to protect privacy while making sure local operations are handled by accountable people.",
+    ],
+  },
+];
+
+export const privacyAssurances = [
+  "Personally identifiable information is encrypted in the database.",
+  "Sensitive onboarding access is limited to the roles that need it.",
+  "Platform activity is logged for audit and review purposes.",
 ];
 
 export const trustBoundaries = [
@@ -484,7 +587,7 @@ export const pricingPlans: PricingPlan[] = [
           {
             title: "Included access",
             items: [
-              "Accept and bid on ride requests",
+              "Accept posted fares or submit bids on ride requests",
               "Earn points and access rewards",
               "Maintain a full rider and vehicle profile",
               "Build trust through ride history and ratings",
@@ -551,6 +654,25 @@ export const rewardAuditPoints = [
   "Consistently strong behavior may increase rewards over time, subject to the review process.",
 ];
 
+export const launchAreas: LaunchArea[] = [
+  {
+    title: "Cagayan de Oro",
+    description:
+      "An initial focus area for community ride coordination, local onboarding, and early operational standards.",
+  },
+  {
+    title: "Butuan City",
+    description:
+      "A second launch priority where trusted local communities and rider groups can adopt the same structured flow.",
+  },
+];
+
+export const launchAreaNotes = [
+  "Launch planning starts with communities that already coordinate rides and want stronger structure.",
+  "Onboarding priorities include customer access, rider verification, and clear local admin responsibilities.",
+  "The same operating model is intended to stay consistent as Kawing Ride expands to more cities.",
+];
+
 export const ctaExpectations = [
   "A clearer and more respectful way to coordinate rides",
   "Shared expectations for customers, riders, and admins",
@@ -576,6 +698,21 @@ export const faqItems: FaqItem[] = [
       "Admins and community leads are expected to manage membership, review access, and define standards locally. The platform supports that structure instead of replacing it.",
   },
   {
+    question: "What customer information do riders see?",
+    answer:
+      "Customer onboarding only requires a name and mobile number, but riders do not see the actual customer name during negotiation. They see a system-generated username instead, and contact details are only shared after both sides agree and the customer allows rider contact in settings.",
+  },
+  {
+    question: "How is rider onboarding information handled?",
+    answer:
+      "Rider onboarding can include plate number, valid IDs, selfie, and supporting background information. Those records are collected for verification and moderation purposes, and access is restricted to admins rather than exposed across the community.",
+  },
+  {
+    question: "Where is Kawing Ride launching first?",
+    answer:
+      "The initial launch focus is Cagayan de Oro and Butuan City, starting with communities that already coordinate rides and need a clearer operating model.",
+  },
+  {
     question: "What happens when disputes or suspicious activity appear?",
     answer:
       "The system is designed to give communities better review paths, clearer history, and more structure for moderation than informal chat threads can offer.",
@@ -586,9 +723,19 @@ export const faqItems: FaqItem[] = [
       "The platform improves coordination, visibility, and accountability, but it does not eliminate risk or replace local judgment, moderation, and due diligence.",
   },
   {
+    question: "How is sensitive information protected?",
+    answer:
+      "Personally identifiable information is encrypted in the database, sensitive onboarding access is limited by role, and key platform activity is logged for audit and review purposes.",
+  },
+  {
     question: "What should an interested group do next?",
     answer:
       "The best next step is to review the operating model, confirm the right membership plan, and align your customer, rider, and admin expectations before adoption.",
+  },
+  {
+    question: "How should communities or partners start the conversation?",
+    answer:
+      "The clearest path is to review the trust model, confirm the right setup for customers and riders, and use the request access path to begin launch and onboarding discussions.",
   },
 ];
 

@@ -4,11 +4,14 @@ import {
   ctaPaths,
   communityRoles,
   comparisonHighlights,
+  dataHandlingGroups,
   faqItems,
   founderNote,
   heroHighlights,
-  howItWorksSteps,
+  howItWorksSummary,
   legacyFlowQuotes,
+  launchAreaNotes,
+  launchAreas,
   missionDescription,
   missionPillars,
   missionStatement,
@@ -23,6 +26,7 @@ import {
   solutionChecklist,
   solutionPillars,
   structuredFlowItems,
+  privacyAssurances,
   trustBoundaries,
   trustPillars,
   whyNowPoints,
@@ -30,8 +34,10 @@ import {
   whyPlatformItems,
 } from "./content";
 import { FaqAccordion } from "./faq-accordion";
+import { HowItWorksFlow } from "./how-it-works-flow";
 import { Icon } from "./icons";
 import { Reveal } from "./reveal";
+import { ScrollToTop } from "./scroll-to-top";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -54,28 +60,28 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
   const customerTierAvailability = customerPlan
     ? (() => {
-        let inheritedFeatures = new Set<string>();
+      let inheritedFeatures = new Set<string>();
 
-        return customerPlan.tiers.map((tier) => {
-          const included = new Set(inheritedFeatures);
+      return customerPlan.tiers.map((tier) => {
+        const included = new Set(inheritedFeatures);
 
-          tier.sections.forEach((section) => {
-            if (section.style !== "muted") {
-              section.items.forEach((item) => included.add(item));
-            }
-          });
-
-          const excluded = new Set(
-            tier.sections
-              .filter((section) => section.style === "muted")
-              .flatMap((section) => section.items),
-          );
-
-          inheritedFeatures = included;
-
-          return { excluded, included, tier };
+        tier.sections.forEach((section) => {
+          if (section.style !== "muted") {
+            section.items.forEach((item) => included.add(item));
+          }
         });
-      })()
+
+        const excluded = new Set(
+          tier.sections
+            .filter((section) => section.style === "muted")
+            .flatMap((section) => section.items),
+        );
+
+        inheritedFeatures = included;
+
+        return { excluded, included, tier };
+      });
+    })()
     : [];
 
   const customerFeatureRows = Array.from(
@@ -90,6 +96,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
   return (
     <div className="landing-page min-h-screen bg-background text-foreground">
       <SiteHeader initialTheme={initialTheme} />
+      <ScrollToTop />
 
       <main>
         <section className="hero-surface noise-overlay relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-24">
@@ -368,9 +375,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       Design principles that guide every decision.
                     </h3>
                   </div>
-                  <p className="max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    Each pillar supports the same goal: a cleaner community transport experience from request to ride completion.
-                  </p>
                 </div>
 
                 <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -537,13 +541,13 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               description="The workflow preserves the natural rhythm people already know, while giving every request a defined sequence of actions and decisions."
             />
 
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {howItWorksSteps.map((item, index) => {
+            <div className="mt-14 rounded-[2rem] border border-slate-100 bg-slate-50/80 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 sm:p-6">
+              <div className="grid gap-4 lg:grid-cols-3">
+              {howItWorksSummary.map((item, index) => {
                 const palette = featureToneClasses[item.tone];
 
                 return (
-                  <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                    <div className={["mb-4 h-1 w-16 rounded-full", palette.icon.split(" ")[0]].join(" ")} />
+                  <article key={item.title} className="rounded-3xl border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80">
                     <div className="flex items-center gap-3">
                       <div
                         className={[
@@ -553,13 +557,23 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       >
                         {index + 1}
                       </div>
-                      <h3 className="font-display text-base font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                      <div>
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                          Summary
+                        </p>
+                        <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                      </div>
                     </div>
                     <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
                   </article>
                 );
               })}
+              </div>
             </div>
+
+            <Reveal delay={0.08}>
+              <HowItWorksFlow />
+            </Reveal>
 
             <div className="mt-12 rounded-[2rem] border border-slate-100 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/70 md:p-8">
               <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white">What users no longer need to say</h3>
@@ -766,6 +780,51 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       </article>
                     );
                   })}
+                </div>
+
+                <div className="mt-8 grid gap-4 xl:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)]">
+                  {dataHandlingGroups.map((group, index) => (
+                    <article
+                      key={group.title}
+                      className="rounded-[1.8rem] border border-white bg-white/92 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75 sm:p-6"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                          <Icon name={index === 0 ? "lock" : "shield"} className="h-5 w-5" />
+                        </span>
+                        <div>
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                            Data handling
+                          </p>
+                          <h3 className="mt-1 font-display text-xl font-bold text-slate-950 dark:text-white">
+                            {group.title}
+                          </h3>
+                        </div>
+                      </div>
+                      <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{group.summary}</p>
+                      <div className="mt-5 space-y-3">
+                        {group.items.map((item) => (
+                          <div
+                            key={item}
+                            className="rounded-[1.3rem] border border-slate-100 bg-slate-50/85 p-4 dark:border-slate-800 dark:bg-slate-900/70"
+                          >
+                            <p className="text-sm leading-7 text-slate-700 dark:text-slate-200">{item}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {privacyAssurances.map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-[1.35rem] border border-brand-100 bg-brand-50/85 px-4 py-3 text-sm font-medium leading-6 text-brand-800 shadow-sm dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </div>
               </Reveal>
 
@@ -1336,6 +1395,83 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             <Reveal delay={0.04} className="mt-14">
               <FaqAccordion items={faqItems} />
             </Reveal>
+          </div>
+        </section>
+
+        <section id="availability" className="bg-slate-50 py-20 dark:bg-slate-900/60 md:py-28">
+          <div className="section-shell">
+            <SectionHeader
+              badge="Launch Areas"
+              icon="calendar"
+              tone="brand"
+              title={
+                <>
+                  Starting with
+                  <span className="gradient-text"> Cagayan de Oro and Butuan City.</span>
+                </>
+              }
+              description="Kawing Ride is being positioned for communities that need a clearer launch path, stronger onboarding, and better day-to-day transport coordination in these first operating areas."
+            />
+
+            <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+              <Reveal className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                  Initial focus
+                </p>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  {launchAreas.map((item, index) => (
+                    <article
+                      key={item.title}
+                      className="rounded-[1.7rem] border border-slate-100 bg-slate-50/80 p-5 dark:border-slate-800 dark:bg-slate-950/70"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                          <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.08} className="rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-amber-50 p-6 shadow-sm dark:border-brand-500/20 dark:from-brand-500/10 dark:via-slate-900 dark:to-amber-500/10 sm:p-7">
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                  What launch needs first
+                </p>
+                <div className="mt-6 space-y-4">
+                  {launchAreaNotes.map((item, index) => (
+                    <div key={item} className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white font-display text-sm font-bold text-brand-700 shadow-sm dark:bg-slate-950 dark:text-brand-300">
+                        {index + 1}
+                      </span>
+                      <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 rounded-[1.6rem] border border-white/80 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-slate-950/45">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                    Community and partnership path
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    For community onboarding, local rollout discussions, or partnership conversations in Cagayan de Oro
+                    and Butuan City, the next step is to use the request access path and align the right admin,
+                    rider, and customer setup from the start.
+                  </p>
+                  <a
+                    href="#cta"
+                    className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                  >
+                    Request Access
+                    <Icon name="arrow-right" className="h-4 w-4" />
+                  </a>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </section>
 

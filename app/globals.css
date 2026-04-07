@@ -374,6 +374,31 @@ body {
   animation: faq-up 180ms ease-in;
 }
 
+.flow-dotted-link {
+  display: inline-block;
+  opacity: 0.9;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgb(var(--rgb-brand-500) / 0.18) 0 6px,
+      transparent 6px 12px
+    );
+  background-size: 24px 100%;
+  animation: flow-drift 1.8s linear infinite;
+}
+
+@media (max-width: 1023px) {
+  .flow-dotted-link {
+    background-image:
+      repeating-linear-gradient(
+        180deg,
+        rgb(var(--rgb-brand-500) / 0.18) 0 6px,
+        transparent 6px 12px
+      );
+    background-size: 100% 24px;
+  }
+}
+
 @keyframes faq-down {
   from {
     opacity: 0;
@@ -383,6 +408,16 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes flow-drift {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 24px 0;
   }
 }
 

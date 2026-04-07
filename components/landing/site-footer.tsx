@@ -30,8 +30,17 @@ export function SiteFooter() {
                 <Link href="/#pricing" className="text-slate-300 transition hover:text-white">
                   Pricing
                 </Link>
+                <Link href="/#availability" className="text-slate-300 transition hover:text-white">
+                  Launch Areas
+                </Link>
                 <Link href="/#faq" className="text-slate-300 transition hover:text-white">
                   FAQ
+                </Link>
+                <Link href="/privacy-policy" className="text-slate-300 transition hover:text-white">
+                  Privacy Policy
+                </Link>
+                <Link href="/terms" className="text-slate-300 transition hover:text-white">
+                  Terms
                 </Link>
               </nav>
               <div className="flex flex-wrap gap-2">
