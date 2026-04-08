@@ -265,21 +265,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 grid gap-6 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 translate-x-1/4 -translate-y-1/4 rounded-full bg-brand-200/40 blur-3xl dark:bg-brand-400/10" />
-                <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 -translate-x-1/4 translate-y-1/4 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/10" />
-                <div className="pointer-events-none absolute -bottom-5 -left-4 w-16 -rotate-[16deg] sm:-bottom-6 sm:-left-6 sm:w-20 lg:-bottom-10 lg:-left-12 lg:w-30">
-                  <div className="kawing-float kawing-float-soft">
-                    <Image
-                      src={blobAssetPaths.glasses}
-                      alt=""
-                      width={180}
-                      height={180}
-                      unoptimized
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
-
                 <div className="relative">
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                     What the mission means on the product
@@ -409,21 +394,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             />
 
             <div className="cta-surface relative mt-14 overflow-hidden rounded-[2rem] p-8 text-white md:p-10">
-              <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5" />
-              <div className="pointer-events-none absolute bottom-0 left-0 h-56 w-56 -translate-x-1/3 translate-y-1/3 rounded-full bg-amber-400/10" />
-              <div className="pointer-events-none absolute -right-3 -top-8 w-18 rotate-[10deg] sm:-right-4 sm:-top-10 sm:w-24 lg:right-0 lg:top-50 lg:w-55">
-                <div className="kawing-float kawing-float-slow kawing-float-delay-2">
-                  <Image
-                    src={blobAssetPaths.idea}
-                    alt=""
-                    width={228}
-                    height={228}
-                    unoptimized
-                    className="h-auto w-full object-contain"
-                  />
-                </div>
-              </div>
-
               <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
                 <div>
                   <h3 className="font-display text-2xl font-extrabold">What changes for the user?</h3>
@@ -650,18 +620,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute -right-4 -top-6 w-18 -rotate-[15deg] sm:-right-6 sm:-top-8 sm:w-22 lg:-right-20 lg:top-22 lg:w-50">
-                  <div className="kawing-float kawing-float-delay-3">
-                    <Image
-                      src={blobAssetPaths.glasses}
-                      alt=""
-                      width={172}
-                      height={172}
-                      unoptimized
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-start">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
@@ -870,18 +828,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 space-y-6">
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="pointer-events-none absolute -right-3 -top-4 w-18 -rotate-[19deg] sm:-right-4 sm:-top-5 sm:w-24 lg:-right-10 lg:-top-5 lg:w-42">
-                  <div className="kawing-float kawing-float-slow">
-                    <Image
-                      src={blobAssetPaths.glasses}
-                      alt=""
-                      width={296}
-                      height={296}
-                      unoptimized
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
