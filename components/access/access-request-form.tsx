@@ -1,19 +1,46 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
+import { useToast } from "@/components/ui/toast-provider";
+import { getErrorMessage } from "@/lib/http/error-message";
+import { getMunicipalitiesOrCities, getProvinces, getRegions } from "@/lib/psgc/service";
+import type { LocationOption } from "@/lib/psgc/types";
 
 const OTP_LENGTH = 6;
 const OTP_CODE = "123456";
 const RESEND_SECONDS = 120;
 
 type FormValues = {
+  agreesToPolicies: boolean;
+  communityName: string;
+  confirmsAuthority: boolean;
   email: string;
   firstName: string;
   lastName: string;
   mobile: string;
+  municipalityOrCityId: string;
+  provinceId: string;
+  regionId: string;
 };
 
 type FieldErrors = Partial<Record<keyof FormValues, string>>;
+
+type LocationLoadingState = {
+  municipalitiesOrCities: boolean;
+  provinces: boolean;
+  regions: boolean;
+};
+
+type LocationOptionsState = {
+  municipalitiesOrCities: LocationOption[];
+  provinces: LocationOption[];
+  regions: LocationOption[];
+};
+
+type LocationField = "municipalityOrCityId" | "provinceId" | "regionId";
 
 function normalizePhilippineMobile(value: string) {
   let digits = value.replace(/\D/g, "");
@@ -54,28 +81,87 @@ function formatCountdown(totalSeconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+function getFieldClassName(hasError: boolean, isDisabled = false) {
+  return [
+    "w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 dark:bg-slate-950 dark:text-white",
+    isDisabled ? "cursor-not-allowed opacity-70" : "",
+    hasError
+      ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-red-500/40 dark:focus:ring-red-500/15"
+      : "border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-800 dark:focus:ring-brand-500/15",
+  ].join(" ");
+}
+
 export function AccessRequestForm() {
+  const { error: showErrorToast } = useToast();
   const [values, setValues] = useState<FormValues>({
+    agreesToPolicies: false,
+    communityName: "",
+    confirmsAuthority: false,
     firstName: "",
     lastName: "",
     mobile: "",
     email: "",
+    municipalityOrCityId: "",
+    provinceId: "",
+    regionId: "",
   });
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [hasMounted, setHasMounted] = useState(false);
+  const [isReviewVisible, setIsReviewVisible] = useState(false);
   const [isOtpVisible, setIsOtpVisible] = useState(false);
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [otpError, setOtpError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [secondsRemaining, setSecondsRemaining] = useState(RESEND_SECONDS);
+  const [locationLoading, setLocationLoading] = useState<LocationLoadingState>({
+    municipalitiesOrCities: false,
+    provinces: false,
+    regions: true,
+  });
+  const [locationOptions, setLocationOptions] = useState<LocationOptionsState>({
+    municipalitiesOrCities: [],
+    provinces: [],
+    regions: [],
+  });
 
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
   const lastSubmittedOtp = useRef("");
-  const currentStep = successMessage ? 3 : isOtpVisible ? 2 : 1;
-  const steps = [
-    { description: "Enter your personal information", title: "Personal" },
-    { description: "Enter the code sent to your mobile", title: "Verify" },
-    { description: "Check your email for the access link", title: "Success" },
-  ];
+  const selectedRegion = locationOptions.regions.find((item) => item.id === values.regionId)?.label ?? "Not selected";
+  const selectedProvince = locationOptions.provinces.find((item) => item.id === values.provinceId)?.label ?? "Not selected";
+  const selectedMunicipality =
+    locationOptions.municipalitiesOrCities.find((item) => item.id === values.municipalityOrCityId)?.label ??
+    "Not selected";
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setHasMounted(true);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isReviewVisible) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsReviewVisible(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isReviewVisible]);
 
   useEffect(() => {
     if (!isOtpVisible || secondsRemaining <= 0) {
@@ -96,8 +182,146 @@ export function AccessRequestForm() {
     return () => window.clearInterval(timer);
   }, [isOtpVisible, secondsRemaining]);
 
+  useEffect(() => {
+    let isActive = true;
+
+    getRegions()
+      .then((regions) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          regions,
+        }));
+      })
+      .catch((error) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          regions: [],
+        }));
+        showErrorToast("Could not load regions.", getErrorMessage(error, "Please refresh and try again."));
+      })
+      .finally(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationLoading((current) => ({
+          ...current,
+          regions: false,
+        }));
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [showErrorToast]);
+
+  useEffect(() => {
+    if (!values.regionId) {
+      return;
+    }
+
+    let isActive = true;
+
+    getProvinces(values.regionId)
+      .then((provinces) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          provinces,
+        }));
+      })
+      .catch((error) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          provinces: [],
+        }));
+        showErrorToast("Could not load provinces.", getErrorMessage(error, "Please try selecting your region again."));
+      })
+      .finally(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationLoading((current) => ({
+          ...current,
+          provinces: false,
+        }));
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [showErrorToast, values.regionId]);
+
+  useEffect(() => {
+    if (!values.provinceId) {
+      return;
+    }
+
+    let isActive = true;
+
+    getMunicipalitiesOrCities(values.provinceId)
+      .then((municipalitiesOrCities) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          municipalitiesOrCities,
+        }));
+      })
+      .catch((error) => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationOptions((current) => ({
+          ...current,
+          municipalitiesOrCities: [],
+        }));
+        showErrorToast(
+          "Could not load municipalities or cities.",
+          getErrorMessage(error, "Please try selecting your province again.")
+        );
+      })
+      .finally(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setLocationLoading((current) => ({
+          ...current,
+          municipalitiesOrCities: false,
+        }));
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [showErrorToast, values.provinceId]);
+
   function validateFields(nextValues: FormValues) {
     const nextErrors: FieldErrors = {};
+
+    if (!nextValues.communityName.trim()) {
+      nextErrors.communityName = "Enter the community name.";
+    }
 
     if (!nextValues.firstName.trim()) {
       nextErrors.firstName = "Enter your first name.";
@@ -115,13 +339,98 @@ export function AccessRequestForm() {
       nextErrors.email = "Enter a valid email address.";
     }
 
+    if (!nextValues.regionId) {
+      nextErrors.regionId = "Select your region.";
+    }
+
+    if (!nextValues.provinceId) {
+      nextErrors.provinceId = "Select your province.";
+    }
+
+    if (!nextValues.municipalityOrCityId) {
+      nextErrors.municipalityOrCityId = "Select your municipality or city.";
+    }
+
+    if (!nextValues.confirmsAuthority) {
+      nextErrors.confirmsAuthority = "Confirm that you are authorized to request admin access.";
+    }
+
+    if (!nextValues.agreesToPolicies) {
+      nextErrors.agreesToPolicies = "You must agree to the Terms and Privacy Policy.";
+    }
+
     return nextErrors;
   }
 
   function updateField<K extends keyof FormValues>(field: K, value: string) {
+    setValues((current) => {
+      const nextValue =
+        field === "mobile"
+          ? normalizePhilippineMobile(value as string)
+          : value;
+      const nextValues = {
+        ...current,
+        [field]: nextValue,
+      };
+
+      if (field === "regionId") {
+        nextValues.provinceId = "";
+        nextValues.municipalityOrCityId = "";
+      }
+
+      if (field === "provinceId") {
+        nextValues.municipalityOrCityId = "";
+      }
+
+      return nextValues;
+    });
+    setErrors((current) => {
+      const nextErrors = {
+        ...current,
+        [field]: undefined,
+      };
+
+      if (field === "regionId") {
+        nextErrors.provinceId = undefined;
+        nextErrors.municipalityOrCityId = undefined;
+      }
+
+      if (field === "provinceId") {
+        nextErrors.municipalityOrCityId = undefined;
+      }
+
+      return nextErrors;
+    });
+
+    if (field === "regionId") {
+      setLocationOptions((current) => ({
+        ...current,
+        municipalitiesOrCities: [],
+        provinces: [],
+      }));
+      setLocationLoading((current) => ({
+        ...current,
+        municipalitiesOrCities: false,
+        provinces: Boolean(value),
+      }));
+    }
+
+    if (field === "provinceId") {
+      setLocationOptions((current) => ({
+        ...current,
+        municipalitiesOrCities: [],
+      }));
+      setLocationLoading((current) => ({
+        ...current,
+        municipalitiesOrCities: Boolean(value),
+      }));
+    }
+  }
+
+  function updateToggle<K extends "agreesToPolicies" | "confirmsAuthority">(field: K, checked: boolean) {
     setValues((current) => ({
       ...current,
-      [field]: field === "mobile" ? normalizePhilippineMobile(value) : value,
+      [field]: checked,
     }));
     setErrors((current) => ({
       ...current,
@@ -129,18 +438,30 @@ export function AccessRequestForm() {
     }));
   }
 
-  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const nextErrors = validateFields(values);
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setIsOtpVisible(false);
-      setSuccessMessage("");
-      return;
+  function getLocationPlaceholder(field: LocationField) {
+    if (field === "regionId") {
+      return locationLoading.regions ? "Loading regions..." : "Select a region";
     }
 
+    if (field === "provinceId") {
+      if (!values.regionId) {
+        return "Select a region first";
+      }
+
+      return locationLoading.provinces ? "Loading provinces..." : "Select a province";
+    }
+
+    if (!values.provinceId) {
+      return "Select a province first";
+    }
+
+    return locationLoading.municipalitiesOrCities
+      ? "Loading municipalities or cities..."
+      : "Select a municipality or city";
+  }
+
+  function openOtpStep() {
+    setIsReviewVisible(false);
     setIsOtpVisible(true);
     setOtpError("");
     setSuccessMessage("");
@@ -153,6 +474,25 @@ export function AccessRequestForm() {
     });
   }
 
+  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextErrors = validateFields(values);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setIsReviewVisible(false);
+      setIsOtpVisible(false);
+      setSuccessMessage("");
+      return;
+    }
+
+    setIsOtpVisible(false);
+    setOtpError("");
+    setSuccessMessage("");
+    setIsReviewVisible(true);
+  }
+
   function verifyOtp(nextOtpValue: string) {
     if (nextOtpValue.length !== OTP_LENGTH || nextOtpValue === lastSubmittedOtp.current) {
       return;
@@ -162,7 +502,7 @@ export function AccessRequestForm() {
 
     if (nextOtpValue === OTP_CODE) {
       setOtpError("");
-      setSuccessMessage(`The access link has been sent to ${values.email.trim()}.`);
+      setSuccessMessage(`The admin onboarding link has been sent to ${values.email.trim()}.`);
       return;
     }
 
@@ -240,6 +580,33 @@ export function AccessRequestForm() {
   return (
     <div className="space-y-6">
       <form noValidate onSubmit={handleFormSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label htmlFor="community-name" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Community name
+            </label>
+            <Link
+              href="/communities"
+              className="text-xs font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 transition hover:text-brand-800 dark:text-brand-300 dark:decoration-brand-500/40 dark:hover:text-brand-200"
+            >
+              View communities
+            </Link>
+          </div>
+          <input
+            id="community-name"
+            type="text"
+            autoComplete="organization"
+            value={values.communityName}
+            onChange={(event) => updateField("communityName", event.target.value)}
+            className={getFieldClassName(Boolean(errors.communityName))}
+            placeholder="Enter the community name"
+          />
+          <p className="text-sm leading-6 text-slate-500 dark:text-slate-400">
+            Use the official name of the organization, transport group, or local network tied to this admin request.
+          </p>
+          {errors.communityName ? <p className="text-sm text-red-600 dark:text-red-300">{errors.communityName}</p> : null}
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <label htmlFor="first-name" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -251,12 +618,7 @@ export function AccessRequestForm() {
               autoComplete="given-name"
               value={values.firstName}
               onChange={(event) => updateField("firstName", event.target.value)}
-              className={[
-                "w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 dark:bg-slate-950 dark:text-white",
-                errors.firstName
-                  ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-red-500/40 dark:focus:ring-red-500/15"
-                  : "border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-800 dark:focus:ring-brand-500/15",
-              ].join(" ")}
+              className={getFieldClassName(Boolean(errors.firstName))}
               placeholder="Enter your first name"
             />
             {errors.firstName ? <p className="text-sm text-red-600 dark:text-red-300">{errors.firstName}</p> : null}
@@ -272,12 +634,7 @@ export function AccessRequestForm() {
               autoComplete="family-name"
               value={values.lastName}
               onChange={(event) => updateField("lastName", event.target.value)}
-              className={[
-                "w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 dark:bg-slate-950 dark:text-white",
-                errors.lastName
-                  ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-red-500/40 dark:focus:ring-red-500/15"
-                  : "border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-800 dark:focus:ring-brand-500/15",
-              ].join(" ")}
+              className={getFieldClassName(Boolean(errors.lastName))}
               placeholder="Enter your last name"
             />
             {errors.lastName ? <p className="text-sm text-red-600 dark:text-red-300">{errors.lastName}</p> : null}
@@ -296,12 +653,7 @@ export function AccessRequestForm() {
               autoComplete="tel"
               value={values.mobile}
               onChange={(event) => updateField("mobile", event.target.value)}
-              className={[
-                "w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 dark:bg-slate-950 dark:text-white",
-                errors.mobile
-                  ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-red-500/40 dark:focus:ring-red-500/15"
-                  : "border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-800 dark:focus:ring-brand-500/15",
-              ].join(" ")}
+              className={getFieldClassName(Boolean(errors.mobile))}
               placeholder="+63 9XX XXXX XXX"
             />
             {errors.mobile ? <p className="text-sm text-red-600 dark:text-red-300">{errors.mobile}</p> : null}
@@ -317,15 +669,168 @@ export function AccessRequestForm() {
               autoComplete="email"
               value={values.email}
               onChange={(event) => updateField("email", event.target.value)}
-              className={[
-                "w-full rounded-2xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 dark:bg-slate-950 dark:text-white",
-                errors.email
-                  ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-red-500/40 dark:focus:ring-red-500/15"
-                  : "border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-slate-800 dark:focus:ring-brand-500/15",
-              ].join(" ")}
+              className={getFieldClassName(Boolean(errors.email))}
               placeholder="name@example.com"
             />
             {errors.email ? <p className="text-sm text-red-600 dark:text-red-300">{errors.email}</p> : null}
+          </div>
+        </div>
+
+        <div className="rounded-[1.8rem] border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-950/40 sm:p-5">
+          <div className="mb-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+              Service area
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              Choose the primary area this administrator will manage.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label htmlFor="region" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Region
+              </label>
+              <select
+                id="region"
+                value={values.regionId}
+                onChange={(event) => updateField("regionId", event.target.value)}
+                aria-busy={locationLoading.regions}
+                className={getFieldClassName(Boolean(errors.regionId), locationLoading.regions)}
+              >
+                <option value="">{getLocationPlaceholder("regionId")}</option>
+                {locationOptions.regions.map((region) => (
+                  <option key={region.id} value={region.id}>
+                    {region.label}
+                  </option>
+                ))}
+              </select>
+              {errors.regionId ? <p className="text-sm text-red-600 dark:text-red-300">{errors.regionId}</p> : null}
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="province" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Province
+              </label>
+              <select
+                id="province"
+                value={values.provinceId}
+                onChange={(event) => updateField("provinceId", event.target.value)}
+                disabled={!values.regionId || locationLoading.provinces}
+                aria-busy={locationLoading.provinces}
+                className={getFieldClassName(Boolean(errors.provinceId), !values.regionId || locationLoading.provinces)}
+              >
+                <option value="">{getLocationPlaceholder("provinceId")}</option>
+                {locationOptions.provinces.map((province) => (
+                  <option key={province.id} value={province.id}>
+                    {province.label}
+                  </option>
+                ))}
+              </select>
+              {errors.provinceId ? <p className="text-sm text-red-600 dark:text-red-300">{errors.provinceId}</p> : null}
+              {!errors.provinceId && values.regionId && !locationLoading.provinces && !locationOptions.provinces.length ? (
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  No provinces are available for the selected region yet.
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <label htmlFor="municipality-or-city" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Municipality or city
+            </label>
+            <select
+              id="municipality-or-city"
+              value={values.municipalityOrCityId}
+              onChange={(event) => updateField("municipalityOrCityId", event.target.value)}
+              disabled={!values.provinceId || locationLoading.municipalitiesOrCities}
+              aria-busy={locationLoading.municipalitiesOrCities}
+              className={getFieldClassName(
+                Boolean(errors.municipalityOrCityId),
+                !values.provinceId || locationLoading.municipalitiesOrCities
+              )}
+            >
+              <option value="">{getLocationPlaceholder("municipalityOrCityId")}</option>
+              {locationOptions.municipalitiesOrCities.map((location) => (
+                <option key={location.id} value={location.id}>
+                  {location.label}
+                </option>
+              ))}
+            </select>
+            {errors.municipalityOrCityId ? (
+              <p className="text-sm text-red-600 dark:text-red-300">{errors.municipalityOrCityId}</p>
+            ) : null}
+            {!errors.municipalityOrCityId &&
+            values.provinceId &&
+            !locationLoading.municipalitiesOrCities &&
+            !locationOptions.municipalitiesOrCities.length ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                No municipalities or cities are available for the selected province yet.
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="rounded-[1.8rem] border border-slate-200/80 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-950/40 sm:p-5">
+          <div className="mb-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+              Agreements
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              Admin access requests should confirm authorization and acknowledge the platform rules before verification.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <label className="flex items-start gap-3 rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65">
+              <input
+                type="checkbox"
+                checked={values.confirmsAuthority}
+                onChange={(event) => updateToggle("confirmsAuthority", event.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500"
+              />
+              <span className="text-sm leading-6 text-slate-700 dark:text-slate-200">
+                I confirm that I am authorized to request admin access for this community and that the information I
+                provided is accurate.
+              </span>
+            </label>
+            {errors.confirmsAuthority ? (
+              <p className="text-sm text-red-600 dark:text-red-300">{errors.confirmsAuthority}</p>
+            ) : null}
+
+            <label className="flex items-start gap-3 rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65">
+              <input
+                type="checkbox"
+                checked={values.agreesToPolicies}
+                onChange={(event) => updateToggle("agreesToPolicies", event.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500"
+              />
+              <span className="text-sm leading-6 text-slate-700 dark:text-slate-200">
+                I agree to the{" "}
+                <Link
+                  href="/terms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 dark:text-brand-300 dark:decoration-brand-500/40"
+                >
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 dark:text-brand-300 dark:decoration-brand-500/40"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </span>
+            </label>
+            {errors.agreesToPolicies ? (
+              <p className="text-sm text-red-600 dark:text-red-300">{errors.agreesToPolicies}</p>
+            ) : null}
           </div>
         </div>
 
@@ -333,9 +838,87 @@ export function AccessRequestForm() {
           type="submit"
           className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-700 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800 sm:w-auto"
         >
-          Submit
+          Review request
         </button>
       </form>
+
+      {hasMounted && isReviewVisible
+        ? createPortal(
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/45 px-4 py-8 backdrop-blur-sm">
+              <div
+                className="absolute inset-0"
+                onClick={() => setIsReviewVisible(false)}
+                aria-hidden="true"
+              />
+              <div className="surface-panel relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:p-8">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Review details
+                    </p>
+                    <h3 className="mt-2 font-display text-3xl font-extrabold text-slate-950 dark:text-white">
+                      Confirm this admin request before verification.
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                      Check the details below. Once confirmed, we will send the verification code for the next step.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewVisible(false)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
+                    aria-label="Close review"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  {[
+                    { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
+                    { label: "Terms and Privacy accepted", value: values.agreesToPolicies ? "Yes" : "No" },
+                    { label: "Community name", value: values.communityName.trim() || "Not provided" },
+                    { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
+                    { label: "Admin last name", value: values.lastName.trim() || "Not provided" },
+                    { label: "Mobile number", value: values.mobile || "Not provided" },
+                    { label: "Email address", value: values.email.trim() || "Not provided" },
+                    { label: "Region", value: selectedRegion },
+                    { label: "Province", value: selectedProvince },
+                    { label: "Municipality or city", value: selectedMunicipality },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65"
+                    >
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                        {item.label}
+                      </p>
+                      <p className="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewVisible(false)}
+                    className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  >
+                    Edit details
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openOtpStep}
+                    className="inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
+                  >
+                    Confirm and continue
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
 
       {isOtpVisible ? (
         <section className="rounded-[2rem] border border-brand-100 bg-brand-50/70 p-5 shadow-sm dark:border-brand-500/20 dark:bg-brand-500/10 sm:p-6">
@@ -354,10 +937,10 @@ export function AccessRequestForm() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                    Verify access
+                    Verify admin request
                   </p>
                   <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                    Enter the 6-digit verification code.
+                    Enter the 6-digit admin verification code.
                   </h3>
                   <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
                     For this access flow demo, use <span className="font-semibold text-slate-900 dark:text-white">123456</span>.

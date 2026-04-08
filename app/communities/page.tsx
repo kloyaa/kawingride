@@ -1,22 +1,21 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
-import { AccessPage } from "@/components/access/access-page";
+import { CommunitiesPage } from "@/components/communities/communities-page";
 import { THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
 export const metadata: Metadata = {
-  title: `Request Admin Access`,
-  description:
-    "Request administrator access to Kawing Ride, verify your code, and receive your admin onboarding link by email.",
+  title: "Communities",
+  description: "Browse communities with customer totals, rider capacity, and community scores.",
   alternates: {
-    canonical: "/access",
+    canonical: "/communities",
   },
 };
 
-export default async function Access() {
+export default async function Communities() {
   const cookieStore = await cookies();
   const cookieTheme = cookieStore.get(THEME_COOKIE_NAME)?.value;
   const initialTheme: ThemeMode = cookieTheme === "dark" ? "dark" : "light";
 
-  return <AccessPage initialTheme={initialTheme} />;
+  return <CommunitiesPage initialTheme={initialTheme} />;
 }

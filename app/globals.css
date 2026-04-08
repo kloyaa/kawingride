@@ -307,6 +307,11 @@ body {
   position: relative;
 }
 
+.section-band > * {
+  position: relative;
+  z-index: 1;
+}
+
 .section-band::before {
   content: "";
   position: absolute;

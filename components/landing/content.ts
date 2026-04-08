@@ -545,7 +545,8 @@ export const trustBoundaries = [
 export const pricingPlans: PricingPlan[] = [
   {
     name: "Customer",
-    description: "Choose between basic access or the full customer experience depending on how often you book and what safety and rewards features you need.",
+    description:
+      "Customer access starts through the mobile app or through a registration link shared by an approved admin or rider.",
     icon: "user",
     tone: "brand",
     tiers: [
@@ -573,7 +574,6 @@ export const pricingPlans: PricingPlan[] = [
             ],
           },
         ],
-        ctaLabel: "Start Free",
       },
       {
         name: "Standard",
@@ -591,13 +591,13 @@ export const pricingPlans: PricingPlan[] = [
             ],
           },
         ],
-        ctaLabel: "Choose Standard",
       },
     ],
   },
   {
     name: "Rider",
-    description: "Rider membership gives active riders full access to bidding, meter-based fare suggestions, and trust-building tools inside the community.",
+    description:
+      "Rider access starts through the mobile app or a registration link shared through the approved onboarding flow.",
     icon: "bolt",
     tone: "brand",
     tiers: [
@@ -622,7 +622,6 @@ export const pricingPlans: PricingPlan[] = [
             ],
           },
         ],
-        ctaLabel: "Apply As Rider",
       },
     ],
   },
@@ -737,6 +736,21 @@ export const faqItems: FaqItem[] = [
     question: "Are there safety features?",
     answer:
       "Yes. Kawing Ride can send optional ride status updates to a trusted contact when a ride is confirmed, cancelled, expires, or is marked complete.",
+  },
+  {
+    question: "Can reward points be used to pay for rides?",
+    answer:
+      "No. Reward points are not used as ride payment inside Kawing Ride. They are reviewed through the rewards process and can be converted into gift cards, as described in the rewards section.",
+  },
+  {
+    question: "Are there vouchers or promo discounts?",
+    answer:
+      "No. Kawing Ride does not currently offer vouchers. Pricing can still be flexible because riders may accept the posted fare, send a different bid, or negotiate directly inside the booking flow before a ride is confirmed.",
+  },
+  {
+    question: "Does Kawing Ride include ride insurance?",
+    answer:
+      "Kawing Ride is a ride community coordination tool, not an insurance provider or transport operator. The platform helps communities organize requests, negotiation, confirmation, and updates, but any insurance, permits, operator coverage, or personal protection arrangements remain the responsibility of the rider, vehicle owner, community, or their chosen provider.",
   },
   {
     question: "Is Kawing Ride available to everyone now?",

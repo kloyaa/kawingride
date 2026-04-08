@@ -18,7 +18,7 @@ const toneClasses: Record<Tone, { badge: string; icon: string }> = {
     icon: "text-amber-600",
   },
   brand: {
-    badge: "border-brand-200 bg-brand-100/90 text-brand-950 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-100",
+    badge: "border-brand-200 bg-brand-100 text-brand-900 dark:border-brand-500/35 dark:bg-brand-500/20 dark:text-brand-50",
     icon: "text-brand-700",
   },
   danger: {
@@ -56,7 +56,7 @@ export function SectionHeader({
           palette.badge,
         ].join(" ")}
       >
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/80 dark:bg-slate-950/40">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white dark:bg-brand-950/70">
           <Icon name={icon} className={["h-3.5 w-3.5", palette.icon].join(" ")} />
         </span>
         <span>{badge}</span>
@@ -66,7 +66,7 @@ export function SectionHeader({
       </h2>
       <div className="flex items-start gap-4">
         <span className="mt-1 hidden h-12 w-px rounded-full bg-gradient-to-b from-brand-500 to-transparent sm:block" />
-        <p className="max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">{description}</p>
+        <p className="max-w-2xl text-base leading-7 text-slate-700 dark:text-slate-200">{description}</p>
       </div>
     </div>
   );

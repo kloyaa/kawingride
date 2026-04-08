@@ -36,31 +36,44 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
 
                 <div className="space-y-4">
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                    Request access
+                    Admin access
                   </p>
                   <h1 className="font-display text-4xl font-extrabold leading-none tracking-tight text-slate-950 dark:text-white sm:text-5xl">
-                    Request access
+                    Request admin access
                     <span className="gradient-text"> for your community.</span>
                   </h1>
                   <p className="max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300">
-                    Share your contact details, verify the code we send, and we will email your access link.
+                    Share your administrator details, verify the one-time code we send, and receive your admin
+                    onboarding link by email.
                   </p>
                 </div>
 
                 <div className="grid gap-3 sm:max-w-xl">
                   {[
-                    "Enter your contact details",
-                    "Verify the one-time code",
-                    "Receive your access link by email",
-                  ].map((item, index) => (
+                    {
+                      description:
+                        "Admins manage onboarding, member access, local standards, and key operating settings for an approved group.",
+                      title: "What is an admin?",
+                    },
+                    {
+                      description:
+                        "Access is reviewed so only authorized community leads can handle protected records, approvals, and policy-sensitive actions.",
+                      title: "Why access is required",
+                    },
+                    {
+                      description:
+                        "Prepare your community name, your contact details, the service area you will manage, and confirmation that you are authorized to apply.",
+                      title: "Before you apply",
+                    },
+                  ].map((item) => (
                     <div
-                      key={item}
-                      className="rounded-[1.4rem] border border-white/80 bg-white/80 px-4 py-3 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
+                      key={item.title}
+                      className="rounded-[1.4rem] border border-white/80 bg-white/80 px-4 py-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
                     >
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                        Step {String(index + 1).padStart(2, "0")}
+                        {item.title}
                       </p>
-                      <p className="mt-2 text-sm font-semibold leading-6 text-slate-700 dark:text-slate-200">{item}</p>
+                      <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-200">{item.description}</p>
                     </div>
                   ))}
                 </div>
@@ -84,14 +97,14 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                        Access form
+                        Admin request form
                       </p>
                       <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                        Complete your request
+                        Complete your admin request
                       </h2>
                     </div>
                     <span className="rounded-full bg-brand-100 px-3 py-1.5 text-xs font-semibold text-brand-800 dark:bg-brand-500/10 dark:text-brand-200">
-                      Secure flow
+                      Admin onboarding
                     </span>
                   </div>
 

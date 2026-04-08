@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { Manrope, Sora, Space_Grotesk } from "next/font/google";
 
+import { AppProviders } from "@/components/providers/app-providers";
 import { blobAssetPaths } from "@/constants/blob-assets";
 import { APP_DOMAIN, APP_NAME, THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
@@ -120,7 +121,7 @@ export default async function RootLayout({
       style={{ colorScheme: theme }}
     >
       <body>
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

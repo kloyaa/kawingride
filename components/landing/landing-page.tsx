@@ -1005,6 +1005,19 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <Icon name="info" className="h-5 w-5" />
               </span>
               <div>
+                <h3 className="font-display text-sm font-bold text-amber-900 dark:text-amber-100">Admin onboarding starts the platform flow.</h3>
+                <p className="mt-1 text-sm leading-6 text-amber-800 dark:text-amber-200">
+                  Community setup begins with admin access. Customer and rider registration starts later through the
+                  mobile app or through approved links shared during onboarding.
+                </p>
+              </div>
+            </article>
+
+            <article className="mt-4 flex items-start gap-4 rounded-3xl border border-amber-100 bg-amber-50 p-5 dark:border-amber-500/20 dark:bg-amber-500/10">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                <Icon name="info" className="h-5 w-5" />
+              </span>
+              <div>
                 <h3 className="font-display text-sm font-bold text-amber-900 dark:text-amber-100">Your reputation supports your discount.</h3>
                 <p className="mt-1 text-sm leading-6 text-amber-800 dark:text-amber-200">
                   Reductions are based on verified community behavior and ratings, then reflected in monthly
