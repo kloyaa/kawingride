@@ -111,6 +111,7 @@ export function AccessRequestForm() {
   const [isOtpVisible, setIsOtpVisible] = useState(false);
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [otpError, setOtpError] = useState("");
+  const [showReviewScrollHint, setShowReviewScrollHint] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [secondsRemaining, setSecondsRemaining] = useState(RESEND_SECONDS);
   const [locationLoading, setLocationLoading] = useState<LocationLoadingState>({
@@ -125,6 +126,7 @@ export function AccessRequestForm() {
   });
 
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const reviewModalRef = useRef<HTMLDivElement | null>(null);
   const lastSubmittedOtp = useRef("");
   const selectedRegion = locationOptions.regions.find((item) => item.id === values.regionId)?.label ?? "Not selected";
   const selectedProvince = locationOptions.provinces.find((item) => item.id === values.provinceId)?.label ?? "Not selected";
@@ -160,6 +162,39 @@ export function AccessRequestForm() {
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isReviewVisible]);
+
+  useEffect(() => {
+    if (!isReviewVisible) {
+      return;
+    }
+
+    const modalElement = reviewModalRef.current;
+
+    if (!modalElement) {
+      return;
+    }
+
+    const updateHint = () => {
+      const isMobileViewport = window.innerWidth < 640;
+      const isScrollable = modalElement.scrollHeight > modalElement.clientHeight + 12;
+      const isNearTop = modalElement.scrollTop < 24;
+
+      setShowReviewScrollHint(isMobileViewport && isScrollable && isNearTop);
+    };
+
+    const frame = window.requestAnimationFrame(updateHint);
+    const handleResize = () => updateHint();
+    const handleScroll = () => updateHint();
+
+    window.addEventListener("resize", handleResize);
+    modalElement.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", handleResize);
+      modalElement.removeEventListener("scroll", handleScroll);
     };
   }, [isReviewVisible]);
 
@@ -850,70 +885,83 @@ export function AccessRequestForm() {
                 onClick={() => setIsReviewVisible(false)}
                 aria-hidden="true"
               />
-              <div className="surface-panel relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:p-8">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Review details
-                    </p>
-                    <h3 className="mt-2 font-display text-3xl font-extrabold text-slate-950 dark:text-white">
-                      Confirm this admin request before verification.
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                      Check the details below. Once confirmed, we will send the verification code for the next step.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsReviewVisible(false)}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
-                    aria-label="Close review"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {[
-                    { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
-                    { label: "Terms and Privacy accepted", value: values.agreesToPolicies ? "Yes" : "No" },
-                    { label: "Community name", value: values.communityName.trim() || "Not provided" },
-                    { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
-                    { label: "Admin last name", value: values.lastName.trim() || "Not provided" },
-                    { label: "Mobile number", value: values.mobile || "Not provided" },
-                    { label: "Email address", value: values.email.trim() || "Not provided" },
-                    { label: "Region", value: selectedRegion },
-                    { label: "Province", value: selectedProvince },
-                    { label: "Municipality or city", value: selectedMunicipality },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65"
-                    >
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                        {item.label}
+              <div className="relative w-full max-w-2xl">
+                <div
+                  ref={reviewModalRef}
+                  className="surface-panel relative max-h-[90vh] overflow-y-auto rounded-[2rem] p-6 pb-20 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:p-8 sm:pb-8"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                        Review details
                       </p>
-                      <p className="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</p>
+                      <h3 className="mt-2 font-display text-3xl font-extrabold text-slate-950 dark:text-white">
+                        Confirm this admin request before verification.
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                        Check the details below. Once confirmed, we will send the verification code for the next step.
+                      </p>
                     </div>
-                  ))}
+                    <button
+                      type="button"
+                      onClick={() => setIsReviewVisible(false)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
+                      aria-label="Close review"
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    {[
+                      { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
+                      { label: "Terms and Privacy accepted", value: values.agreesToPolicies ? "Yes" : "No" },
+                      { label: "Community name", value: values.communityName.trim() || "Not provided" },
+                      { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
+                      { label: "Admin last name", value: values.lastName.trim() || "Not provided" },
+                      { label: "Mobile number", value: values.mobile || "Not provided" },
+                      { label: "Email address", value: values.email.trim() || "Not provided" },
+                      { label: "Region", value: selectedRegion },
+                      { label: "Province", value: selectedProvince },
+                      { label: "Municipality or city", value: selectedMunicipality },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65"
+                      >
+                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                          {item.label}
+                        </p>
+                        <p className="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setIsReviewVisible(false)}
+                      className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                    >
+                      Edit details
+                    </button>
+                    <button
+                      type="button"
+                      onClick={openOtpStep}
+                      className="inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
+                    >
+                      Confirm and continue
+                    </button>
+                  </div>
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setIsReviewVisible(false)}
-                    className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
-                  >
-                    Edit details
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openOtpStep}
-                    className="inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
-                  >
-                    Confirm and continue
-                  </button>
-                </div>
+                {showReviewScrollHint ? (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center sm:hidden">
+                    <span className="rounded-full bg-slate-950/78 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur">
+                      Scroll down
+                    </span>
+                  </div>
+                ) : null}
               </div>
             </div>,
             document.body
