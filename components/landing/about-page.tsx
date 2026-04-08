@@ -13,6 +13,7 @@ import { ScrollToTop } from "./scroll-to-top";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { blobAssetPaths } from "@/constants/blob-assets";
 import { type ThemeMode } from "@/constants/branding";
 
 type AboutPageProps = {
@@ -71,10 +72,11 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                 <div className="pointer-events-none absolute -right-2 -top-8 w-24 rotate-[10deg] sm:w-30">
                   <div className="kawing-float kawing-float-slow kawing-float-delay-2">
                     <Image
-                      src="/images/kawing-idea.png"
+                      src={blobAssetPaths.idea}
                       alt=""
                       width={228}
                       height={228}
+                      unoptimized
                       className="h-auto w-full object-contain"
                     />
                   </div>

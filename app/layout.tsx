@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { Manrope, Sora, Space_Grotesk } from "next/font/google";
 
+import { blobAssetPaths } from "@/constants/blob-assets";
 import { APP_DOMAIN, APP_NAME, THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
 import "./globals.css";
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png", sizes: "1024x1024" },
-      { url: "/images/kawing-logo.png", type: "image/png", sizes: "1024x1024" },
+      { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
     ],
     apple: [
       { url: "/apple-icon.png", type: "image/png", sizes: "1024x1024" },

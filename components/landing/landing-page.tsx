@@ -37,6 +37,7 @@ import { ScrollToTop } from "./scroll-to-top";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { blobAssetPaths } from "@/constants/blob-assets";
 import { brandMeaning, type ThemeMode } from "@/constants/branding";
 import { featureToneClasses, pricingToneClasses, timelineToneClasses } from "@/constants/landing";
 
@@ -229,10 +230,11 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div className="pointer-events-none absolute -right-3 -top-12 z-10 sm:-right-5 sm:-top-14">
                   <div className="kawing-float kawing-float-delay-1">
                     <Image
-                      src="/images/kawing-glasses.png"
+                      src={blobAssetPaths.glasses}
                       alt=""
                       width={236}
                       height={236}
+                      unoptimized
                       className="h-auto w-36 rotate-[11deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)] sm:w-44"
                     />
                   </div>
@@ -268,10 +270,11 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div className="pointer-events-none absolute -bottom-5 -left-4 w-16 -rotate-[16deg] sm:-bottom-6 sm:-left-6 sm:w-20 lg:-bottom-10 lg:-left-12 lg:w-30">
                   <div className="kawing-float kawing-float-soft">
                     <Image
-                      src="/images/kawing-glasses.png"
+                      src={blobAssetPaths.glasses}
                       alt=""
                       width={180}
                       height={180}
+                      unoptimized
                       className="h-auto w-full object-contain"
                     />
                   </div>
@@ -411,10 +414,11 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               <div className="pointer-events-none absolute -right-3 -top-8 w-18 rotate-[10deg] sm:-right-4 sm:-top-10 sm:w-24 lg:right-0 lg:top-50 lg:w-55">
                 <div className="kawing-float kawing-float-slow kawing-float-delay-2">
                   <Image
-                    src="/images/kawing-idea.png"
+                    src={blobAssetPaths.idea}
                     alt=""
                     width={228}
                     height={228}
+                    unoptimized
                     className="h-auto w-full object-contain"
                   />
                 </div>
@@ -649,10 +653,11 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div className="pointer-events-none absolute -right-4 -top-6 w-18 -rotate-[15deg] sm:-right-6 sm:-top-8 sm:w-22 lg:-right-20 lg:top-22 lg:w-50">
                   <div className="kawing-float kawing-float-delay-3">
                     <Image
-                      src="/images/kawing-glasses.png"
+                      src={blobAssetPaths.glasses}
                       alt=""
                       width={172}
                       height={172}
+                      unoptimized
                       className="h-auto w-full object-contain"
                     />
                   </div>
@@ -868,10 +873,11 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div className="pointer-events-none absolute -right-3 -top-4 w-18 -rotate-[19deg] sm:-right-4 sm:-top-5 sm:w-24 lg:-right-10 lg:-top-5 lg:w-42">
                   <div className="kawing-float kawing-float-slow">
                     <Image
-                      src="/images/kawing-glasses.png"
+                      src={blobAssetPaths.glasses}
                       alt=""
                       width={296}
                       height={296}
+                      unoptimized
                       className="h-auto w-full object-contain"
                     />
                   </div>

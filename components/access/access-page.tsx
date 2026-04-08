@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
+import { blobAssetPaths } from "@/constants/blob-assets";
 import type { ThemeMode } from "@/constants/branding";
 
 import { AccessRequestForm } from "./access-request-form";
@@ -12,6 +13,7 @@ type AccessPageProps = {
 };
 
 export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader initialTheme={initialTheme} />
@@ -68,10 +70,11 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                 <div className="pointer-events-none absolute right-1 -top-6 z-10 w-20 sm:right-0 sm:-top-8 sm:w-24 lg:w-28 xl:w-34">
                   <div className="kawing-float kawing-float-soft kawing-float-delay-1">
                     <Image
-                      src="https://sotl6g8ueeaxvmqn.private.blob.vercel-storage.com/kawings/basic-icon-78uabRapHmlwlDhKuNib4lqbSdIIDE.png"
+                      src={blobAssetPaths.basicIcon}
                       alt=""
                       width={640}
                       height={640}
+                      unoptimized
                       className="h-auto w-full -rotate-[18deg] object-contain drop-shadow-[0_20px_34px_rgba(29,42,45,0.14)]"
                     />
                   </div>

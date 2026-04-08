@@ -6,6 +6,7 @@ import { ScrollToTop } from "@/components/landing/scroll-to-top";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
 import { Icon } from "@/components/landing/icons";
+import { blobAssetPaths } from "@/constants/blob-assets";
 import { THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
 export default async function NotFound() {
@@ -126,10 +127,11 @@ export default async function NotFound() {
                 <div className="pointer-events-none absolute -right-4 -top-10 z-10 w-28 sm:w-36 lg:-right-10 lg:-top-12 lg:w-44">
                   <div className="kawing-float kawing-float-slow kawing-float-delay-1">
                     <Image
-                      src="/images/kawing-curious.png"
+                      src={blobAssetPaths.curious}
                       alt=""
                       width={228}
                       height={228}
+                      unoptimized
                       className="h-auto w-full rotate-[8deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)]"
                     />
                   </div>
