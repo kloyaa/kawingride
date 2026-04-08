@@ -6,6 +6,7 @@ import {
   missionDescription,
   missionPillars,
   platformIdentity,
+  trustStory,
 } from "./content";
 import { FounderNoteCard } from "./founder-note-card";
 import { Reveal } from "./reveal";
@@ -142,6 +143,23 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                 </Link>
               </Reveal>
             </div>
+
+            <Reveal
+              delay={0.1}
+              className="mt-5 rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900 sm:p-7"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                Why trust matters
+              </p>
+              <h3 className="mt-4 font-display text-2xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2rem]">
+                {trustStory.title}
+              </h3>
+              <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-[0.98rem]">
+                {trustStory.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </Reveal>
           </div>
         </section>
 

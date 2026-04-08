@@ -177,6 +177,15 @@ export const founderNote = {
   attribution: "A note from the founder",
 };
 
+export const trustStory = {
+  title: "Customers should not have to do detective work before every ride.",
+  paragraphs: [
+    "Many scam victims are not careless. They are often moving quickly, unfamiliar with community rules, or simply trying to get a ride without the extra burden of checking whether a rider is legitimate.",
+    "Kawing Ride is designed to remove that burden from the customer side. Riders go through proper verification before they can serve the community, and device fingerprints are actively monitored to strengthen protection for both customers and riders.",
+    "The goal is to make trusted access feel normal from the start, so safety does not depend on whether a busy customer remembered to run a background check alone.",
+  ],
+};
+
 export const heroHighlights: FeatureCard[] = [
   {
     title: "Private",
@@ -568,13 +577,14 @@ export const pricingPlans: PricingPlan[] = [
       },
       {
         name: "Standard",
-        price: "₱60",
-        discount: "Good reputation may reduce this to ₱40 per month.",
+        price: "₱100",
+        discount: "Good reputation may reduce this to ₱80 per month.",
         sections: [
           {
             title: "Everything in Free, plus",
             items: [
               "Emergency contact notifications",
+              "Live location sharing",
               "Reward points and redemptions",
               "Priority access to customer incentives tied to strong community standing",
             ],
@@ -592,9 +602,9 @@ export const pricingPlans: PricingPlan[] = [
     tiers: [
       {
         name: "Rider",
-        price: "₱270",
-        description: "₱250 per month after the first month",
-        discount: "Good reputation may reduce this to ₱200 per month.",
+        price: "₱330",
+        description: "₱300 per month after the first month",
+        discount: "Approximately ₱11 per day, which is less than the cost of one ride for many customers.",
         badge: "Most common",
         featured: true,
         sections: [
@@ -603,7 +613,7 @@ export const pricingPlans: PricingPlan[] = [
             items: [
               "Bid, counter, or suggest meter on every ride request",
               "View live gas price ranges in your city",
-              "Use admin-set per-km rates when suggesting meter fares",
+              "Access built-in tools",
               "Earn points and access rewards",
               "Maintain a full rider and vehicle profile",
               "Build trust through ride history and ratings",
@@ -622,8 +632,8 @@ export const pricingPlans: PricingPlan[] = [
     tiers: [
       {
         name: "Community Admin",
-        price: "₱500",
-        discount: "Strong community performance may reduce this to ₱300 per month.",
+        price: "₱1,300",
+        discount: "Strong community performance may reduce this to ₱1,000 per month.",
         sections: [
           {
             title: "Included access",

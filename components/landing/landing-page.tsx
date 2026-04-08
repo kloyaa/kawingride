@@ -23,6 +23,7 @@ import {
   solutionPillars,
   privacyAssurances,
   trustBoundaries,
+  trustStory,
   trustPillars,
 } from "./content";
 import { FaqAccordion } from "./faq-accordion";
@@ -294,7 +295,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   <p className="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300">{platformIdentity}</p>
                   <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
                     <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                      Why "Kawing"
+                      Why &quot;Kawing&quot;
                     </p>
                     <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
                   </div>
@@ -307,7 +308,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                     Our Story
                   </p>
                   <h3 className="mt-3 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                    The context behind what we're building.
+                    The context behind what we&apos;re building.
                   </h3>
                   <p className="mt-3 flex-1 text-sm leading-7 text-slate-600 dark:text-slate-300">
                     The founder note and brand origin story live on a lighter page so this one stays focused on
@@ -455,22 +456,22 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div className="flex flex-col bg-slate-900 dark:bg-slate-950">
                   <div className="flex items-center gap-3 border-b border-slate-700/60 px-5 py-4">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700 text-xs font-bold text-slate-300">
-                      GC
+                      JD
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Local Riders CDO</p>
-                      <p className="text-xs text-slate-500">128 members · public group</p>
+                      <p className="text-sm font-semibold text-white">Rider No.41</p>
+                      <p className="text-xs text-slate-500">Active · CDO</p>
                     </div>
                   </div>
 
                   <div className="flex-1 space-y-3 p-5">
                     {[
-                      { side: "left", name: "Jay", color: "bg-slate-700", text: "SM to Gaisano Downtown? Kinsa mo?" },
-                      { side: "right", text: "Pila pangayo?" },
-                      { side: "left", name: "Jay", color: "bg-slate-700", text: "P120" },
-                      { side: "right", text: "Kaya P100 na lang?" },
-                      { side: "left", name: "Mark", color: "bg-amber-800", text: "Ako na!! P110 nlng" },
-                      { side: "left", name: "Jay", color: "bg-slate-700", text: "Sige sige ikaw na" },
+                      { side: "left", name: "John D.", color: "bg-slate-700", text: "Joined the chat" },
+                      { side: "right", text: "Hello, sir. Pila?" },
+                      { side: "left", name: "John D.", color: "bg-slate-700", text: "Ikaw pila man?" },
+                      { side: "right", text: "Ikaw sir" },
+                      { side: "left", name: "John D.", color: "bg-slate-800", text: "Ikaw offer?" },
+                      { side: "right", text: "Kaya 100?" },
                     ].map((msg, i) =>
                       msg.side === "left" ? (
                         <div key={i} className="flex items-end gap-2">
@@ -494,7 +495,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
                     <div className="flex items-center gap-2 rounded-xl bg-red-950/60 px-3 py-2 text-xs text-red-400">
                       <Icon name="warning" className="h-3.5 w-3.5 shrink-0" />
-                      No confirmation. No safety trail. No record.
+                      No confirmation. No safety trail. No record. Ghosted.
                     </div>
                   </div>
 
@@ -628,6 +629,25 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
             />
 
             <div className="mt-14 space-y-6">
+              <Reveal className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900 sm:p-7">
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-start">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                      Why this matters
+                    </p>
+                    <h3 className="mt-3 font-display text-2xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2rem]">
+                      {trustStory.title}
+                    </h3>
+                  </div>
+
+                  <div className="space-y-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    {trustStory.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+
               <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-start">
                   <div>
