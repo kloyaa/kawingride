@@ -779,17 +779,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
               <div className="grid gap-6 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
                 <Reveal className="relative rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-                  <div className="pointer-events-none absolute -left-5 -top-7 w-14 rotate-[14deg] sm:-left-6 sm:-top-8 sm:w-18 lg:-left-20 lg:top-40 lg:w-38">
-                    <div className="kawing-float kawing-float-soft kawing-float-delay-1">
-                      <Image
-                        src="/images/kawing-detective.png"
-                        alt=""
-                        width={264}
-                        height={264}
-                        className="h-auto w-full object-contain"
-                      />
-                    </div>
-                  </div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                     How trust becomes operational
                   </p>
@@ -819,17 +808,6 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </Reveal>
 
                 <Reveal delay={0.08} className="relative rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10 sm:p-7">
-                  <div className="pointer-events-none absolute -right-24 -bottom-6 w-18 -rotate-[15deg] sm:-right-6 sm:-bottom-8 sm:w-22 lg:-right-50 lg:top-52 lg:w-50">
-                    <div className="kawing-float kawing-float-slow kawing-float-delay-2">
-                      <Image
-                        src="/images/kawing-detective.png"
-                        alt=""
-                        width={212}
-                        height={212}
-                        className="h-auto w-full object-contain"
-                      />
-                    </div>
-                  </div>
                   <div className="flex items-center gap-3">
                     <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
                       <Icon name="warning" className="h-5 w-5" />
