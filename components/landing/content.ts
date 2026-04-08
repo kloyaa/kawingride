@@ -583,6 +583,7 @@ export const pricingPlans: PricingPlan[] = [
           {
             title: "Everything in Free, plus",
             items: [
+              "Join multiple communities and access more riders",
               "Emergency contact notifications",
               "Live location sharing",
               "Reward points and redemptions",
@@ -611,6 +612,7 @@ export const pricingPlans: PricingPlan[] = [
           {
             title: "Included access",
             items: [
+              "Transferable rider membership that can be shared across multiple communities",
               "Bid, counter, or suggest meter on every ride request",
               "View live gas price ranges in your city",
               "Access built-in tools",
