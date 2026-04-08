@@ -198,7 +198,7 @@ export const heroHighlights: FeatureCard[] = [
   },
   {
     title: "Fairer",
-    description: "Ratings and history help people choose with confidence.",
+    description: "Live gas prices and admin-set per-km rates give both sides a fair starting point.",
     icon: "star",
     tone: "violet",
   },
@@ -239,9 +239,10 @@ export const problemCards = [
 
 export const solutionChecklist = [
   "Requests stay inside a controlled environment instead of a public feed.",
-  "Riders can accept the posted fare or submit an offer, while the customer still decides which response to confirm.",
+  "Riders can bid at a fixed fare, send a counteroffer, or suggest a meter-based fare — while the customer still decides which response to confirm.",
   "Customers can accept, decline, or counter without relying on unstructured chat.",
   "Each negotiation follows a visible sequence of actions with less ambiguity.",
+  "Live gas price ranges and admin-set per-km rates give both sides a fair baseline for meter negotiations.",
   "Safety notifications can be sent automatically when ride status changes.",
 ];
 
@@ -252,7 +253,7 @@ export const solutionPillars = [
   },
   {
     title: "Structured negotiation",
-    description: "Users see the posted fare, the current offer, and the next available action.",
+    description: "Riders bid, counter, or suggest meter. Customers compare and confirm — all within a defined sequence.",
   },
   {
     title: "Faster decision making",
@@ -465,22 +466,34 @@ export const communityRoles: CommunityRole[] = [
   {
     title: "Riders",
     description:
-      "Riders review requests, accept posted fares or submit offers, and go through verified onboarding before serving the community.",
+      "Riders review requests and respond with a bid, counteroffer, or meter-based suggestion. Each active rider goes through verified onboarding before serving the community.",
     responsibilities: [
       "Keep rider, vehicle, and onboarding details current",
-      "Respond honestly to offers and counters",
+      "Respond with a bid, counteroffer, or meter suggestion",
+      "Use live gas price context when suggesting meter fares",
       "Maintain reliable service and conduct",
     ],
   },
   {
     title: "Admins",
     description:
-      "Admins help set standards, oversee access, manage protected onboarding records, and support moderation for the community.",
+      "Admins help set standards, oversee access, manage protected onboarding records, and configure community-level settings like per-km rates.",
     responsibilities: [
       "Approve or remove access when needed",
+      "Set per-km rates and community pricing standards",
       "Handle verification records with appropriate care",
       "Review incidents and suspicious activity",
-      "Protect community standards over time",
+    ],
+  },
+  {
+    title: "Moderators",
+    description:
+      "Moderators are appointed by the super admin and help maintain fair practices and consistent standards across communities.",
+    responsibilities: [
+      "Review flagged activity and escalated incidents",
+      "Enforce platform standards across communities",
+      "Support admins in resolving disputes",
+      "Ensure pricing conduct and community behavior stays fair",
     ],
   },
 ];
@@ -499,7 +512,7 @@ export const dataHandlingGroups: DataHandlingGroup[] = [
   {
     title: "Verified rider onboarding",
     summary:
-      "Rider onboarding is more detailed so communities can be managed by properly identified operators.",
+      "Rider onboarding is more detailed so communities can be managed by properly identified riders.",
     items: [
       "We collect plate number, valid IDs, selfie, and background information for onboarding purposes.",
       "Sensitive rider verification records are restricted to admins and are not openly visible across the community.",
@@ -573,12 +586,12 @@ export const pricingPlans: PricingPlan[] = [
   },
   {
     name: "Rider",
-    description: "Rider membership is built for active operators who need a complete profile, full bidding access, and trust-building tools inside the community.",
+    description: "Rider membership gives active riders full access to bidding, meter-based fare suggestions, and trust-building tools inside the community.",
     icon: "bolt",
     tone: "brand",
     tiers: [
       {
-        name: "Operator",
+        name: "Rider",
         price: "₱270",
         description: "₱250 per month after the first month",
         discount: "Good reputation may reduce this to ₱200 per month.",
@@ -588,7 +601,9 @@ export const pricingPlans: PricingPlan[] = [
           {
             title: "Included access",
             items: [
-              "Accept posted fares or submit bids on ride requests",
+              "Bid, counter, or suggest meter on every ride request",
+              "View live gas price ranges in your city",
+              "Use admin-set per-km rates when suggesting meter fares",
               "Earn points and access rewards",
               "Maintain a full rider and vehicle profile",
               "Build trust through ride history and ratings",
@@ -732,7 +747,7 @@ export const ctaPaths: CtaPath[] = [
   },
   {
     title: "Plan rider onboarding",
-    description: "Check the pricing and rider expectations before inviting operators into the platform.",
+    description: "Check the pricing and rider expectations before inviting riders into the platform.",
     label: "View Pricing Options",
     href: "#pricing",
   },

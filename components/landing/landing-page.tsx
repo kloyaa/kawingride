@@ -8,15 +8,12 @@ import {
   dataHandlingGroups,
   faqItems,
   heroHighlights,
-  howItWorksSummary,
-  legacyFlowQuotes,
   launchAreaNotes,
   launchAreas,
   missionDescription,
   missionPillars,
   platformIdentity,
   pricingPlans,
-  pricingValueStatement,
   problemCards,
   rewardAuditPoints,
   rewardsHighlights,
@@ -24,7 +21,6 @@ import {
   safetyTimeline,
   solutionChecklist,
   solutionPillars,
-  structuredFlowItems,
   privacyAssurances,
   trustBoundaries,
   trustPillars,
@@ -49,45 +45,26 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
   const communityRoleIcons = {
     Admins: "shield",
     Customers: "user",
+    Moderators: "eye",
     Riders: "bolt",
   } as const;
 
-  const customerPlan = pricingPlans.find((plan) => plan.name === "Customer");
-  const operatorPlans = pricingPlans.filter((plan) => plan.name !== "Customer");
-
-  const customerTierAvailability = customerPlan
-    ? (() => {
-      let inheritedFeatures = new Set<string>();
-
-      return customerPlan.tiers.map((tier) => {
-        const included = new Set(inheritedFeatures);
-
-        tier.sections.forEach((section) => {
-          if (section.style !== "muted") {
-            section.items.forEach((item) => included.add(item));
-          }
-        });
-
-        const excluded = new Set(
-          tier.sections
-            .filter((section) => section.style === "muted")
-            .flatMap((section) => section.items),
-        );
-
-        inheritedFeatures = included;
-
-        return { excluded, included, tier };
-      });
-    })()
-    : [];
-
-  const customerFeatureRows = Array.from(
-    new Set(
-      customerTierAvailability.flatMap(({ excluded, included }) => [
-        ...Array.from(included),
-        ...Array.from(excluded),
-      ]),
-    ),
+  const allPricingTiers = pricingPlans.flatMap((plan) =>
+    plan.tiers.map((tier) => ({
+      planName: plan.name,
+      planIcon: plan.icon,
+      planTone: plan.tone,
+      tierName: tier.name,
+      price: tier.price,
+      badge: tier.badge,
+      featured: tier.featured ?? false,
+      description: tier.description ?? "",
+      discount: tier.discount,
+      ctaLabel: tier.ctaLabel,
+      features: tier.sections
+        .filter((s) => s.style !== "muted")
+        .flatMap((s) => s.items),
+    }))
   );
 
   return (
@@ -102,7 +79,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           <div className="pointer-events-none absolute bottom-0 left-12 h-64 w-64 rounded-full bg-amber-300/15 blur-3xl" />
 
           <div className="section-shell relative">
-            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
+            <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
               <Reveal className="space-y-8">
                 <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-brand-800 shadow-sm backdrop-blur dark:border-brand-500/20 dark:bg-slate-900/70 dark:text-brand-200">
                   <span className="inline-flex h-2 w-2 rounded-full bg-brand-500 shadow-[0_0_0_6px_rgba(20,184,166,0.15)]" />
@@ -164,42 +141,43 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 </div>
               </Reveal>
 
-              <Reveal delay={0.08} className="relative rounded-[2rem] p-5 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-6">
+              <Reveal delay={0.08} className="relative rounded-[2rem] p-4 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-5">
                 <div className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-800">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  <span className="ml-2 text-xs font-medium text-slate-400 dark:text-slate-500">kawingride.app</span>
+                  <span className="ml-2 text-xs font-medium text-slate-400 dark:text-slate-500">kawingride.com</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {heroHighlights.map((item) => {
+                <div className="grid grid-cols-2 gap-2">
+                  {heroHighlights.map((item, i) => {
                     const palette = featureToneClasses[item.tone];
 
                     return (
-                      <article
-                        key={item.title}
-                        className={[
-                          "card-lift rounded-3xl border p-4 shadow-sm",
-                          palette.card,
-                        ].join(" ")}
-                      >
-                        <div className={["mb-3 flex h-10 w-10 items-center justify-center rounded-2xl", palette.icon].join(" ")}>
-                          <Icon name={item.icon} className="h-4 w-4" />
-                        </div>
-                        <h2 className={["font-display text-lg font-extrabold", palette.text].join(" ")}>{item.title}</h2>
-                        <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                      </article>
+                      <Reveal key={item.title} delay={0.12 + i * 0.07}>
+                        <article
+                          className={[
+                            "card-lift rounded-2xl border p-4 shadow-sm",
+                            palette.card,
+                          ].join(" ")}
+                        >
+                          <div className={["mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl", palette.icon].join(" ")}>
+                            <Icon name={item.icon} className="h-4 w-4" />
+                          </div>
+                          <h2 className={["font-display text-base font-extrabold", palette.text].join(" ")}>{item.title}</h2>
+                          <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">{item.description}</p>
+                        </article>
+                      </Reveal>
                     );
                   })}
                 </div>
 
-                <article className="mt-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
+                <article className="mt-3 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
                   <div className="mb-4 flex items-center justify-between">
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                       Active Ride Request
                     </span>
-                    <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
                       Live
                     </span>
                   </div>
@@ -220,9 +198,29 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       </div>
                     </div>
                     <div className="pl-7 text-left sm:pl-0 sm:text-right">
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Offer</p>
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Opening fare</p>
                       <p className="font-display text-2xl font-extrabold text-brand-700">₱120</p>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">2 bids received</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500">3 responses</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+                    <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                      Rider responses
+                    </p>
+                    <div className="space-y-1.5">
+                      {[
+                        { label: "Fixed bid", amount: "₱120", cls: "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300" },
+                        { label: "Meter", amount: "~₱95", cls: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300" },
+                        { label: "Counter", amount: "₱105", cls: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300" },
+                      ].map((r) => (
+                        <div key={r.label} className="flex items-center justify-between rounded-xl bg-slate-50/80 px-3 py-2 dark:bg-slate-800/60">
+                          <span className={["rounded-full px-2 py-0.5 text-[0.65rem] font-semibold", r.cls].join(" ")}>
+                            {r.label}
+                          </span>
+                          <span className="font-display text-sm font-bold text-slate-900 dark:text-white">{r.amount}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </article>
@@ -263,84 +261,67 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               </div>
             </div>
 
-            <div className="mt-14 grid gap-6 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
-              <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="relative">
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                    What the mission means on the product
-                  </p>
-                  <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300">
-                    {platformIdentity}
-                  </p>
+            {/* Mission pillars */}
+            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+              {missionPillars.map((item, index) => (
+                <Reveal key={item.title} delay={index * 0.1}>
+                  <article className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                    <span
+                      className="pointer-events-none absolute -right-3 -top-5 z-0 select-none font-display text-[7rem] font-black leading-none text-slate-50 dark:text-slate-800"
+                      aria-hidden="true"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className="relative z-10">
+                      <span className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-7 text-slate-500 dark:text-slate-400">{item.description}</p>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
 
-                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                    {[
-                      "Private trip coordination",
-                      "Clear decision making",
-                      "Shared accountability",
-                    ].map((item, index) => (
-                      <div
-                        key={item}
-                        className="rounded-[1.4rem] border border-white/80 bg-white/85 p-4 shadow-sm dark:border-white/10 dark:bg-slate-950/45"
-                      >
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
-                          {String(index + 1).padStart(2, "0")}
-                        </p>
-                        <p className="mt-2 text-sm font-semibold leading-6 text-slate-700 dark:text-slate-200">
-                          {item}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-8 rounded-[1.6rem] border border-brand-100 bg-white/88 p-5 dark:border-brand-500/20 dark:bg-slate-950/55">
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
-                      Why Kawing
+            {/* Platform context + Our Story */}
+            <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+              <Reveal>
+                <div className="rounded-3xl border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand-700 dark:text-brand-300">
+                    What this platform is
+                  </p>
+                  <p className="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300">{platformIdentity}</p>
+                  <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                      Why "Kawing"
                     </p>
-                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{brandMeaning}</p>
                   </div>
                 </div>
               </Reveal>
 
-              <div className="grid gap-4">
-                {missionPillars.map((item, index) => (
-                  <Reveal key={item.title} delay={0.04 + index * 0.04}>
-                    <article className="card-lift rounded-[1.8rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                      <div className="flex items-start gap-4">
-                        <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-700 font-display text-sm font-bold text-white">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <div>
-                          <h3 className="font-display text-xl font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                          <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
-                        </div>
-                      </div>
-                    </article>
-                  </Reveal>
-                ))}
-
-                <Reveal delay={0.16}>
-                  <article className="rounded-[1.8rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:via-slate-900 dark:to-brand-500/10">
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700 dark:text-amber-300">
-                      Our Story
-                    </p>
-                    <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                      A simpler introduction now lives on its own page.
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                      We moved the founder note and brand context into a lighter page so the homepage can stay focused
-                      on the product and booking flow.
-                    </p>
-                    <Link
-                      href="/our-story"
-                      className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50 dark:bg-slate-950 dark:text-brand-200 dark:hover:bg-slate-900"
-                    >
-                      Read Our Story
-                      <Icon name="arrow-right" className="h-4 w-4" />
-                    </Link>
-                  </article>
-                </Reveal>
-              </div>
+              <Reveal delay={0.08}>
+                <article className="flex h-full flex-col rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-brand-50/60 p-7 shadow-sm dark:border-amber-500/20 dark:from-amber-500/10 dark:to-brand-500/10 sm:p-8">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 dark:text-amber-300">
+                    Our Story
+                  </p>
+                  <h3 className="mt-3 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                    The context behind what we're building.
+                  </h3>
+                  <p className="mt-3 flex-1 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    The founder note and brand origin story live on a lighter page so this one stays focused on
+                    the product.
+                  </p>
+                  <Link
+                    href="/our-story"
+                    className="mt-6 inline-flex items-center gap-2 self-start rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50 dark:bg-slate-950 dark:text-brand-200 dark:hover:bg-slate-900"
+                  >
+                    Read Our Story
+                    <Icon name="arrow-right" className="h-4 w-4" />
+                  </Link>
+                </article>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -363,16 +344,23 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {problemCards.map((item, index) => (
-                <article
-                  key={item.title}
-                  className="card-lift rounded-3xl border border-red-100 bg-white p-6 shadow-sm dark:border-red-500/15 dark:bg-slate-900"
-                >
-                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-red-50 font-display text-sm font-bold text-red-600 dark:bg-red-500/10 dark:text-red-300">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                </article>
+                <Reveal key={item.title} delay={index * 0.07}>
+                  <article className="group relative h-full overflow-hidden rounded-3xl border border-red-100 bg-white p-7 shadow-sm transition-shadow hover:shadow-md dark:border-red-500/15 dark:bg-slate-900">
+                    {/* Ghost number */}
+                    <span
+                      className="pointer-events-none absolute -right-2 -top-5 z-0 select-none font-display text-[7rem] font-black leading-none text-red-50 dark:text-red-950"
+                      aria-hidden="true"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className="relative z-10">
+                      {/* Red top accent bar */}
+                      <div className="mb-6 h-1 w-10 rounded-full bg-red-200 transition-colors group-hover:bg-red-400 dark:bg-red-500/30 dark:group-hover:bg-red-500/60" />
+                      <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{item.description}</p>
+                    </div>
+                  </article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -398,13 +386,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 <div>
                   <h3 className="font-display text-2xl font-extrabold">What changes for the user?</h3>
                   <ul className="mt-5 space-y-3">
-                    {solutionChecklist.map((item) => (
-                      <li key={item} className="flex items-start gap-3 text-sm leading-6 text-brand-100">
-                        <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/10 text-brand-200">
-                          <Icon name="check" className="h-3.5 w-3.5" />
-                        </span>
-                        <span>{item}</span>
-                      </li>
+                    {solutionChecklist.map((item, i) => (
+                      <Reveal key={item} delay={0.05 + i * 0.06}>
+                        <li className="flex items-start gap-3 text-sm leading-6 text-brand-100">
+                          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-brand-200">
+                            <Icon name="check" className="h-3.5 w-3.5" />
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      </Reveal>
                     ))}
                   </ul>
                 </div>
@@ -426,13 +416,15 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {solutionPillars.map((item, index) => (
-                <article key={item.title} className="card-lift rounded-3xl border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <h3 className="font-display text-base font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                </article>
+                <Reveal key={item.title} delay={0.05 + index * 0.07}>
+                  <article className="card-lift h-full rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <h3 className="font-display text-base font-bold text-slate-950 dark:text-white">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{item.description}</p>
+                  </article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -453,78 +445,95 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               description="The workflow preserves the natural rhythm people already know, while giving every request a defined sequence of actions and decisions."
             />
 
-            <div className="mt-14 rounded-[2rem] border border-slate-100 bg-slate-50/80 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 sm:p-6">
-              <div className="grid gap-4 lg:grid-cols-3">
-                {howItWorksSummary.map((item, index) => {
-                  const palette = featureToneClasses[item.tone];
-
-                  return (
-                    <article key={item.title} className="rounded-3xl border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={[
-                            "flex h-10 w-10 items-center justify-center rounded-2xl font-display text-base font-extrabold text-white",
-                            palette.icon.split(" ")[0],
-                          ].join(" ")}
-                        >
-                          {index + 1}
-                        </div>
-                        <div>
-                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                            Summary
-                          </p>
-                          <h3 className="font-display text-lg font-bold text-slate-950 dark:text-white">{item.title}</h3>
-                        </div>
-                      </div>
-                      <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-
-            <Reveal delay={0.08}>
+            <Reveal delay={0.08} className="mt-14">
               <HowItWorksFlow />
             </Reveal>
 
-            <div className="mt-12 rounded-[2rem] border border-slate-100 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/70 md:p-8">
-              <h3 className="font-display text-xl font-extrabold text-slate-950 dark:text-white">What users no longer need to say</h3>
-              <div className="mt-6 grid gap-4 md:grid-cols-2">
-                <article className="rounded-3xl border border-red-100 bg-red-50 p-5 dark:border-red-500/15 dark:bg-red-500/10">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-red-600">
-                      <Icon name="close" className="h-3.5 w-3.5" />
-                    </span>
-                    <h4 className="font-display text-sm font-bold text-red-900 dark:text-red-100">Old social media flow</h4>
+            <div className="mt-12 overflow-hidden rounded-[2rem] border border-slate-100 dark:border-slate-800">
+              <div className="grid md:grid-cols-2">
+                {/* Left: chat mockup */}
+                <div className="flex flex-col bg-slate-900 dark:bg-slate-950">
+                  <div className="flex items-center gap-3 border-b border-slate-700/60 px-5 py-4">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700 text-xs font-bold text-slate-300">
+                      GC
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Local Riders CDO</p>
+                      <p className="text-xs text-slate-500">128 members · public group</p>
+                    </div>
                   </div>
-                  <ul className="mt-4 space-y-2 text-sm leading-6 text-red-800 dark:text-red-100">
-                    {legacyFlowQuotes.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5">
-                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-red-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
 
-                <article className="rounded-3xl border border-brand-100 bg-brand-50 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700">
-                      <Icon name="check" className="h-3.5 w-3.5" />
-                    </span>
-                    <h4 className="font-display text-sm font-bold text-brand-900 dark:text-brand-100">New structured flow</h4>
+                  <div className="flex-1 space-y-3 p-5">
+                    {[
+                      { side: "left", name: "Jay", color: "bg-slate-700", text: "SM to Gaisano Downtown? Kinsa mo?" },
+                      { side: "right", text: "Pila pangayo?" },
+                      { side: "left", name: "Jay", color: "bg-slate-700", text: "P120" },
+                      { side: "right", text: "Kaya P100 na lang?" },
+                      { side: "left", name: "Mark", color: "bg-amber-800", text: "Ako na!! P110 nlng" },
+                      { side: "left", name: "Jay", color: "bg-slate-700", text: "Sige sige ikaw na" },
+                    ].map((msg, i) =>
+                      msg.side === "left" ? (
+                        <div key={i} className="flex items-end gap-2">
+                          <div className={["flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold text-white", msg.color].join(" ")}>
+                            {msg.name?.[0]}
+                          </div>
+                          <div className="max-w-[72%] rounded-2xl rounded-bl-sm bg-slate-800 px-4 py-2.5">
+                            <p className="mb-0.5 text-[0.65rem] text-slate-500">{msg.name}</p>
+                            <p className="text-sm text-slate-200">{msg.text}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div key={i} className="flex items-end justify-end gap-2">
+                          <div className="max-w-[72%] rounded-2xl rounded-br-sm bg-brand-700 px-4 py-2.5">
+                            <p className="text-sm text-white">{msg.text}</p>
+                            <p className="mt-0.5 text-right text-[0.65rem] text-brand-300">You · seen</p>
+                          </div>
+                        </div>
+                      )
+                    )}
+
+                    <div className="flex items-center gap-2 rounded-xl bg-red-950/60 px-3 py-2 text-xs text-red-400">
+                      <Icon name="warning" className="h-3.5 w-3.5 shrink-0" />
+                      No confirmation. No safety trail. No record.
+                    </div>
                   </div>
-                  <ul className="mt-4 space-y-2 text-sm leading-6 text-brand-900 dark:text-brand-100">
-                    {structuredFlowItems.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5">
-                        <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-100 text-brand-700">
-                          <Icon name="check-circle" className="h-4 w-4" />
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
+
+                  <div className="border-t border-slate-800 px-5 py-3">
+                    <p className="text-xs font-semibold text-slate-500">Before — public group chat, no structure</p>
+                  </div>
+                </div>
+
+                {/* Right: new structured way */}
+                <div className="flex flex-col justify-between bg-white p-7 dark:bg-slate-900 md:p-8">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-brand-700 dark:text-brand-300">
+                      With Kawing Ride
+                    </p>
+                    <h4 className="mt-2 font-display text-xl font-extrabold text-slate-950 dark:text-white">
+                      Every step is tracked,<br />private, and confirmed.
+                    </h4>
+                    <ul className="mt-7 space-y-4">
+                      {[
+                        { icon: "bolt" as const, text: "Post your fare — riders respond to you privately" },
+                        { icon: "eye" as const, text: "Review all offers before deciding anything" },
+                        { icon: "chart" as const, text: "Negotiate in one place without the noise" },
+                        { icon: "check-circle" as const, text: "Both sides confirm before the booking is real" },
+                      ].map((item) => (
+                        <li key={item.text} className="flex items-center gap-3.5">
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                            <Icon name={item.icon} className="h-4 w-4" />
+                          </span>
+                          <span className="text-sm leading-5 text-slate-700 dark:text-slate-300">{item.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
+                    <p className="text-xs font-semibold text-brand-700 dark:text-brand-300">
+                      After — structured, private, and fully confirmed
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -603,7 +612,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="trust" className="section-band bg-slate-50/70 py-20 dark:bg-slate-900/70 md:py-28">
+        <section id="trust" className="section-band bg-slate-50 py-20 dark:bg-slate-900/70 md:py-28">
           <div className="section-shell">
             <SectionHeader
               badge="Trust Model"
@@ -653,19 +662,16 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   </div>
                 </div>
 
-                <div className="mt-8 grid gap-4 lg:grid-cols-3">
+                <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                   {communityRoles.map((item) => {
                     const roleIcon =
-                      item.title === "Customers"
-                        ? communityRoleIcons.Customers
-                        : item.title === "Riders"
-                          ? communityRoleIcons.Riders
-                          : communityRoleIcons.Admins;
+                      communityRoleIcons[item.title as keyof typeof communityRoleIcons] ??
+                      communityRoleIcons.Admins;
 
                     return (
                       <article
                         key={item.title}
-                        className="card-lift rounded-[1.7rem] border border-white bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75"
+                        className="card-lift rounded-[1.7rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75"
                       >
                         <div className="flex items-center gap-3">
                           <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
@@ -698,7 +704,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   {dataHandlingGroups.map((group, index) => (
                     <article
                       key={group.title}
-                      className="rounded-[1.8rem] border border-white bg-white/92 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75 sm:p-6"
+                      className="rounded-[1.8rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/75 sm:p-6"
                     >
                       <div className="flex items-start gap-3">
                         <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
@@ -826,257 +832,152 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               description="Choose the level that fits how your community books today, then let stronger participation lower costs over time."
             />
 
-            <div className="mt-14 space-y-6">
-              <Reveal className="surface-panel relative overflow-hidden rounded-[2.2rem] p-7 sm:p-9">
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-end">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                      Membership that scales with trust
-                    </p>
-                    <h3 className="mt-3 font-display text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">
-                      Start with essential access, then unlock more value as participation grows.
-                    </h3>
-                  </div>
-                  <p className="text-base leading-7 text-slate-600 dark:text-slate-300">{pricingValueStatement}</p>
-                </div>
-
-                <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                  {["Free customer entry", "Operator and admin plans", "Discounts tied to reputation"].map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-[1.35rem] border border-white/80 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:border-white/10 dark:bg-slate-950/45 dark:text-slate-200"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </Reveal>
-
-              {customerPlan ? (
-                <Reveal className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-                  <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                        Customer plans
-                      </p>
-                      <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                        Pick the right level of access for how often you book.
-                      </h3>
-                      <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-300">
-                        {customerPlan.description}
-                      </p>
-                    </div>
-                    <span className="rounded-full bg-slate-100 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                      Compare Free and Standard
-                    </span>
-                  </div>
-
-                  <div className="mt-6 grid gap-4 md:grid-cols-2">
-                    {customerTierAvailability.map(({ tier }) => (
-                      <article
-                        key={`${customerPlan.name}-${tier.name}`}
-                        className={
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {allPricingTiers.map((tier, i) => {
+                const palette = pricingToneClasses[tier.planTone as keyof typeof pricingToneClasses];
+                return (
+                  <Reveal
+                    key={`${tier.planName}-${tier.tierName}`}
+                    delay={i * 0.07}
+                    className={[
+                      "flex flex-col rounded-3xl p-7 shadow-sm",
+                      tier.featured
+                        ? "bg-gradient-to-b from-slate-900 to-slate-800 text-white dark:from-slate-800 dark:to-slate-900"
+                        : "border border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-900",
+                    ].join(" ")}
+                  >
+                    {/* Plan role badge */}
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={[
+                          "rounded-full px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-widest",
                           tier.featured
-                            ? "rounded-[1.8rem] border border-brand-600 bg-gradient-to-br from-brand-700 to-brand-900 p-5 text-white shadow-lg"
-                            : "rounded-[1.8rem] border border-slate-100 bg-slate-50/85 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80"
-                        }
+                            ? "bg-white/10 text-slate-300"
+                            : [palette.badge, ""].join(" "),
+                        ].join(" ")}
                       >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h4 className={tier.featured ? "font-display text-xl font-bold text-white" : "font-display text-xl font-bold text-slate-950 dark:text-white"}>
-                                {tier.name}
-                              </h4>
-                              {tier.badge ? (
-                                <span className={tier.featured ? "rounded-full bg-white/15 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white" : "rounded-full bg-brand-50 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"}>
-                                  {tier.badge}
-                                </span>
-                              ) : null}
-                            </div>
-                            {tier.description ? (
-                              <p className={tier.featured ? "mt-2 text-sm leading-6 text-brand-100" : "mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400"}>
-                                {tier.description}
-                              </p>
-                            ) : null}
-                          </div>
-                          <div className="text-right">
-                            <p className={tier.featured ? "font-display text-3xl font-extrabold text-white" : "font-display text-3xl font-extrabold text-slate-950 dark:text-white"}>
-                              {tier.price}
-                            </p>
-                            <p className={tier.featured ? "text-xs text-brand-100" : "text-xs text-slate-400 dark:text-slate-500"}>/month</p>
-                          </div>
-                        </div>
-
-                        <p className={tier.featured ? "mt-4 text-sm leading-6 text-brand-100" : "mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300"}>
-                          {tier.discount}
-                        </p>
-
-                        <div className="mt-5 space-y-3">
-                          {tier.sections.map((section) => (
-                            <div
-                              key={section.title}
-                              className={
-                                tier.featured
-                                  ? "rounded-[1.3rem] border border-white/10 bg-white/5 p-4"
-                                  : section.style === "muted"
-                                    ? "rounded-[1.3rem] border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
-                                    : "rounded-[1.3rem] border border-brand-100 bg-white p-4 dark:border-brand-500/20 dark:bg-slate-950"
-                              }
-                            >
-                              <p className={tier.featured ? "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-100" : section.style === "muted" ? "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400" : "text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300"}>
-                                {section.title}
-                              </p>
-                              <div className="mt-3 flex flex-wrap gap-2">
-                                {section.items.map((item) => (
-                                  <span
-                                    key={item}
-                                    className={
-                                      tier.featured
-                                        ? "rounded-full bg-white/10 px-3 py-1.5 text-xs leading-5 text-white"
-                                        : section.style === "muted"
-                                          ? "rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs leading-5 text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400"
-                                          : "rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300"
-                                    }
-                                  >
-                                    {item}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {tier.ctaLabel ? (
-                          <Link
-                            href="/access"
-                            className={tier.featured ? "mt-5 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-brand-800 transition hover:bg-brand-50" : "mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"}
-                          >
-                            {tier.ctaLabel}
-                            <Icon name="arrow-right" className="h-4 w-4" />
-                          </Link>
-                        ) : null}
-                      </article>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 overflow-x-auto rounded-[1.7rem] border border-slate-100 dark:border-slate-800">
-                    <div className="min-w-[38rem]">
-                      <div className="grid grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,0.8fr))] bg-slate-50/90 dark:bg-slate-950/90">
-                        <div className="px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                          Feature access
-                        </div>
-                        {customerTierAvailability.map(({ tier }) => (
-                          <div
-                            key={`${tier.name}-heading`}
-                            className="border-l border-slate-200 px-4 py-3 text-center text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-600 dark:border-slate-800 dark:text-slate-300"
-                          >
-                            {tier.name}
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {customerFeatureRows.map((item) => (
-                          <div
-                            key={item}
-                            className="grid grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,0.8fr))] bg-white dark:bg-slate-900"
-                          >
-                            <div className="px-4 py-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item}</div>
-                            {customerTierAvailability.map(({ excluded, included, tier }) => {
-                              const isIncluded = included.has(item) && !excluded.has(item);
-
-                              return (
-                                <div
-                                  key={`${tier.name}-${item}`}
-                                  className="flex items-center justify-center border-l border-slate-100 px-4 py-3 dark:border-slate-800"
-                                >
-                                  <span
-                                    className={[
-                                      "inline-flex h-8 w-8 items-center justify-center rounded-2xl",
-                                      isIncluded
-                                        ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
-                                        : "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500",
-                                    ].join(" ")}
-                                  >
-                                    <Icon name={isIncluded ? "check" : "close"} className="h-4 w-4" />
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
+                        {tier.planName}
+                      </span>
+                      {tier.badge ? (
+                        <span
+                          className={[
+                            "rounded-full px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-widest",
+                            tier.featured
+                              ? "bg-brand-500/30 text-brand-200"
+                              : "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300",
+                          ].join(" ")}
+                        >
+                          {tier.badge}
+                        </span>
+                      ) : null}
                     </div>
-                  </div>
-                </Reveal>
-              ) : null}
 
-              <div className="grid gap-4 xl:grid-cols-2">
-                {operatorPlans.map((plan, index) => {
-                  const palette = pricingToneClasses[plan.tone];
-                  const tier = plan.tiers[0];
-                  const includedItems = tier?.sections.flatMap((section) => section.items) ?? [];
+                    {/* Tier name */}
+                    <h3
+                      className={[
+                        "mt-5 font-display text-2xl font-extrabold",
+                        tier.featured ? "text-white" : "text-slate-950 dark:text-white",
+                      ].join(" ")}
+                    >
+                      {tier.tierName}
+                    </h3>
 
-                  return (
-                    <Reveal key={plan.name} delay={0.04 + index * 0.04}>
-                      <article className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                        <div className="flex flex-wrap items-start justify-between gap-4">
-                          <div className="max-w-2xl">
-                            <div className="flex items-center gap-3">
-                              <span className={["inline-flex h-11 w-11 items-center justify-center rounded-2xl", palette.badge].join(" ")}>
-                                <Icon name={plan.icon} className="h-5 w-5" />
-                              </span>
-                              <div>
-                                <p className={["text-[0.68rem] font-semibold uppercase tracking-[0.2em]", palette.text].join(" ")}>
-                                  {plan.name}
-                                </p>
-                                <h3 className="font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                                  {tier?.name ?? plan.name}
-                                </h3>
-                              </div>
-                            </div>
-                            <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{plan.description}</p>
-                          </div>
+                    {/* Price */}
+                    <div className="mt-3 flex items-end gap-1.5">
+                      <span
+                        className={[
+                          "font-display text-5xl font-black leading-none tracking-tight",
+                          tier.featured ? "text-white" : "text-slate-950 dark:text-white",
+                        ].join(" ")}
+                      >
+                        {tier.price}
+                      </span>
+                      <span
+                        className={[
+                          "mb-1 text-sm",
+                          tier.featured ? "text-slate-400" : "text-slate-400 dark:text-slate-500",
+                        ].join(" ")}
+                      >
+                        /month
+                      </span>
+                    </div>
 
-                          <div className="rounded-[1.3rem] border border-slate-200 bg-slate-50 px-4 py-3 text-right dark:border-slate-800 dark:bg-slate-950">
-                            <p className="font-display text-3xl font-extrabold text-slate-950 dark:text-white">{tier?.price}</p>
-                            <p className="text-xs text-slate-400 dark:text-slate-500">/month</p>
-                          </div>
-                        </div>
+                    {/* Description */}
+                    {tier.description ? (
+                      <p
+                        className={[
+                          "mt-3 text-sm leading-6",
+                          tier.featured ? "text-slate-400" : "text-slate-500 dark:text-slate-400",
+                        ].join(" ")}
+                      >
+                        {tier.description}
+                      </p>
+                    ) : null}
 
-                        {tier?.description ? (
-                          <p className="mt-4 text-sm leading-6 text-slate-500 dark:text-slate-400">{tier.description}</p>
-                        ) : null}
+                    {/* Divider */}
+                    <div
+                      className={[
+                        "my-5 h-px",
+                        tier.featured ? "bg-white/10" : "bg-slate-100 dark:bg-slate-800",
+                      ].join(" ")}
+                    />
 
-                        {tier?.discount ? (
-                          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{tier.discount}</p>
-                        ) : null}
-
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          {includedItems.map((item) => (
-                            <span
-                              key={item}
-                              className="rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-xs leading-5 text-brand-700 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-
-                        {tier?.ctaLabel ? (
-                          <Link
-                            href="/access"
-                            className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                    {/* Features */}
+                    <ul className="flex-1 space-y-3">
+                      {tier.features.map((feat) => (
+                        <li key={feat} className="flex items-start gap-3">
+                          <span
+                            className={[
+                              "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                              tier.featured
+                                ? "bg-brand-500/25 text-brand-300"
+                                : "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300",
+                            ].join(" ")}
                           >
-                            {tier.ctaLabel}
-                            <Icon name="arrow-right" className="h-4 w-4" />
-                          </Link>
-                        ) : null}
-                      </article>
-                    </Reveal>
-                  );
-                })}
-              </div>
+                            <Icon name="check" className="h-3 w-3" />
+                          </span>
+                          <span
+                            className={[
+                              "text-sm leading-5",
+                              tier.featured ? "text-slate-300" : "text-slate-600 dark:text-slate-300",
+                            ].join(" ")}
+                          >
+                            {feat}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Discount note */}
+                    {tier.discount ? (
+                      <p
+                        className={[
+                          "mt-5 text-xs leading-5",
+                          tier.featured ? "text-slate-500" : "text-slate-400 dark:text-slate-500",
+                        ].join(" ")}
+                      >
+                        {tier.discount}
+                      </p>
+                    ) : null}
+
+                    {/* CTA */}
+                    {tier.ctaLabel ? (
+                      <Link
+                        href="/access"
+                        className={[
+                          "mt-5 flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-bold transition",
+                          tier.featured
+                            ? "bg-brand-500 text-white hover:bg-brand-400"
+                            : "bg-slate-950 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100",
+                        ].join(" ")}
+                      >
+                        {tier.ctaLabel}
+                        <Icon name="arrow-right" className="h-4 w-4" />
+                      </Link>
+                    ) : null}
+                  </Reveal>
+                );
+              })}
             </div>
 
             <article className="mt-8 flex items-start gap-4 rounded-3xl border border-amber-100 bg-amber-50 p-5 dark:border-amber-500/20 dark:bg-amber-500/10">
@@ -1109,64 +1010,69 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
               description="Customers and riders both earn reward points, with a review process that keeps redemption fair and accountable."
             />
 
-            <div className="mt-14 grid gap-8 lg:grid-cols-2">
-              <article className="rounded-[2rem] border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <h3 className="font-display text-lg font-extrabold text-slate-950 dark:text-white">How points work</h3>
-                <div className="mt-6 space-y-4">
-                  {rewardsHighlights.map((item) => {
-                    const palette = featureToneClasses[item.tone];
-
-                    return (
-                      <div key={item.title} className={["rounded-3xl border p-4", palette.card].join(" ")}>
-                        <div className="flex items-start gap-4">
-                          <div
-                            className={[
-                              "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-display text-sm font-extrabold",
-                              palette.icon,
-                            ].join(" ")}
-                          >
-                            {item.badge}
-                          </div>
-                          <div>
-                            <h4 className={["font-display text-sm font-bold", palette.text].join(" ")}>{item.title}</h4>
-                            <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
-                          </div>
-                        </div>
+            {/* Stat cards — 3 reward highlights */}
+            <div className="mt-14 grid gap-5 sm:grid-cols-3">
+              {rewardsHighlights.map((item, i) => {
+                const palette = featureToneClasses[item.tone];
+                return (
+                  <Reveal key={item.title} delay={i * 0.1}>
+                    <article className={["group relative overflow-hidden rounded-3xl border p-8 shadow-sm", palette.card].join(" ")}>
+                      <span
+                        className="pointer-events-none absolute -right-3 -bottom-4 z-0 select-none font-display text-[5.5rem] font-black leading-none opacity-20"
+                        aria-hidden="true"
+                      >
+                        {item.badge}
+                      </span>
+                      <div className="relative z-10">
+                        <p className={["font-display text-6xl font-black leading-none tracking-tight", palette.text].join(" ")}>
+                          {item.badge}
+                        </p>
+                        <h4 className={["mt-4 font-display text-base font-extrabold", palette.text].join(" ")}>{item.title}</h4>
+                        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
                       </div>
-                    );
-                  })}
-                </div>
-              </article>
+                    </article>
+                  </Reveal>
+                );
+              })}
+            </div>
 
-              <div className="flex flex-col gap-5">
-                <article className="flex-1 rounded-[2rem] border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            {/* Audit + Anti-abuse */}
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
+              <Reveal>
+                <article className="rounded-3xl border border-slate-100 bg-white p-7 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
                       <Icon name="eye" className="h-5 w-5" />
                     </span>
-                    <h3 className="font-display text-base font-extrabold text-slate-950 dark:text-white">Human reviewed and bias aware</h3>
+                    <h3 className="font-display text-base font-extrabold text-slate-950 dark:text-white">Human reviewed, bias aware</h3>
                   </div>
-                  <div className="mt-5 space-y-3">
+                  <ul className="mt-5 space-y-3">
                     {rewardAuditPoints.map((item) => (
-                      <div key={item} className="flex items-start gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500" />
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+                          <Icon name="check" className="h-3 w-3" />
+                        </span>
                         <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">{item}</p>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </article>
+              </Reveal>
 
-                <article className="rounded-[2rem] border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-                  <div className="flex items-center gap-2">
-                    <Icon name="warning" className="h-4 w-4 text-amber-400" />
-                    <h3 className="font-display text-sm font-bold text-white">Anti-abuse protection</h3>
+              <Reveal delay={0.08}>
+                <article className="rounded-3xl border border-amber-200 bg-gradient-to-br from-slate-900 to-slate-800 p-7 dark:border-amber-500/20">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/15 text-amber-400">
+                      <Icon name="warning" className="h-5 w-5" />
+                    </span>
+                    <h3 className="font-display text-base font-extrabold text-white">Anti-abuse protection</h3>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">
+                  <p className="mt-4 text-sm leading-7 text-slate-300">
                     Reward activity is reviewed to identify suspicious or inflated bookings before any
                     redemption is approved. Honest participation remains the standard.
                   </p>
                 </article>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>

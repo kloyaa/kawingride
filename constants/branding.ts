@@ -1,6 +1,6 @@
 export const APP_NAME = "Kawing Ride";
 export const APP_NAME_LOWERCASE = "kawing ride";
-export const APP_DOMAIN = "https://kawingride.app";
+export const APP_DOMAIN = "https://kawingride.com";
 export const THEME_COOKIE_NAME = "kawing-ride-theme";
 export type ThemeMode = "light" | "dark";
 
