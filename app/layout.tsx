@@ -51,13 +51,13 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   icons: {
     icon: [
-      { url: "/icon.png", type: "image/png", sizes: "1024x1024" },
+      { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
       { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
     ],
     apple: [
-      { url: "/apple-icon.png", type: "image/png", sizes: "1024x1024" },
+      { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
     ],
-    shortcut: ["/icon.png"],
+    shortcut: [blobAssetPaths.logo],
   },
   robots: {
     index: true,

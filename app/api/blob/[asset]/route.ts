@@ -1,57 +1,26 @@
-import { get, list } from "@vercel/blob";
 import { type NextRequest, NextResponse } from "next/server";
 
 import {
-  getBlobAssetPrefix,
   getPreferredBlobAssetPathname,
   isBlobAssetName,
-  type BlobAssetName,
 } from "@/constants/blob-assets";
 
 export const runtime = "nodejs";
 
-const resolvedPathnameCache = new Map<BlobAssetName, string>();
+function getStoreIdFromToken(token: string) {
+  const [, , , storeId = ""] = token.split("_");
 
-function matchesAssetPathname(pathname: string, prefix: string) {
-  return pathname === prefix || pathname.startsWith(`${prefix}-`) || pathname.startsWith(`${prefix}.`);
+  return storeId;
 }
 
-async function resolveBlobPathname(asset: BlobAssetName) {
-  const cachedPathname = resolvedPathnameCache.get(asset);
+function createBlobUrl(pathname: string, token: string) {
+  const storeId = getStoreIdFromToken(token);
 
-  if (cachedPathname) {
-    return cachedPathname;
+  if (!storeId) {
+    throw new Error("Unable to determine Blob store ID from BLOB_READ_WRITE_TOKEN.");
   }
 
-  const preferredPathname = getPreferredBlobAssetPathname(asset);
-  const preferredBlob = await get(preferredPathname, { access: "private" });
-
-  if (preferredBlob) {
-    resolvedPathnameCache.set(asset, preferredPathname);
-
-    return preferredPathname;
-  }
-
-  const prefix = getBlobAssetPrefix(asset);
-  const { blobs } = await list({ prefix, limit: 20 });
-  const match = blobs
-    .filter((blob) => matchesAssetPathname(blob.pathname, prefix))
-    .sort((left, right) => right.uploadedAt.getTime() - left.uploadedAt.getTime())[0];
-
-  if (!match) {
-    return null;
-  }
-
-  resolvedPathnameCache.set(asset, match.pathname);
-
-  return match.pathname;
-}
-
-async function fetchBlob(pathname: string, ifNoneMatch: string | undefined) {
-  return get(pathname, {
-    access: "private",
-    ifNoneMatch,
-  });
+  return `https://${storeId}.private.blob.vercel-storage.com/${pathname}`;
 }
 
 export async function GET(
@@ -65,45 +34,57 @@ export async function GET(
   }
 
   try {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "Missing BLOB_READ_WRITE_TOKEN." },
+        { status: 500 },
+      );
+    }
+
     const ifNoneMatch = request.headers.get("if-none-match") ?? undefined;
-    let pathname = await resolveBlobPathname(asset);
+    const pathname = getPreferredBlobAssetPathname(asset);
+    const response = await fetch(createBlobUrl(pathname, token), {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+        ...(ifNoneMatch ? { "If-None-Match": ifNoneMatch } : {}),
+      },
+      cache: "no-store",
+    });
 
-    if (!pathname) {
+    if (response.status === 404) {
       return new NextResponse("Not found", { status: 404 });
     }
 
-    let result = await fetchBlob(pathname, ifNoneMatch);
-
-    if (!result) {
-      resolvedPathnameCache.delete(asset);
-      pathname = await resolveBlobPathname(asset);
-
-      if (!pathname) {
-        return new NextResponse("Not found", { status: 404 });
-      }
-
-      result = await fetchBlob(pathname, ifNoneMatch);
-    }
-
-    if (!result) {
-      return new NextResponse("Not found", { status: 404 });
-    }
-
-    if (result.statusCode === 304) {
+    if (response.status === 304) {
       return new NextResponse(null, {
         status: 304,
         headers: {
-          ETag: result.blob.etag,
+          ETag: response.headers.get("etag") ?? "",
           "Cache-Control": "private, no-cache",
         },
       });
     }
 
-    return new NextResponse(result.stream, {
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: `Blob request failed with ${response.status} ${response.statusText}.` },
+        { status: 502 },
+      );
+    }
+
+    const body = Buffer.from(await response.arrayBuffer());
+    const contentType = response.headers.get("content-type") ?? "application/octet-stream";
+    const etag = response.headers.get("etag") ?? "";
+
+    return new NextResponse(body, {
       headers: {
-        "Content-Type": result.blob.contentType,
+        "Content-Type": contentType,
+        "Content-Length": body.byteLength.toString(),
         "X-Content-Type-Options": "nosniff",
-        ETag: result.blob.etag,
+        ETag: etag,
         "Cache-Control": "private, no-cache",
       },
     });

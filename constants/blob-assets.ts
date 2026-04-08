@@ -26,10 +26,6 @@ export function isBlobAssetName(value: string): value is BlobAssetName {
   return Object.hasOwn(blobAssetNames, value);
 }
 
-export function getBlobAssetPrefix(asset: BlobAssetName) {
-  return `${getNormalizedBlobAssetPrefix()}${blobAssetNames[asset]}`;
-}
-
 export function getPreferredBlobAssetPathname(asset: BlobAssetName) {
-  return `${getBlobAssetPrefix(asset)}.png`;
+  return `${getNormalizedBlobAssetPrefix()}${blobAssetNames[asset]}.png`;
 }
