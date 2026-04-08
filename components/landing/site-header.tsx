@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import type { ThemeMode } from "@/constants/branding";
@@ -15,7 +16,71 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [homeActiveHref, setHomeActiveHref] = useState<string | null>("/#mission");
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      return;
+    }
+
+    const sectionItems = navigationItems.filter((item) => item.href.startsWith("/#"));
+    const sections = sectionItems
+      .map((item) => {
+        const id = item.href.slice(2);
+        const element = document.getElementById(id);
+
+        return element ? { element, href: item.href } : null;
+      })
+      .filter((item): item is { element: HTMLElement; href: string } => item !== null);
+
+    if (sections.length === 0) {
+      return;
+    }
+
+    const updateActiveHref = () => {
+      const viewportAnchor = window.innerHeight * 0.28;
+      const currentSection = sections.findLast(({ element }) => element.getBoundingClientRect().top <= viewportAnchor);
+
+      setHomeActiveHref(currentSection?.href ?? sections[0]?.href ?? null);
+    };
+
+    updateActiveHref();
+    window.addEventListener("scroll", updateActiveHref, { passive: true });
+    window.addEventListener("resize", updateActiveHref);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveHref);
+      window.removeEventListener("resize", updateActiveHref);
+    };
+  }, [pathname]);
+
+  const activeHref = pathname === "/our-story"
+    ? "/our-story"
+    : pathname === "/"
+      ? (homeActiveHref ?? "/#mission")
+      : null;
+
+  function getNavItemClasses(href: string, mobile = false) {
+    const isActive = activeHref === href;
+
+    if (mobile) {
+      return [
+        "rounded-2xl border px-4 py-3 text-sm font-medium transition",
+        isActive
+          ? "border-brand-100 bg-brand-50 text-brand-800 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200"
+          : "border-transparent text-slate-700 hover:border-brand-100 hover:bg-brand-50 hover:text-brand-700 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-brand-300",
+      ].join(" ");
+    }
+
+    return [
+      "rounded-full px-2.5 py-2 text-[0.82rem] font-medium transition",
+      isActive
+        ? "bg-white text-brand-800 shadow-sm dark:bg-slate-800 dark:text-brand-200"
+        : "text-slate-600 hover:bg-white hover:text-brand-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-brand-300",
+    ].join(" ");
+  }
 
   return (
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-4">
@@ -35,7 +100,8 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-full px-2.5 py-2 text-[0.82rem] font-medium text-slate-600 transition hover:bg-white hover:text-brand-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-brand-300"
+                    className={getNavItemClasses(item.href)}
+                    aria-current={activeHref === item.href ? "page" : undefined}
                   >
                     {item.label}
                   </Link>
@@ -75,7 +141,8 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-brand-100 hover:bg-brand-50 hover:text-brand-700 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-brand-300"
+                  className={getNavItemClasses(item.href, true)}
+                  aria-current={activeHref === item.href ? "page" : undefined}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
