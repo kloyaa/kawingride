@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { Icon } from "@/components/landing/icons";
 import { useToast } from "@/components/ui/toast-provider";
 import { getErrorMessage } from "@/lib/http/error-message";
 import { getMunicipalitiesOrCities, getProvinces, getRegions } from "@/lib/psgc/service";
@@ -957,8 +958,9 @@ export function AccessRequestForm() {
 
                 {showReviewScrollHint ? (
                   <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center sm:hidden">
-                    <span className="rounded-full bg-slate-950/78 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur">
-                      Scroll down
+                    <span className="inline-flex animate-bounce items-center gap-2 rounded-full bg-slate-950/78 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur">
+                      <Icon name="arrow-down" className="h-3.5 w-3.5" />
+                      <span>Scroll down</span>
                     </span>
                   </div>
                 ) : null}
