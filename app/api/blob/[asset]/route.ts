@@ -1,13 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import {
+  getExpectedBlobAssetContentType,
   getPreferredBlobAssetPathname,
   isBlobAssetName,
 } from "@/constants/blob-assets";
 
 export const runtime = "nodejs";
-
-const ALLOWED_BLOB_CONTENT_TYPES = new Set(["image/png"]);
 
 function getStoreIdFromToken(token: string) {
   const [, , , storeId = ""] = token.split("_");
@@ -47,6 +46,7 @@ export async function GET(
 
     const ifNoneMatch = request.headers.get("if-none-match") ?? undefined;
     const pathname = getPreferredBlobAssetPathname(asset);
+    const expectedContentType = getExpectedBlobAssetContentType(asset);
     const response = await fetch(createBlobUrl(pathname, token), {
       method: "GET",
       headers: {
@@ -78,10 +78,12 @@ export async function GET(
     }
 
     const body = Buffer.from(await response.arrayBuffer());
-    const contentType = response.headers.get("content-type") ?? "application/octet-stream";
+    const contentType = (response.headers.get("content-type") ?? "application/octet-stream")
+      .split(";", 1)[0]
+      .trim();
     const etag = response.headers.get("etag") ?? "";
 
-    if (!ALLOWED_BLOB_CONTENT_TYPES.has(contentType)) {
+    if (contentType !== expectedContentType) {
       console.error(
         `Rejected blob asset "${asset}" with unexpected content type "${contentType}"`,
       );
@@ -97,8 +99,8 @@ export async function GET(
         "Content-Type": contentType,
         "Content-Length": body.byteLength.toString(),
         "X-Content-Type-Options": "nosniff",
-        "Content-Disposition": `inline; filename="${asset}.png"`,
-        "Content-Security-Policy": "default-src 'none'; img-src 'self'; script-src 'none'; sandbox",
+        "Content-Disposition": `inline; filename="${pathname.split("/").pop() ?? asset}"`,
+        "Content-Security-Policy": "default-src 'none'; img-src 'self'; script-src 'none'; style-src 'none'; sandbox",
         ETag: etag,
         "Cache-Control": "private, no-cache",
       },

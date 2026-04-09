@@ -52,13 +52,12 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   icons: {
     icon: [
-      { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
-      { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
+      { url: blobAssetPaths.navLogo, type: "image/svg+xml", sizes: "any" },
     ],
     apple: [
       { url: blobAssetPaths.logo, type: "image/png", sizes: "1024x1024" },
     ],
-    shortcut: [blobAssetPaths.logo],
+    shortcut: [{ url: blobAssetPaths.navLogo, type: "image/svg+xml", sizes: "any" }],
   },
   robots: {
     index: true,
