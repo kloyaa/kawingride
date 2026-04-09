@@ -7,6 +7,8 @@ import {
 
 export const runtime = "nodejs";
 
+const ALLOWED_BLOB_CONTENT_TYPES = new Set(["image/png"]);
+
 function getStoreIdFromToken(token: string) {
   const [, , , storeId = ""] = token.split("_");
 
@@ -79,11 +81,24 @@ export async function GET(
     const contentType = response.headers.get("content-type") ?? "application/octet-stream";
     const etag = response.headers.get("etag") ?? "";
 
+    if (!ALLOWED_BLOB_CONTENT_TYPES.has(contentType)) {
+      console.error(
+        `Rejected blob asset "${asset}" with unexpected content type "${contentType}"`,
+      );
+
+      return NextResponse.json(
+        { error: "Unexpected asset content type." },
+        { status: 502 },
+      );
+    }
+
     return new NextResponse(body, {
       headers: {
         "Content-Type": contentType,
         "Content-Length": body.byteLength.toString(),
         "X-Content-Type-Options": "nosniff",
+        "Content-Disposition": `inline; filename="${asset}.png"`,
+        "Content-Security-Policy": "default-src 'none'; img-src 'self'; script-src 'none'; sandbox",
         ETag: etag,
         "Cache-Control": "private, no-cache",
       },

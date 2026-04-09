@@ -37,7 +37,9 @@ function applyTheme(theme: ThemeMode) {
   root.classList.toggle("dark", theme === "dark");
   root.style.colorScheme = theme;
   window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-  document.cookie = `${THEME_COOKIE_NAME}=${theme}; path=/; max-age=31536000; samesite=lax`;
+  const secureAttribute = window.location.protocol === "https:" ? "; secure" : "";
+  document.cookie =
+    `${THEME_COOKIE_NAME}=${theme}; path=/; max-age=31536000; samesite=lax${secureAttribute}`;
   window.dispatchEvent(new Event(EVENT_NAME));
 }
 
