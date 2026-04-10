@@ -92,20 +92,22 @@ function getFieldClassName(hasError: boolean, isDisabled = false) {
   ].join(" ");
 }
 
+const initialFormValues: FormValues = {
+  agreesToPolicies: false,
+  communityName: "",
+  confirmsAuthority: false,
+  firstName: "",
+  lastName: "",
+  mobile: "",
+  email: "",
+  municipalityOrCityId: "",
+  provinceId: "",
+  regionId: "",
+};
+
 export function AccessRequestForm() {
   const { error: showErrorToast, success: showSuccessToast } = useToast();
-  const [values, setValues] = useState<FormValues>({
-    agreesToPolicies: false,
-    communityName: "",
-    confirmsAuthority: false,
-    firstName: "",
-    lastName: "",
-    mobile: "",
-    email: "",
-    municipalityOrCityId: "",
-    provinceId: "",
-    regionId: "",
-  });
+  const [values, setValues] = useState<FormValues>(initialFormValues);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [hasMounted, setHasMounted] = useState(false);
   const [isReviewVisible, setIsReviewVisible] = useState(false);
@@ -126,6 +128,7 @@ export function AccessRequestForm() {
   });
 
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const formRootRef = useRef<HTMLDivElement | null>(null);
   const reviewModalRef = useRef<HTMLDivElement | null>(null);
   const lastSubmittedOtp = useRef("");
   const selectedRegion = locationOptions.regions.find((item) => item.id === values.regionId)?.label ?? "Not selected";
@@ -522,6 +525,12 @@ export function AccessRequestForm() {
     if (Object.keys(nextErrors).length > 0) {
       setIsReviewVisible(false);
       setIsOtpVisible(false);
+      window.requestAnimationFrame(() => {
+        formRootRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
       return;
     }
 
@@ -541,6 +550,22 @@ export function AccessRequestForm() {
       setOtpError("");
       setIsOtpVisible(false);
       showSuccessToast("Access confirmed", `The admin onboarding link has been sent to ${values.email.trim()}.`);
+      setValues(initialFormValues);
+      setErrors({});
+      setIsReviewVisible(false);
+      setOtpDigits(Array(OTP_LENGTH).fill(""));
+      setSecondsRemaining(RESEND_SECONDS);
+      setLocationOptions((current) => ({
+        ...current,
+        municipalitiesOrCities: [],
+        provinces: [],
+      }));
+      setLocationLoading((current) => ({
+        ...current,
+        municipalitiesOrCities: false,
+        provinces: false,
+      }));
+      lastSubmittedOtp.current = "";
       return;
     }
 
@@ -605,7 +630,7 @@ export function AccessRequestForm() {
   }
 
   return (
-    <div className="space-y-6">
+    <div ref={formRootRef} className="space-y-6">
       <form noValidate onSubmit={handleFormSubmit} className="space-y-6">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -878,19 +903,16 @@ export function AccessRequestForm() {
                 aria-hidden="true"
               />
               <div className="relative w-full max-w-2xl">
-                <div
-                  ref={reviewModalRef}
-                  className="surface-panel relative max-h-[90vh] overflow-y-auto rounded-[2rem] p-6 pb-20 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:p-8 sm:pb-8"
-                >
-                  <div className="flex items-start justify-between gap-4">
+                <div className="surface-panel relative flex max-h-[90vh] flex-col overflow-hidden rounded-[2rem] shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
+                  <div className="flex items-start justify-between gap-4 border-b border-slate-200/80 px-5 py-5 dark:border-slate-800 sm:px-6 sm:py-6">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                         Review details
                       </p>
-                      <h3 className="mt-2 font-display text-3xl font-extrabold text-slate-950 dark:text-white">
+                      <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white sm:text-3xl">
                         Confirm this admin request before verification.
                       </h3>
-                      <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
                         Check the details below. Once confirmed, we will send the verification code for the next step.
                       </p>
                     </div>
@@ -904,49 +926,56 @@ export function AccessRequestForm() {
                     </button>
                   </div>
 
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {[
-                      { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
-                      {
-                        label: "Terms of Service and Privacy Policy accepted",
-                        value: values.agreesToPolicies ? "Yes" : "No",
-                      },
-                      { label: "Community name", value: values.communityName.trim() || "Not provided" },
-                      { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
-                      { label: "Admin last name", value: values.lastName.trim() || "Not provided" },
-                      { label: "Mobile number", value: values.mobile || "Not provided" },
-                      { label: "Email address", value: values.email.trim() || "Not provided" },
-                      { label: "Region", value: selectedRegion },
-                      { label: "Province", value: selectedProvince },
-                      { label: "Municipality or city", value: selectedMunicipality },
-                    ].map((item) => (
-                      <div
-                        key={item.label}
-                        className="rounded-[1.4rem] border border-slate-200 bg-white/80 px-4 py-4 dark:border-slate-800 dark:bg-slate-950/65"
-                      >
-                        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                          {item.label}
-                        </p>
-                        <p className="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</p>
-                      </div>
-                    ))}
+                  <div
+                    ref={reviewModalRef}
+                    className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6"
+                  >
+                    <div className="grid gap-2">
+                      {[
+                        { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
+                        {
+                          label: "Terms of Service and Privacy Policy accepted",
+                          value: values.agreesToPolicies ? "Yes" : "No",
+                        },
+                        { label: "Community name", value: values.communityName.trim() || "Not provided" },
+                        { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
+                        { label: "Admin last name", value: values.lastName.trim() || "Not provided" },
+                        { label: "Mobile number", value: values.mobile || "Not provided" },
+                        { label: "Email address", value: values.email.trim() || "Not provided" },
+                        { label: "Region", value: selectedRegion },
+                        { label: "Province", value: selectedProvince },
+                        { label: "Municipality or city", value: selectedMunicipality },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className="grid gap-1 rounded-[1.1rem] border border-slate-200 bg-white/80 px-3.5 py-3 dark:border-slate-800 dark:bg-slate-950/65 sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-start sm:gap-3"
+                        >
+                          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                            {item.label}
+                          </p>
+                          <p className="text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setIsReviewVisible(false)}
-                      className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
-                    >
-                      Edit details
-                    </button>
-                    <button
-                      type="button"
-                      onClick={openOtpStep}
-                      className="inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
-                    >
-                      Confirm and continue
-                    </button>
+                  <div className="border-t border-slate-200/80 bg-white px-5 py-4 dark:border-slate-800 dark:bg-slate-950 sm:px-6 sm:py-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setIsReviewVisible(false)}
+                        className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                      >
+                        Edit details
+                      </button>
+                      <button
+                        type="button"
+                        onClick={openOtpStep}
+                        className="inline-flex items-center justify-center rounded-2xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
+                      >
+                        Confirm and continue
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -966,8 +995,8 @@ export function AccessRequestForm() {
 
       {hasMounted && isOtpVisible
         ? createPortal(
-            <div className="fixed inset-0 z-[110] flex min-h-screen items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md sm:p-6">
-              <div className="surface-panel relative flex h-full min-h-[100dvh] w-full items-center justify-center overflow-hidden rounded-none px-6 py-8 sm:min-h-[calc(100dvh-3rem)] sm:rounded-[2rem] sm:px-8">
+            <div className="fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-md">
+              <div className="surface-panel relative flex h-[100dvh] w-screen items-center justify-center overflow-hidden rounded-none px-6 py-8 sm:px-8">
                 <button
                   type="button"
                   onClick={() => setIsOtpVisible(false)}
