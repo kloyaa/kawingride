@@ -392,7 +392,7 @@ export function AccessRequestForm() {
     }
 
     if (!nextValues.agreesToPolicies) {
-      nextErrors.agreesToPolicies = "You must agree to the Terms and Privacy Policy.";
+      nextErrors.agreesToPolicies = "You must agree to the Terms of Service and Privacy Policy.";
     }
 
     return nextErrors;
@@ -850,7 +850,7 @@ export function AccessRequestForm() {
                   rel="noreferrer"
                   className="font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 dark:text-brand-300 dark:decoration-brand-500/40"
                 >
-                  Terms
+                  Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
@@ -916,7 +916,10 @@ export function AccessRequestForm() {
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {[
                       { label: "Authorization confirmed", value: values.confirmsAuthority ? "Yes" : "No" },
-                      { label: "Terms and Privacy accepted", value: values.agreesToPolicies ? "Yes" : "No" },
+                      {
+                        label: "Terms of Service and Privacy Policy accepted",
+                        value: values.agreesToPolicies ? "Yes" : "No",
+                      },
                       { label: "Community name", value: values.communityName.trim() || "Not provided" },
                       { label: "Admin first name", value: values.firstName.trim() || "Not provided" },
                       { label: "Admin last name", value: values.lastName.trim() || "Not provided" },

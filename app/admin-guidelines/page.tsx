@@ -2,12 +2,12 @@ import { LegalDocumentPage } from "@/components/legal/legal-document-page";
 import { buildLegalMetadata, getLegalDocument } from "@/lib/legal-documents";
 import { getServerTheme } from "@/lib/theme/server";
 
-export const metadata = buildLegalMetadata("privacy-policy");
+export const metadata = buildLegalMetadata("admin-guidelines");
 
-export default async function PrivacyPolicyPage() {
+export default async function AdminGuidelinesPage() {
   const [initialTheme, document] = await Promise.all([
     getServerTheme(),
-    getLegalDocument("privacy-policy"),
+    getLegalDocument("admin-guidelines"),
   ]);
 
   return <LegalDocumentPage initialTheme={initialTheme} document={document} />;

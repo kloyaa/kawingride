@@ -760,7 +760,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "How do I join or bring my community in?",
     answer:
-      "Use the Request Access path to start the conversation. That is the best way to express interest, ask about launch fit, or explore how your community can come on board.",
+      "Use the admin access path to start the conversation. That is the best way to express interest, ask about launch fit, or explore how your community can come on board.",
   },
 ];
 

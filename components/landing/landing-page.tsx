@@ -1192,14 +1192,14 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   </p>
                   <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
                     For community onboarding, local rollout discussions, or partnership conversations in Cagayan de Oro City
-                    and Butuan City, the next step is to use the request access path and align the right admin,
+                    and Butuan City, the next step is to use the admin access path and align the right admin,
                     rider, and customer setup from the start.
                   </p>
                   <Link
                     href="/access"
                     className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
                   >
-                    Request Access
+                    Request Admin Access
                     <Icon name="arrow-right" className="h-4 w-4" />
                   </Link>
                 </div>

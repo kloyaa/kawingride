@@ -39,11 +39,14 @@ export function SiteFooter() {
                 <Link href="/#faq" className="text-slate-300 transition hover:text-white">
                   FAQ
                 </Link>
+                <Link href="/policies" className="text-slate-300 transition hover:text-white">
+                  Policies
+                </Link>
                 <Link href="/privacy-policy" className="text-slate-300 transition hover:text-white">
                   Privacy Policy
                 </Link>
                 <Link href="/terms" className="text-slate-300 transition hover:text-white">
-                  Terms
+                  Terms of Service
                 </Link>
               </nav>
               <div className="flex flex-wrap gap-2">

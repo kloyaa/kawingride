@@ -64,7 +64,7 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                     href="/access"
                     className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-slate-800"
                   >
-                    Request Access
+                    Request Admin Access
                   </Link>
                 </div>
               </Reveal>
