@@ -44,6 +44,11 @@ export function LegalIndexPage({ initialTheme = "light" }: LegalIndexPageProps) 
                   coordination, what users are responsible for, how data is handled, and where the platform&apos;s safety
                   and liability boundaries begin and end.
                 </p>
+
+                <p className="max-w-2xl text-sm leading-7 text-slate-500 dark:text-slate-400">
+                  Each document page also includes version history so users can review archived policy text when the
+                  rules change.
+                </p>
               </div>
 
               <div className="rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700/70 dark:bg-slate-950/70 dark:shadow-[0_24px_56px_rgba(7,12,14,0.36)]">

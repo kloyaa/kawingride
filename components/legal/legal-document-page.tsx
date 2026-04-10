@@ -24,8 +24,16 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
   const relatedDocuments = getAllLegalDocumentDefinitions().filter((entry) =>
     document.related.includes(entry.key),
   );
-  const downloadHref = getLegalDocumentDownloadPath(document.key);
-  const downloadFileName = getLegalDocumentDownloadFileName(document.key);
+  const downloadHref = getLegalDocumentDownloadPath(document.key, { version: document.version ?? undefined });
+  const downloadFileName = getLegalDocumentDownloadFileName(document.key, { version: document.version ?? undefined });
+  const downloadMarkdownHref = getLegalDocumentDownloadPath(document.key, {
+    version: document.version ?? undefined,
+    format: "md",
+  });
+  const downloadMarkdownFileName = getLegalDocumentDownloadFileName(document.key, {
+    version: document.version ?? undefined,
+    format: "md",
+  });
   const isAdminRelatedDocument = document.key === "admin-guidelines";
 
   return (
@@ -55,6 +63,19 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
                   {document.summary}
                 </p>
 
+                <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span className="rounded-full border border-brand-200 bg-white/90 px-3 py-1.5 text-brand-900 shadow-sm dark:border-brand-500/25 dark:bg-white/8 dark:text-brand-100">
+                    {document.versionLabel}
+                  </span>
+                  <span className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
+                    Effective {document.effectiveDate}
+                  </span>
+                </div>
+
+                <p className="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  {document.changeSummary}
+                </p>
+
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href="/policies"
@@ -67,7 +88,14 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
                     download={downloadFileName}
                     className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-slate-800"
                   >
-                    Download Full Text
+                    Download TXT
+                  </a>
+                  <a
+                    href={downloadMarkdownHref}
+                    download={downloadMarkdownFileName}
+                    className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-slate-800"
+                  >
+                    Download MD
                   </a>
                   {isAdminRelatedDocument ? (
                     <Link
@@ -82,12 +110,19 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
 
               <aside className="rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700/70 dark:bg-slate-950/70 dark:shadow-[0_24px_56px_rgba(7,12,14,0.36)]">
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                  What this page covers
+                  Version details
                 </p>
                 <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                  This document is part of the Kawing Ride trust and policy framework. Use the sections below for quick
-                  navigation, then open the related documents for the connected rules and privacy context.
+                  This document is part of the Kawing Ride trust and policy framework. The current view reflects the
+                  rules that took effect on {document.effectiveDate}.
                 </p>
+
+                <div className="mt-5 rounded-[1.4rem] border border-slate-100 bg-slate-50/90 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                    Change summary
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-200">{document.changeSummary}</p>
+                </div>
 
                 <div className="mt-6">
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
@@ -181,6 +216,39 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
               </article>
 
               <aside className="space-y-5 xl:sticky xl:top-28 xl:h-fit">
+                <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                    Version history
+                  </p>
+                  <div className="mt-4 space-y-3">
+                    {document.availableVersions.map((versionEntry) => (
+                      <Link
+                        key={versionEntry.version ?? versionEntry.versionLabel}
+                        href={versionEntry.href}
+                        className={[
+                          "block rounded-[1.25rem] border px-4 py-3 transition",
+                          versionEntry.version === document.version
+                            ? "border-brand-200 bg-brand-50/75 dark:border-brand-500/30 dark:bg-brand-500/10"
+                            : "border-slate-200 bg-slate-50/80 hover:border-brand-200 hover:bg-brand-50/60 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-brand-500/30 dark:hover:bg-slate-950",
+                        ].join(" ")}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{versionEntry.versionLabel}</p>
+                          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                            {versionEntry.isCurrent ? "Current" : "Archive"}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-xs leading-6 text-slate-500 dark:text-slate-400">
+                          Effective {versionEntry.effectiveDate}
+                        </p>
+                        <p className="mt-2 text-xs leading-6 text-slate-600 dark:text-slate-300">
+                          {versionEntry.changeSummary}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="rounded-[1.75rem] border border-brand-100 bg-brand-50/75 p-5 dark:border-brand-500/20 dark:bg-brand-500/10">
                   <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
                     Related documents

@@ -93,7 +93,7 @@ function getFieldClassName(hasError: boolean, isDisabled = false) {
 }
 
 export function AccessRequestForm() {
-  const { error: showErrorToast } = useToast();
+  const { error: showErrorToast, success: showSuccessToast } = useToast();
   const [values, setValues] = useState<FormValues>({
     agreesToPolicies: false,
     communityName: "",
@@ -113,7 +113,6 @@ export function AccessRequestForm() {
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [otpError, setOtpError] = useState("");
   const [showReviewScrollHint, setShowReviewScrollHint] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [secondsRemaining, setSecondsRemaining] = useState(RESEND_SECONDS);
   const [locationLoading, setLocationLoading] = useState<LocationLoadingState>({
     municipalitiesOrCities: false,
@@ -146,13 +145,18 @@ export function AccessRequestForm() {
   }, []);
 
   useEffect(() => {
-    if (!isReviewVisible) {
+    if (!isReviewVisible && !isOtpVisible) {
       return;
     }
 
     const previousOverflow = document.body.style.overflow;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        if (isOtpVisible) {
+          setIsOtpVisible(false);
+          return;
+        }
+
         setIsReviewVisible(false);
       }
     };
@@ -164,7 +168,7 @@ export function AccessRequestForm() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isReviewVisible]);
+  }, [isOtpVisible, isReviewVisible]);
 
   useEffect(() => {
     if (!isReviewVisible) {
@@ -500,7 +504,6 @@ export function AccessRequestForm() {
     setIsReviewVisible(false);
     setIsOtpVisible(true);
     setOtpError("");
-    setSuccessMessage("");
     setOtpDigits(Array(OTP_LENGTH).fill(""));
     setSecondsRemaining(RESEND_SECONDS);
     lastSubmittedOtp.current = "";
@@ -519,13 +522,11 @@ export function AccessRequestForm() {
     if (Object.keys(nextErrors).length > 0) {
       setIsReviewVisible(false);
       setIsOtpVisible(false);
-      setSuccessMessage("");
       return;
     }
 
     setIsOtpVisible(false);
     setOtpError("");
-    setSuccessMessage("");
     setIsReviewVisible(true);
   }
 
@@ -538,11 +539,11 @@ export function AccessRequestForm() {
 
     if (nextOtpValue === OTP_CODE) {
       setOtpError("");
-      setSuccessMessage(`The admin onboarding link has been sent to ${values.email.trim()}.`);
+      setIsOtpVisible(false);
+      showSuccessToast("Access confirmed", `The admin onboarding link has been sent to ${values.email.trim()}.`);
       return;
     }
 
-    setSuccessMessage("");
     setOtpError("The verification code is incorrect. Please try again.");
   }
 
@@ -550,7 +551,6 @@ export function AccessRequestForm() {
     const digit = rawValue.replace(/\D/g, "").slice(-1);
 
     setOtpError("");
-    setSuccessMessage("");
     lastSubmittedOtp.current = "";
     const nextDigits = [...otpDigits];
     nextDigits[index] = digit;
@@ -560,9 +560,6 @@ export function AccessRequestForm() {
       otpRefs.current[index + 1]?.focus();
     }
 
-    if (!nextDigits.includes("")) {
-      verifyOtp(nextDigits.join(""));
-    }
   }
 
   function handleOtpKeyDown(index: number, event: React.KeyboardEvent<HTMLInputElement>) {
@@ -591,24 +588,18 @@ export function AccessRequestForm() {
     }
 
     setOtpError("");
-    setSuccessMessage("");
     lastSubmittedOtp.current = "";
     const nextDigits = Array.from({ length: OTP_LENGTH }, (_, index) => digits[index] ?? "");
     setOtpDigits(nextDigits);
 
     const nextIndex = Math.min(digits.length, OTP_LENGTH - 1);
     otpRefs.current[nextIndex]?.focus();
-
-    if (!nextDigits.includes("")) {
-      verifyOtp(nextDigits.join(""));
-    }
   }
 
   function handleResend() {
     setSecondsRemaining(RESEND_SECONDS);
     setOtpDigits(Array(OTP_LENGTH).fill(""));
     setOtpError("");
-    setSuccessMessage("");
     lastSubmittedOtp.current = "";
     otpRefs.current[0]?.focus();
   }
@@ -973,80 +964,87 @@ export function AccessRequestForm() {
           )
         : null}
 
-      {isOtpVisible ? (
-        <section className="rounded-[2rem] border border-brand-100 bg-brand-50/70 p-5 shadow-sm dark:border-brand-500/20 dark:bg-brand-500/10 sm:p-6">
-          {successMessage ? (
-            <div className="rounded-[1.6rem] border border-emerald-200 bg-emerald-50 px-5 py-5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">
-                Access confirmed
-              </p>
-              <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                Verification completed successfully.
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-emerald-800 dark:text-emerald-100">{successMessage}</p>
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
+      {hasMounted && isOtpVisible
+        ? createPortal(
+            <div className="fixed inset-0 z-[110] flex min-h-screen items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md sm:p-6">
+              <div className="surface-panel relative flex h-full min-h-[100dvh] w-full items-center justify-center overflow-hidden rounded-none px-6 py-8 sm:min-h-[calc(100dvh-3rem)] sm:rounded-[2rem] sm:px-8">
+                <button
+                  type="button"
+                  onClick={() => setIsOtpVisible(false)}
+                  className="absolute right-5 top-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200"
+                  aria-label="Close verification"
+                >
+                  ×
+                </button>
+
+                <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center text-center">
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                     Verify admin request
                   </p>
-                  <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
+                  <h3 className="mt-3 font-display text-3xl font-extrabold text-slate-950 dark:text-white sm:text-4xl">
                     Enter the 6-digit admin verification code.
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                    For this access flow demo, use <span className="font-semibold text-slate-900 dark:text-white">123456</span>.
+                  <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+                    We are sending the verification step to{" "}
+                    <span className="font-semibold text-slate-900 dark:text-white">{values.email.trim()}</span>. For
+                    this access flow demo, use{" "}
+                    <span className="font-semibold text-slate-900 dark:text-white">123456</span>.
                   </p>
+
+                  <div className="mt-5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-700">
+                    Resend in {formatCountdown(secondsRemaining)}
+                  </div>
+
+                  <div className="mt-8 flex flex-wrap justify-center gap-3" onPaste={handleOtpPaste}>
+                    {otpDigits.map((digit, index) => (
+                      <input
+                        key={`otp-${index}`}
+                        ref={(element) => {
+                          otpRefs.current[index] = element;
+                        }}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete={index === 0 ? "one-time-code" : "off"}
+                        maxLength={1}
+                        value={digit}
+                        onChange={(event) => handleOtpChange(index, event.target.value)}
+                        onKeyDown={(event) => handleOtpKeyDown(index, event)}
+                        aria-label={`OTP digit ${index + 1}`}
+                        className="h-16 w-12 rounded-2xl border border-brand-200 bg-white text-center font-display text-2xl font-bold text-slate-950 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-brand-500/20 dark:bg-slate-950 dark:text-white dark:focus:ring-brand-500/15 sm:h-20 sm:w-16 sm:text-3xl"
+                      />
+                    ))}
+                  </div>
+
+                  {otpError ? (
+                    <p className="mt-5 w-full max-w-xl rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-200">
+                      {otpError}
+                    </p>
+                  ) : null}
+
+                  <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+                    <button
+                      type="button"
+                      onClick={() => verifyOtp(otpDigits.join(""))}
+                      disabled={otpDigits.includes("")}
+                      className="inline-flex flex-1 items-center justify-center rounded-2xl bg-brand-700 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Send code
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={secondsRemaining > 0}
+                      className="inline-flex flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                    >
+                      Resend code
+                    </button>
+                  </div>
                 </div>
-                <div className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-950 dark:text-slate-300 dark:ring-slate-700">
-                  Resend in {formatCountdown(secondsRemaining)}
-                </div>
               </div>
-
-              <div className="mt-6 flex flex-wrap gap-3" onPaste={handleOtpPaste}>
-                {otpDigits.map((digit, index) => (
-                  <input
-                    key={`otp-${index}`}
-                    ref={(element) => {
-                      otpRefs.current[index] = element;
-                    }}
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete={index === 0 ? "one-time-code" : "off"}
-                    maxLength={1}
-                    value={digit}
-                    onChange={(event) => handleOtpChange(index, event.target.value)}
-                    onKeyDown={(event) => handleOtpKeyDown(index, event)}
-                    aria-label={`OTP digit ${index + 1}`}
-                    className="h-14 w-12 rounded-2xl border border-brand-200 bg-white text-center font-display text-xl font-bold text-slate-950 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100 dark:border-brand-500/20 dark:bg-slate-950 dark:text-white dark:focus:ring-brand-500/15 sm:h-16 sm:w-14"
-                  />
-                ))}
-              </div>
-
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={secondsRemaining > 0}
-                  className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
-                >
-                  Resend code
-                </button>
-                <p className="text-sm leading-6 text-slate-500 dark:text-slate-400">
-                  Verification will submit automatically once all six digits are entered.
-                </p>
-              </div>
-            </>
-          )}
-
-          {otpError ? (
-            <p className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-200">
-              {otpError}
-            </p>
-          ) : null}
-        </section>
-      ) : null}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
