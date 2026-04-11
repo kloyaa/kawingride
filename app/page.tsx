@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 import { LandingPage } from "@/components/landing/landing-page";
 import { THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
@@ -13,6 +14,7 @@ export default async function Home() {
     <>
       <LandingPage initialTheme={initialTheme} />
       <SpeedInsights />
+      <Analytics />
     </>
   );
 }
