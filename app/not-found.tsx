@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 
@@ -7,7 +6,6 @@ import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
 import { RouteBackButton } from "@/components/landing/route-back-button";
 import { Icon } from "@/components/landing/icons";
-import { blobAssetPaths } from "@/constants/blob-assets";
 import { THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
 
 export default async function NotFound() {
@@ -21,7 +19,7 @@ export default async function NotFound() {
       <ScrollToTop />
 
       <main>
-        <section className="hero-surface noise-overlay relative overflow-hidden pb-20 pt-16 md:pb-28 md:pt-22">
+        <section className="route-hero-section hero-surface noise-overlay relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/80 to-transparent dark:from-slate-950/70" />
           <div className="pointer-events-none absolute right-0 top-20 h-80 w-80 rounded-full bg-brand-300/18 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-10 h-56 w-56 rounded-full bg-amber-300/18 blur-3xl" />
@@ -45,8 +43,7 @@ export default async function NotFound() {
                     This route took a wrong turn.
                   </h1>
                   <p className="max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-                    The page you are looking for does not exist, may have moved, or is not available yet. Let&apos;s
-                    get you back to a clearer path.
+                    The page you&apos;re looking for is not here anymore, or it may not be available yet. Here are a few good places to continue.
                   </p>
                 </div>
 
@@ -129,20 +126,6 @@ export default async function NotFound() {
                   </div>
                 </div>
 
-                <div className="pointer-events-none absolute -right-4 -top-10 z-10 w-28 sm:w-36 lg:-right-10 lg:-top-12 lg:w-44">
-                  <div className="kawing-float kawing-float-slow kawing-float-delay-1">
-                    <Image
-                      src={blobAssetPaths.curious}
-                      alt=""
-                      width={228}
-                      height={228}
-                      loading="lazy"
-                      unoptimized
-                      sizes="(min-width: 1024px) 176px, (min-width: 640px) 144px, 112px"
-                      className="h-auto w-full rotate-[8deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)]"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>

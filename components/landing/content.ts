@@ -116,12 +116,9 @@ export type LaunchArea = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  { href: "/", label: "Home" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/safety", label: "Safety" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/partnerships", label: "Partnerships" },
-  { href: "/updates", label: "Updates" },
   { href: "/our-story", label: "Our Story" },
 ];
 
@@ -129,7 +126,7 @@ export const missionStatement =
   "Private ride requests for trusted local communities, with structured negotiation, optional safety updates, and stronger accountability.";
 
 export const missionDescription =
-  "Built for communities that already rely on local riders, with better privacy, clearer decisions, and stronger accountability for every trip.";
+  "Kawing Ride is for communities that already rely on local riders and want a better way to handle requests, decisions, and follow-through.";
 
 export const missionPillars: MissionPillar[] = [
   {
@@ -168,7 +165,7 @@ export const whyNowPoints = [
 ];
 
 export const platformIdentity =
-  "Kawing Ride is a safety-first coordination platform for community-based transport. It is not an open marketplace that matches strangers by default, and it is not trying to replace the human relationships that local ride communities already rely on.";
+  "Kawing Ride is a coordination platform for community-based transport. It is meant to support trusted local ride networks with more privacy, clearer decisions, and better follow-through.";
 
 export const founderNote = {
   quote:

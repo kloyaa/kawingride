@@ -15,8 +15,7 @@ export function SiteFooter() {
             <div className="max-w-md space-y-4">
               <Logo inverted />
               <p className="text-sm leading-7 text-slate-300">
-                Private ride coordination and personal requests for trusted local communities, with clearer
-                negotiation, stronger accountability, and calmer operational flow.
+                Private ride coordination and approved local requests for trusted communities, with clearer decisions and better follow-through.
               </p>
             </div>
 

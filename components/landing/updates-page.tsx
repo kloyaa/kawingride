@@ -32,9 +32,9 @@ export function UpdatesPage({ initialTheme = "light" }: UpdatesPageProps) {
       title="Product, rollout, and policy updates in one place."
       titleLines={["Product, rollout, and", "policy updates", "in one place."]}
       highlightedText="policy updates"
-      description="A single place for important Kawing Ride announcements, rollout notes, and platform changes."
+      description="A single place for important Kawing Ride announcements, rollout notes, and product updates."
       actions={[
-        { href: "/partnerships", label: "Partnerships" },
+        { href: "/partnerships", label: "Open Partnerships" },
         { href: siteSettings.updatesEmailHref, label: "Contact Updates", variant: "secondary" },
       ]}
       highlights={[
@@ -52,12 +52,12 @@ export function UpdatesPage({ initialTheme = "light" }: UpdatesPageProps) {
         },
       ]}
     >
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <Reveal>
               <SectionHeader
-                badge="What Belongs Here"
+                badge="What You’ll Find"
                 icon="calendar"
                 tone="brand"
                 title="Important updates and platform notices."
@@ -83,14 +83,14 @@ export function UpdatesPage({ initialTheme = "light" }: UpdatesPageProps) {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+      <section className="route-section bg-slate-50 dark:bg-slate-900/50">
         <div className="section-shell">
           <SectionHeader
             badge="Current Status"
             icon="info"
             tone="amber"
-            title="Current direction."
-            description="A concise view of the rollout and product priorities reflected across Kawing Ride today."
+            title="Current focus."
+            description="A quick view of the rollout and product priorities shaping Kawing Ride right now."
           />
 
           <div className="mt-12 grid gap-4">
@@ -108,7 +108,7 @@ export function UpdatesPage({ initialTheme = "light" }: UpdatesPageProps) {
         </div>
       </section>
 
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
             <Reveal>
@@ -117,7 +117,7 @@ export function UpdatesPage({ initialTheme = "light" }: UpdatesPageProps) {
                 icon="users"
                 tone="violet"
                 title="Questions about a published update."
-                description="For launch-fit discussions or onboarding conversations, partnerships remains the better starting point."
+                description="If you want to talk about launch plans or onboarding, the partnerships page is the better place to start."
               />
             </Reveal>
 

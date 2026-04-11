@@ -194,18 +194,18 @@ body {
 .section-shell {
   margin-inline: auto;
   max-width: 82rem;
-  padding-inline: 1rem;
+  padding-inline: 1.25rem;
 }
 
 @media (min-width: 640px) {
   .section-shell {
-    padding-inline: 1.5rem;
+    padding-inline: 2rem;
   }
 }
 
 @media (min-width: 1024px) {
   .section-shell {
-    padding-inline: 2rem;
+    padding-inline: 2.5rem;
   }
 }
 
@@ -234,6 +234,28 @@ body {
     );
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
+}
+
+.route-hero-section {
+  padding-top: 4.5rem;
+  padding-bottom: 5rem;
+}
+
+.route-section {
+  padding-top: 4.75rem;
+  padding-bottom: 4.75rem;
+}
+
+@media (min-width: 768px) {
+  .route-hero-section {
+    padding-top: 5.75rem;
+    padding-bottom: 6.25rem;
+  }
+
+  .route-section {
+    padding-top: 5.75rem;
+    padding-bottom: 5.75rem;
+  }
 }
 
 .dark .hero-surface {

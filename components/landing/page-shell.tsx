@@ -69,7 +69,7 @@ export function MarketingPageShell({
       <ScrollToTop />
 
       <main>
-        <section className="hero-surface relative overflow-hidden pb-14 pt-16 md:pb-18 md:pt-20">
+        <section className="route-hero-section hero-surface relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent dark:from-slate-950/40" />
 
           <div className="section-shell relative">

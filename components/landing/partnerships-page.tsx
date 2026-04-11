@@ -13,7 +13,7 @@ type PartnershipsPageProps = {
 
 const partnershipGroups = [
   "Communities and subdivisions that already coordinate rides informally.",
-  "Schools and workplaces that need a more structured local mobility workflow.",
+  "Schools and workplaces that need a clearer local mobility setup.",
   "Rider groups and transport associations that want clearer onboarding and accountability.",
   "Service-oriented organizations that may benefit from both rides and approved personal requests.",
 ];
@@ -35,7 +35,7 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
       title="A starting point for businesses, communities, and local operators."
       titleLines={["A starting point for", "businesses, communities,", "and local operators."]}
       highlightedText="businesses, communities,"
-      description="If you want to explore how Kawing Ride could support your organization, this is the right route for discussing fit, scope, onboarding, and rollout expectations."
+      description="If you want to see whether Kawing Ride fits your organization, this is the place to talk through scope, onboarding, and rollout."
       actions={[
         { href: siteSettings.partnershipsEmailHref, label: "Email Partnerships" },
         { href: "/access", label: "Request Admin Access", variant: "secondary" },
@@ -55,7 +55,7 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
         },
       ]}
     >
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <Reveal>
@@ -86,14 +86,14 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+      <section className="route-section bg-slate-50 dark:bg-slate-900/50">
         <div className="section-shell">
           <SectionHeader
             badge="What We’ll Discuss"
             icon="check-circle"
             tone="amber"
             title="The best first conversation is practical."
-            description="A good partnership discussion clarifies the operating model, not just general interest."
+            description="A good partnership conversation should clarify how the setup will actually work."
           />
 
           <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
@@ -124,7 +124,7 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
                   {siteSettings.partnershipsEmail}
                 </a>
                 <p className="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-200">
-                  Share your organization, location, and whether you are evaluating rides only or a broader request model.
+                  Share your organization, area, and whether you are looking at rides only or rides plus approved requests.
                 </p>
               </aside>
             </Reveal>
@@ -132,7 +132,7 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
         </div>
       </section>
 
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
             <Reveal>
@@ -140,8 +140,8 @@ export function PartnershipsPage({ initialTheme = "light" }: PartnershipsPagePro
                 badge="Launch Context"
                 icon="calendar"
                 tone="violet"
-                title="Rollout planning is still focused and location-aware."
-                description="Readiness depends on having the right admin lead, a realistic first scope, and clear operational standards."
+                title="Rollout planning stays focused."
+                description="Readiness depends on the right admin lead, a realistic first scope, and clear standards from day one."
               />
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">

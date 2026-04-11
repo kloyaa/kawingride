@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { AnimatedHeroHeadline } from "./animated-hero-headline";
 import {
   founderNote,
   missionDescription,
@@ -15,12 +15,26 @@ import { ScrollToTop } from "./scroll-to-top";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
-import { blobAssetPaths } from "@/constants/blob-assets";
 import { type ThemeMode } from "@/constants/branding";
 
 type AboutPageProps = {
   initialTheme?: ThemeMode;
 };
+
+const storyFrame = [
+  {
+    label: "Where it starts",
+    text: "People already book rides inside neighborhoods, campuses, workplaces, and trusted local groups.",
+  },
+  {
+    label: "What was missing",
+    text: "Those bookings still happen through scattered chats that were never designed for privacy, clarity, or consistent follow-through.",
+  },
+  {
+    label: "What Kawing Ride adds",
+    text: "A calmer coordination layer that helps communities request, compare, confirm, and stay informed without changing how trust already works.",
+  },
+] as const;
 
 export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
   return (
@@ -29,20 +43,16 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
       <ScrollToTop />
 
       <main>
-        <section className="hero-surface noise-overlay relative overflow-hidden pb-18 pt-16 md:pb-22 md:pt-20">
+        <section className="route-hero-section hero-surface noise-overlay relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/80 to-transparent dark:from-slate-950/70" />
-          <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-brand-300/18 blur-3xl" />
-          <div className="pointer-events-none absolute bottom-0 left-12 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
+          <div className="pointer-events-none absolute right-0 top-1/4 h-64 w-64 rounded-full bg-brand-300/14 blur-3xl" />
+          <div className="pointer-events-none absolute bottom-0 left-12 h-52 w-52 rounded-full bg-amber-300/14 blur-3xl" />
 
           <div className="section-shell relative space-y-8">
             <Reveal>
               <div className="mb-2">
                 <RouteBackButton />
               </div>
-            </Reveal>
-
-            <Reveal delay={0.02}>
-              <FounderNoteCard attribution={founderNote.attribution} quote={founderNote.quote} />
             </Reveal>
 
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center">
@@ -52,13 +62,17 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                   Our Story
                 </div>
 
-                <h1 className="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-white sm:text-5xl lg:text-[3.2rem]">
-                  Built for communities that already trust each other.
-                </h1>
+                <AnimatedHeroHeadline
+                  className="mt-0 text-4xl leading-tight sm:text-5xl lg:text-[3.2rem]"
+                  highlightedText="communities that already trust"
+                  lines={["Built for", "communities that already trust", "each other."]}
+                />
 
                 <p className="max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
                   {missionDescription}
                 </p>
+
+                <FounderNoteCard attribution={founderNote.attribution} quote={founderNote.quote} />
 
                 <div className="flex flex-wrap gap-3">
                   <Link
@@ -76,47 +90,50 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                 </div>
               </Reveal>
 
-              <Reveal delay={0.06} className="relative rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700/70 dark:bg-slate-950/70 dark:shadow-[0_24px_56px_rgba(7,12,14,0.36)]">
-                <div className="pointer-events-none absolute -right-2 -top-8 w-24 rotate-[10deg] sm:w-30">
-                  <div className="kawing-float kawing-float-slow kawing-float-delay-2">
-                    <Image
-                      src={blobAssetPaths.idea}
-                      alt=""
-                      width={228}
-                      height={228}
-                      loading="lazy"
-                      unoptimized
-                      sizes="(min-width: 640px) 120px, 96px"
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
+              <Reveal
+                delay={0.06}
+                className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-700/70 dark:bg-slate-950/72 dark:shadow-[0_24px_56px_rgba(7,12,14,0.36)] sm:p-7"
+              >
+                <div className="pointer-events-none absolute right-0 top-0 h-36 w-36 rounded-full bg-brand-100/80 blur-3xl dark:bg-brand-500/10" />
 
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                  What matters most
-                </p>
-                <div className="mt-5 space-y-3">
-                  {[
-                    "Keep ride requests private inside trusted circles",
-                    "Make booking clearer without taking away flexibility",
-                    "Support trust with accountability, not noise",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-[1.4rem] border border-slate-100 bg-slate-50/90 px-4 py-3.5 dark:border-slate-800 dark:bg-slate-900/70"
-                    >
-                      <p className="text-sm font-semibold leading-6 text-slate-800 dark:text-slate-100">
-                        {item}
-                      </p>
-                    </div>
-                  ))}
+                <div className="relative">
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-brand-700 dark:text-brand-300">
+                    Story frame
+                  </p>
+                  <h2 className="mt-3 font-display text-2xl font-bold leading-tight text-slate-950 dark:text-white sm:text-[2rem]">
+                    The product begins with a real community pattern.
+                  </h2>
+
+                  <div className="mt-6 space-y-4">
+                    {storyFrame.map((item, index) => (
+                      <div
+                        key={item.label}
+                        className="grid gap-3 rounded-[1.35rem] border border-slate-200/80 bg-slate-50/82 px-4 py-4 dark:border-slate-800 dark:bg-slate-900/62 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:px-5"
+                      >
+                        <div>
+                          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
+                            {String(index + 1).padStart(2, "0")}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{item.label}</p>
+                          <p className="mt-1.5 text-sm leading-7 text-slate-600 dark:text-slate-300">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="mt-5 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    The product is not trying to replace those community relationships. It is trying to give them a
+                    better system to work through.
+                  </p>
                 </div>
               </Reveal>
             </div>
           </div>
         </section>
 
-        <section className="bg-white py-18 dark:bg-slate-950 md:py-24">
+        <section className="route-section bg-white dark:bg-slate-950">
           <div className="section-shell">
             <SectionHeader
               badge="Why We Built It"
@@ -126,7 +143,7 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
               description="Kawing Ride is meant to support the relationships communities already have, while making booking feel clearer and more respectful."
             />
 
-            <div className="mt-14 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <div className="mt-14 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               <Reveal className="rounded-[2rem] border border-slate-100 bg-slate-50/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/75 sm:p-7">
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                   In one sentence
@@ -136,43 +153,33 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.06} className="rounded-[2rem] border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-brand-50 p-6 shadow-sm dark:border-amber-500/20 dark:from-[#273136] dark:via-[#1d272b] dark:to-[#1b2529] sm:p-7">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-700 dark:text-amber-300">
-                  The direction
+              <Reveal
+                delay={0.06}
+                className="rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900 sm:p-7"
+              >
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
+                  Why trust matters
                 </p>
-                <p className="mt-4 text-base leading-8 text-slate-700 dark:text-slate-200">
-                  The goal is not to replace local relationships. The goal is to give those relationships a more
-                  respectful way to book, agree, and follow through.
-                </p>
+                <h3 className="mt-4 font-display text-2xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2rem]">
+                  {trustStory.title}
+                </h3>
+                <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-[0.98rem]">
+                  {trustStory.paragraphs.slice(0, 2).map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
                 <Link
-                  href="/"
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 shadow-sm transition hover:bg-brand-50 dark:bg-slate-950 dark:text-brand-200 dark:hover:bg-slate-900"
+                  href="/safety"
+                  className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-brand-300 hover:text-brand-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-brand-500/40 dark:hover:text-brand-200"
                 >
-                  Back to Home
+                  View Safety Details
                 </Link>
               </Reveal>
             </div>
-
-            <Reveal
-              delay={0.1}
-              className="mt-5 rounded-[2rem] border border-brand-100 bg-white p-6 shadow-sm dark:border-brand-500/20 dark:bg-slate-900 sm:p-7"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
-                Why trust matters
-              </p>
-              <h3 className="mt-4 font-display text-2xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-[2rem]">
-                {trustStory.title}
-              </h3>
-              <div className="mt-5 space-y-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-[0.98rem]">
-                {trustStory.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
-            </Reveal>
           </div>
         </section>
 
-        <section className="bg-slate-50 py-18 dark:bg-slate-900/60 md:py-24">
+        <section className="route-section bg-slate-50 dark:bg-slate-900/60">
           <div className="section-shell">
             <SectionHeader
               badge="What We Care About"

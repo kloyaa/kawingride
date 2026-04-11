@@ -30,7 +30,7 @@ export function HowItWorksPage({ initialTheme = "light" }: HowItWorksPageProps) 
       title="A clearer request flow for rides and approved personal errands."
       titleLines={["A clearer request flow for", "rides", "and approved personal errands."]}
       highlightedText="rides"
-      description="Kawing Ride is designed to replace scattered chats with a more structured process for posting requests, comparing responses, and confirming the final arrangement."
+      description="Kawing Ride turns messy back-and-forth chats into a clearer flow for posting a request, comparing responses, and confirming the ride."
       actions={[
         { href: "/access", label: "Request Admin Access" },
         { href: "/safety", label: "View Safety Details", variant: "secondary" },
@@ -50,7 +50,7 @@ export function HowItWorksPage({ initialTheme = "light" }: HowItWorksPageProps) 
         },
       ]}
     >
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
             <Reveal>
@@ -81,7 +81,7 @@ export function HowItWorksPage({ initialTheme = "light" }: HowItWorksPageProps) 
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+      <section className="route-section bg-slate-50 dark:bg-slate-900/50">
         <div className="section-shell">
           <SectionHeader
             badge="Core Flow"
@@ -132,7 +132,7 @@ export function HowItWorksPage({ initialTheme = "light" }: HowItWorksPageProps) 
         </div>
       </section>
 
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
             <Reveal>

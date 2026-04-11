@@ -1,9 +1,6 @@
-import Image from "next/image";
-
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
 import { RouteBackButton } from "@/components/landing/route-back-button";
-import { blobAssetPaths } from "@/constants/blob-assets";
 import type { ThemeMode } from "@/constants/branding";
 
 import { AccessRequestForm } from "./access-request-form";
@@ -13,13 +10,12 @@ type AccessPageProps = {
 };
 
 export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader initialTheme={initialTheme} />
 
       <main>
-        <section className="hero-surface noise-overlay relative overflow-hidden pb-18 pt-14 md:pb-24 md:pt-20">
+        <section className="route-hero-section hero-surface noise-overlay relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/70 to-transparent dark:from-slate-950/60" />
           <div className="pointer-events-none absolute right-0 top-20 h-72 w-72 rounded-full bg-brand-300/20 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-10 h-56 w-56 rounded-full bg-amber-300/15 blur-3xl" />
@@ -40,8 +36,7 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                     <span className="gradient-text"> for your community.</span>
                   </h1>
                   <p className="max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300">
-                    Share your administrator details, verify the one-time code we send, and receive your admin
-                    onboarding link by email.
+                    Share your admin details, confirm the one-time code, and we’ll send the onboarding link by email.
                   </p>
                 </div>
 
@@ -49,7 +44,7 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                   {[
                     {
                       description:
-                        "Admins manage onboarding, member access, local standards, and key operating settings for an approved group.",
+                        "Admins handle onboarding, member access, community standards, and key settings for an approved group.",
                       title: "What is an admin?",
                     },
                     {
@@ -76,31 +71,14 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                 </div>
               </div>
 
-              <div className="relative pt-6 sm:pt-8 xl:pt-10">
-                <div className="pointer-events-none absolute right-1 -top-6 z-10 w-20 sm:right-0 sm:-top-8 sm:w-24 lg:w-28 xl:w-34">
-                  <div className="kawing-float kawing-float-soft kawing-float-delay-1">
-                    <Image
-                      src={blobAssetPaths.basicIcon}
-                      alt=""
-                      width={640}
-                      height={640}
-                      loading="lazy"
-                      unoptimized
-                      sizes="(min-width: 1280px) 136px, (min-width: 640px) 96px, 80px"
-                      className="h-auto w-full -rotate-[18deg] object-contain drop-shadow-[0_20px_34px_rgba(29,42,45,0.14)]"
-                    />
-                  </div>
-                </div>
-
+              <div className="relative pt-2 sm:pt-4 xl:pt-6">
                 <article className="surface-panel relative overflow-hidden rounded-[2.2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-8">
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                         Admin request form
                       </p>
-                      <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">
-                        Complete your admin request
-                      </h2>
+                      <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white">Complete your request</h2>
                     </div>
                     <span className="rounded-full bg-brand-100 px-3 py-1.5 text-xs font-semibold text-brand-800 dark:bg-brand-500/10 dark:text-brand-200">
                       Admin onboarding

@@ -24,10 +24,10 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
       title="Clear plan structure for customers, riders, and community admins."
       titleLines={["Clear plan structure for", "customers, riders,", "and community admins."]}
       highlightedText="customers, riders,"
-      description="Kawing Ride pricing is designed to be easier to understand before onboarding, while still leaving room for negotiated trip outcomes inside the product."
+      description="Kawing Ride pricing is easier to understand before onboarding, while still leaving room for riders and customers to agree on the trip itself."
       actions={[
-        { href: "/access", label: "Start Admin Access" },
-        { href: "/partnerships", label: "Talk To Us", variant: "secondary" },
+        { href: "/access", label: "Request Admin Access" },
+        { href: "/partnerships", label: "Talk to Us", variant: "secondary" },
       ]}
       highlights={[
         {
@@ -44,7 +44,7 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
         },
       ]}
     >
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
             <Reveal>
@@ -75,7 +75,7 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+      <section className="route-section bg-slate-50 dark:bg-slate-900/50">
         <div className="section-shell">
           <SectionHeader
             badge="Plans"
@@ -129,7 +129,7 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
         </div>
       </section>
 
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
             <Reveal>

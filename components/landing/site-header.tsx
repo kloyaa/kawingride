@@ -51,7 +51,7 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
 
             <div className="hidden items-center gap-3 xl:flex">
               <nav
-                className="flex items-center gap-0.5 rounded-full border border-slate-200/80 bg-slate-50/80 p-1 dark:border-slate-800 dark:bg-slate-900/80"
+                className="flex items-center gap-1 rounded-full border border-slate-200/80 bg-slate-50/85 p-1 dark:border-slate-800 dark:bg-slate-900/80"
                 aria-label="Primary"
               >
                 {navigationItems.map((item) => (
@@ -64,13 +64,13 @@ export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
                     {item.label}
                   </Link>
                 ))}
-                <Link
-                  href="/access"
-                  className="ml-1 inline-flex items-center rounded-full bg-brand-700 px-3.5 py-2 text-[0.82rem] font-semibold text-white shadow-sm transition hover:bg-brand-800"
-                >
-                  Request Admin Access
-                </Link>
               </nav>
+              <Link
+                href="/access"
+                className="inline-flex items-center rounded-full bg-brand-700 px-4 py-2.5 text-[0.82rem] font-semibold text-white shadow-sm transition hover:bg-brand-800"
+              >
+                Request Admin Access
+              </Link>
               <ThemeToggle initialTheme={initialTheme} />
             </div>
 

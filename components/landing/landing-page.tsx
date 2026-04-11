@@ -15,22 +15,22 @@ type LandingPageProps = {
 const roleBlocks = [
   {
     title: "Customers",
-    description: "Post requests privately, compare rider responses, and confirm with clearer visibility into what happens next.",
+    description: "Post requests privately, compare rider responses, and confirm with a clearer next step.",
   },
   {
     title: "Riders",
-    description: "Review requests, respond with a fare or counter, and work inside a more structured booking flow.",
+    description: "Review requests, reply with a fare or counter, and work through a cleaner booking flow.",
   },
   {
     title: "Admins",
-    description: "Set onboarding rules, manage standards, and keep local operations more organized from the start.",
+    description: "Set onboarding rules, manage standards, and keep the community running smoothly.",
   },
 ];
 
 const useCases = [
   {
     title: "Community ride booking",
-    description: "A calmer request flow for neighborhoods, campuses, workplaces, and local rider groups.",
+    description: "A clearer request flow for neighborhoods, campuses, workplaces, and rider groups.",
     href: "/how-it-works",
   },
   {
@@ -53,8 +53,8 @@ const routeLinks = [
   },
   {
     href: "/safety",
-    label: "Safety And Trust",
-    description: "Privacy boundaries, support paths, and how urgent help is handled inside communities.",
+    label: "Safety and Trust",
+    description: "Privacy boundaries, support paths, and how urgent help works inside communities.",
   },
   {
     href: "/pricing",
@@ -77,7 +77,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
       <ScrollToTop />
 
       <main>
-        <section className="hero-surface relative overflow-hidden pb-16 pt-10 md:pb-20 md:pt-14">
+        <section className="route-hero-section hero-surface relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent dark:from-slate-950/40" />
           <div className="section-shell relative">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_24rem] lg:items-start">
@@ -92,8 +92,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                 />
 
                 <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-                  Kawing Ride helps communities manage ride requests, rider responses, personal errands, and local
-                  standards in a way that feels more structured, more private, and more dependable.
+                  Kawing Ride gives communities a clearer way to handle ride requests, rider responses, and approved local requests without relying on scattered chats.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
@@ -101,7 +100,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                     href="/how-it-works"
                     className="inline-flex items-center justify-center rounded-full bg-brand-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-800"
                   >
-                    Explore The Product
+                    Explore the product
                   </Link>
                 </div>
 
@@ -232,14 +231,14 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           </div>
         </section>
 
-        <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+        <section className="route-section bg-white dark:bg-slate-950">
           <div className="section-shell">
             <SectionHeader
               badge="Use Cases"
               icon="users"
               tone="brand"
               title="Designed around real community operations."
-              description="Relevant for transport groups, neighborhood admins, schools, workplaces, and other trusted local networks."
+              description="Made for transport groups, neighborhood admins, schools, workplaces, and other trusted local networks."
             />
 
             <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -258,14 +257,14 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           </div>
         </section>
 
-        <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+        <section className="route-section bg-slate-50 dark:bg-slate-900/50">
           <div className="section-shell">
             <SectionHeader
               badge="Explore"
               icon="check-circle"
               tone="amber"
               title="Each route answers a specific decision."
-              description="Explore the product, trust model, pricing, and rollout details without losing the main overview."
+              description="Use the pages below when you want the full story behind how Kawing Ride works."
             />
 
             <div className="mt-12 divide-y divide-slate-200 rounded-[1.8rem] border border-slate-200/80 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-950">
@@ -279,10 +278,10 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
                         {String(index + 1).padStart(2, "0")}
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{item.label}</p>
-                    </div>
-                    <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
-                    <span className="text-sm font-semibold text-brand-700 dark:text-brand-300">Open</span>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{item.label}</p>
+                  </div>
+                  <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{item.description}</p>
+                  <span className="text-sm font-semibold text-brand-700 dark:text-brand-300">Open</span>
                   </Link>
                 </Reveal>
               ))}
@@ -290,7 +289,7 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
           </div>
         </section>
 
-        <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+        <section className="route-section bg-white dark:bg-slate-950">
           <div className="section-shell">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
               <Reveal>
@@ -298,8 +297,8 @@ export function LandingPage({ initialTheme = "light" }: LandingPageProps) {
                   badge="Rollout"
                   icon="calendar"
                   tone="violet"
-                  title="Current launch planning stays focused and location-aware."
-                  description="The right admin lead, clear standards, and a realistic first scope matter more than launching everywhere at once."
+                  title="Current launch planning stays focused."
+                  description="A strong admin lead, clear standards, and a realistic first scope matter more than launching everywhere at once."
                 />
 
                 <div className="mt-8 flex flex-wrap gap-2">

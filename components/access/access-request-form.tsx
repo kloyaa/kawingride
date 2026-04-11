@@ -6,9 +6,7 @@ import { createPortal } from "react-dom";
 
 import { Icon } from "@/components/landing/icons";
 import { useToast } from "@/components/ui/toast-provider";
-import { getErrorMessage } from "@/lib/http/error-message";
-import { getMunicipalitiesOrCities, getProvinces, getRegions } from "@/lib/psgc/service";
-import type { LocationOption } from "@/lib/psgc/types";
+import { allowedServiceAreas } from "@/constants/service-areas";
 
 const OTP_LENGTH = 6;
 const OTP_CODE = "123456";
@@ -28,18 +26,6 @@ type FormValues = {
 };
 
 type FieldErrors = Partial<Record<keyof FormValues, string>>;
-
-type LocationLoadingState = {
-  municipalitiesOrCities: boolean;
-  provinces: boolean;
-  regions: boolean;
-};
-
-type LocationOptionsState = {
-  municipalitiesOrCities: LocationOption[];
-  provinces: LocationOption[];
-  regions: LocationOption[];
-};
 
 type LocationField = "municipalityOrCityId" | "provinceId" | "regionId";
 
@@ -106,7 +92,7 @@ const initialFormValues: FormValues = {
 };
 
 export function AccessRequestForm() {
-  const { error: showErrorToast, success: showSuccessToast } = useToast();
+  const { success: showSuccessToast } = useToast();
   const [values, setValues] = useState<FormValues>(initialFormValues);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [hasMounted, setHasMounted] = useState(false);
@@ -116,26 +102,19 @@ export function AccessRequestForm() {
   const [otpError, setOtpError] = useState("");
   const [showReviewScrollHint, setShowReviewScrollHint] = useState(false);
   const [secondsRemaining, setSecondsRemaining] = useState(RESEND_SECONDS);
-  const [locationLoading, setLocationLoading] = useState<LocationLoadingState>({
-    municipalitiesOrCities: false,
-    provinces: false,
-    regions: true,
-  });
-  const [locationOptions, setLocationOptions] = useState<LocationOptionsState>({
-    municipalitiesOrCities: [],
-    provinces: [],
-    regions: [],
-  });
 
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
   const formRootRef = useRef<HTMLDivElement | null>(null);
   const reviewModalRef = useRef<HTMLDivElement | null>(null);
   const lastSubmittedOtp = useRef("");
-  const selectedRegion = locationOptions.regions.find((item) => item.id === values.regionId)?.label ?? "Not selected";
-  const selectedProvince = locationOptions.provinces.find((item) => item.id === values.provinceId)?.label ?? "Not selected";
-  const selectedMunicipality =
-    locationOptions.municipalitiesOrCities.find((item) => item.id === values.municipalityOrCityId)?.label ??
-    "Not selected";
+  const regionOptions = allowedServiceAreas.map(({ id, label }) => ({ id, label }));
+  const selectedRegionConfig = allowedServiceAreas.find((item) => item.id === values.regionId);
+  const provinceOptions = selectedRegionConfig?.provinces ?? [];
+  const selectedProvinceConfig = provinceOptions.find((item) => item.id === values.provinceId);
+  const cityOptions = selectedProvinceConfig?.cities ?? [];
+  const selectedRegion = selectedRegionConfig?.label ?? "Not selected";
+  const selectedProvince = selectedProvinceConfig?.label ?? "Not selected";
+  const selectedMunicipality = cityOptions.find((item) => item.id === values.municipalityOrCityId)?.label ?? "Not selected";
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -225,140 +204,6 @@ export function AccessRequestForm() {
     return () => window.clearInterval(timer);
   }, [isOtpVisible, secondsRemaining]);
 
-  useEffect(() => {
-    let isActive = true;
-
-    getRegions()
-      .then((regions) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          regions,
-        }));
-      })
-      .catch((error) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          regions: [],
-        }));
-        showErrorToast("Could not load regions.", getErrorMessage(error, "Please refresh and try again."));
-      })
-      .finally(() => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationLoading((current) => ({
-          ...current,
-          regions: false,
-        }));
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, [showErrorToast]);
-
-  useEffect(() => {
-    if (!values.regionId) {
-      return;
-    }
-
-    let isActive = true;
-
-    getProvinces(values.regionId)
-      .then((provinces) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          provinces,
-        }));
-      })
-      .catch((error) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          provinces: [],
-        }));
-        showErrorToast("Could not load provinces.", getErrorMessage(error, "Please try selecting your region again."));
-      })
-      .finally(() => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationLoading((current) => ({
-          ...current,
-          provinces: false,
-        }));
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, [showErrorToast, values.regionId]);
-
-  useEffect(() => {
-    if (!values.provinceId) {
-      return;
-    }
-
-    let isActive = true;
-
-    getMunicipalitiesOrCities(values.provinceId)
-      .then((municipalitiesOrCities) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          municipalitiesOrCities,
-        }));
-      })
-      .catch((error) => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationOptions((current) => ({
-          ...current,
-          municipalitiesOrCities: [],
-        }));
-        showErrorToast(
-          "Could not load municipalities or cities.",
-          getErrorMessage(error, "Please try selecting your province again.")
-        );
-      })
-      .finally(() => {
-        if (!isActive) {
-          return;
-        }
-
-        setLocationLoading((current) => ({
-          ...current,
-          municipalitiesOrCities: false,
-        }));
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, [showErrorToast, values.provinceId]);
-
   function validateFields(nextValues: FormValues) {
     const nextErrors: FieldErrors = {};
 
@@ -444,30 +289,6 @@ export function AccessRequestForm() {
 
       return nextErrors;
     });
-
-    if (field === "regionId") {
-      setLocationOptions((current) => ({
-        ...current,
-        municipalitiesOrCities: [],
-        provinces: [],
-      }));
-      setLocationLoading((current) => ({
-        ...current,
-        municipalitiesOrCities: false,
-        provinces: Boolean(value),
-      }));
-    }
-
-    if (field === "provinceId") {
-      setLocationOptions((current) => ({
-        ...current,
-        municipalitiesOrCities: [],
-      }));
-      setLocationLoading((current) => ({
-        ...current,
-        municipalitiesOrCities: Boolean(value),
-      }));
-    }
   }
 
   function updateToggle<K extends "agreesToPolicies" | "confirmsAuthority">(field: K, checked: boolean) {
@@ -483,7 +304,7 @@ export function AccessRequestForm() {
 
   function getLocationPlaceholder(field: LocationField) {
     if (field === "regionId") {
-      return locationLoading.regions ? "Loading regions..." : "Select a region";
+      return "Select a region";
     }
 
     if (field === "provinceId") {
@@ -491,16 +312,14 @@ export function AccessRequestForm() {
         return "Select a region first";
       }
 
-      return locationLoading.provinces ? "Loading provinces..." : "Select a province";
+      return "Select a province";
     }
 
     if (!values.provinceId) {
       return "Select a province first";
     }
 
-    return locationLoading.municipalitiesOrCities
-      ? "Loading municipalities or cities..."
-      : "Select a municipality or city";
+    return "Select a city";
   }
 
   function openOtpStep() {
@@ -549,22 +368,12 @@ export function AccessRequestForm() {
     if (nextOtpValue === OTP_CODE) {
       setOtpError("");
       setIsOtpVisible(false);
-      showSuccessToast("Access confirmed", `The admin onboarding link has been sent to ${values.email.trim()}.`);
+      showSuccessToast("Access confirmed", `The admin access link has been sent to ${values.email.trim()}.`);
       setValues(initialFormValues);
       setErrors({});
       setIsReviewVisible(false);
       setOtpDigits(Array(OTP_LENGTH).fill(""));
       setSecondsRemaining(RESEND_SECONDS);
-      setLocationOptions((current) => ({
-        ...current,
-        municipalitiesOrCities: [],
-        provinces: [],
-      }));
-      setLocationLoading((current) => ({
-        ...current,
-        municipalitiesOrCities: false,
-        provinces: false,
-      }));
       lastSubmittedOtp.current = "";
       return;
     }
@@ -641,7 +450,7 @@ export function AccessRequestForm() {
               href="/communities"
               className="text-xs font-semibold text-brand-700 underline decoration-brand-200 underline-offset-4 transition hover:text-brand-800 dark:text-brand-300 dark:decoration-brand-500/40 dark:hover:text-brand-200"
             >
-              View communities
+              See communities
             </Link>
           </div>
           <input
@@ -734,7 +543,7 @@ export function AccessRequestForm() {
               Service area
             </p>
             <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-              Choose the primary area this administrator will manage.
+              Choose the approved region, province, and city this admin will manage. We only accept selected service areas right now.
             </p>
           </div>
 
@@ -747,11 +556,10 @@ export function AccessRequestForm() {
                 id="region"
                 value={values.regionId}
                 onChange={(event) => updateField("regionId", event.target.value)}
-                aria-busy={locationLoading.regions}
-                className={getFieldClassName(Boolean(errors.regionId), locationLoading.regions)}
+                className={getFieldClassName(Boolean(errors.regionId))}
               >
                 <option value="">{getLocationPlaceholder("regionId")}</option>
-                {locationOptions.regions.map((region) => (
+                {regionOptions.map((region) => (
                   <option key={region.id} value={region.id}>
                     {region.label}
                   </option>
@@ -768,43 +576,33 @@ export function AccessRequestForm() {
                 id="province"
                 value={values.provinceId}
                 onChange={(event) => updateField("provinceId", event.target.value)}
-                disabled={!values.regionId || locationLoading.provinces}
-                aria-busy={locationLoading.provinces}
-                className={getFieldClassName(Boolean(errors.provinceId), !values.regionId || locationLoading.provinces)}
+                disabled={!values.regionId}
+                className={getFieldClassName(Boolean(errors.provinceId), !values.regionId)}
               >
                 <option value="">{getLocationPlaceholder("provinceId")}</option>
-                {locationOptions.provinces.map((province) => (
+                {provinceOptions.map((province) => (
                   <option key={province.id} value={province.id}>
                     {province.label}
                   </option>
                 ))}
               </select>
               {errors.provinceId ? <p className="text-sm text-red-600 dark:text-red-300">{errors.provinceId}</p> : null}
-              {!errors.provinceId && values.regionId && !locationLoading.provinces && !locationOptions.provinces.length ? (
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  No provinces are available for the selected region yet.
-                </p>
-              ) : null}
             </div>
           </div>
 
           <div className="mt-4 space-y-2">
             <label htmlFor="municipality-or-city" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              Municipality or city
+              City
             </label>
             <select
               id="municipality-or-city"
               value={values.municipalityOrCityId}
               onChange={(event) => updateField("municipalityOrCityId", event.target.value)}
-              disabled={!values.provinceId || locationLoading.municipalitiesOrCities}
-              aria-busy={locationLoading.municipalitiesOrCities}
-              className={getFieldClassName(
-                Boolean(errors.municipalityOrCityId),
-                !values.provinceId || locationLoading.municipalitiesOrCities
-              )}
+              disabled={!values.provinceId}
+              className={getFieldClassName(Boolean(errors.municipalityOrCityId), !values.provinceId)}
             >
               <option value="">{getLocationPlaceholder("municipalityOrCityId")}</option>
-              {locationOptions.municipalitiesOrCities.map((location) => (
+              {cityOptions.map((location) => (
                 <option key={location.id} value={location.id}>
                   {location.label}
                 </option>
@@ -812,14 +610,6 @@ export function AccessRequestForm() {
             </select>
             {errors.municipalityOrCityId ? (
               <p className="text-sm text-red-600 dark:text-red-300">{errors.municipalityOrCityId}</p>
-            ) : null}
-            {!errors.municipalityOrCityId &&
-            values.provinceId &&
-            !locationLoading.municipalitiesOrCities &&
-            !locationOptions.municipalitiesOrCities.length ? (
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                No municipalities or cities are available for the selected province yet.
-              </p>
             ) : null}
           </div>
         </div>
@@ -890,7 +680,7 @@ export function AccessRequestForm() {
           type="submit"
           className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-700 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800 sm:w-auto"
         >
-          Review request
+          Review details
         </button>
       </form>
 
@@ -910,10 +700,10 @@ export function AccessRequestForm() {
                         Review details
                       </p>
                       <h3 className="mt-2 font-display text-2xl font-extrabold text-slate-950 dark:text-white sm:text-3xl">
-                        Confirm this admin request before verification.
+                        Confirm your details before verification.
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                        Check the details below. Once confirmed, we will send the verification code for the next step.
+                        Check the details below. Once confirmed, we’ll send the verification code for the next step.
                       </p>
                     </div>
                     <button
@@ -944,7 +734,7 @@ export function AccessRequestForm() {
                         { label: "Email address", value: values.email.trim() || "Not provided" },
                         { label: "Region", value: selectedRegion },
                         { label: "Province", value: selectedProvince },
-                        { label: "Municipality or city", value: selectedMunicipality },
+                        { label: "City", value: selectedMunicipality },
                       ].map((item) => (
                         <div
                           key={item.label}
@@ -1011,7 +801,7 @@ export function AccessRequestForm() {
                     Verify admin request
                   </p>
                   <h3 className="mt-3 font-display text-3xl font-extrabold text-slate-950 dark:text-white sm:text-4xl">
-                    Enter the 6-digit admin verification code.
+                    Enter the 6-digit verification code.
                   </h3>
                   <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
                     We are sending the verification step to{" "}

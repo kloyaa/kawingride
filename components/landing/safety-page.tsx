@@ -13,8 +13,8 @@ type SafetyPageProps = {
 
 const urgentHelpSteps = [
   "Contact public emergency services first for immediate threats, serious injury, or urgent criminal risk.",
-  "Use the in-community urgent support contact for platform-related help such as harassment or accidents.",
-  "Follow up through reporting and appeals so the incident can be reviewed and documented properly.",
+  "Use the community support contact in the app for platform-related concerns such as harassment or accidents.",
+  "Follow up through reporting and appeals so the case can be reviewed properly.",
 ];
 
 export function SafetyPage({ initialTheme = "light" }: SafetyPageProps) {
@@ -23,13 +23,13 @@ export function SafetyPage({ initialTheme = "light" }: SafetyPageProps) {
   return (
     <MarketingPageShell
       initialTheme={initialTheme}
-      eyebrow="Safety And Trust"
+      eyebrow="Safety and Trust"
       title="A practical trust model with clear boundaries."
       titleLines={["A practical trust model", "with clear boundaries."]}
       highlightedText="clear boundaries"
-      description="Kawing Ride is built to support safer coordination, clearer privacy handling, and stronger accountability without pretending to replace emergency services or personal judgment."
+      description="Kawing Ride supports safer coordination, clearer privacy handling, and stronger accountability without pretending to replace emergency services or personal judgment."
       actions={[
-        { href: "/reporting-and-appeals", label: "Reporting And Appeals" },
+        { href: "/reporting-and-appeals", label: "Reporting and Appeals" },
         { href: "/privacy-policy", label: "Privacy Policy", variant: "secondary" },
       ]}
       highlights={[
@@ -47,7 +47,7 @@ export function SafetyPage({ initialTheme = "light" }: SafetyPageProps) {
         },
       ]}
     >
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
             <Reveal>
@@ -92,7 +92,7 @@ export function SafetyPage({ initialTheme = "light" }: SafetyPageProps) {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-16 dark:bg-slate-900/50 md:py-20">
+      <section className="route-section bg-slate-50 dark:bg-slate-900/50">
         <div className="section-shell">
           <SectionHeader
             badge="Trust Model"
@@ -133,7 +133,7 @@ export function SafetyPage({ initialTheme = "light" }: SafetyPageProps) {
         </div>
       </section>
 
-      <section className="bg-white py-16 dark:bg-slate-950 md:py-20">
+      <section className="route-section bg-white dark:bg-slate-950">
         <div className="section-shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
             <Reveal>
