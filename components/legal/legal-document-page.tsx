@@ -280,7 +280,7 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
                   </p>
                   <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
                     Review the complete policy set to understand how Kawing Ride aligns privacy, trust, safety, and
-                    community governance.
+                    community governance, including how rewards are reviewed and kept separate from ride payment.
                   </p>
                   <Link
                     href="/policies"

@@ -32,7 +32,7 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
       highlights={[
         {
           title: "Role-based plans",
-          description: "Customers, riders, and admins each have a clearer access model.",
+          description: "Customer, rider, and admin access are laid out separately so each role is easier to understand.",
         },
         {
           title: "Flexible trip pricing",
@@ -85,6 +85,27 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
             description="This gives communities a clearer view of who is using the platform, what access they have, and how local operations can be managed."
           />
 
+          <div className="mt-8 rounded-[1.8rem] border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 sm:p-6">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
+              Pricing by role
+            </p>
+            <ul className="mt-4 grid gap-3 md:grid-cols-3">
+              {[
+                "Customer pricing covers community access and optional upgraded features.",
+                "Rider pricing covers the tools riders use to respond, negotiate, and build trust across communities.",
+                "Admin pricing covers access for community leads who manage standards, access, and local operations.",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-3 rounded-[1.3rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200"
+                >
+                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-violet-600 dark:bg-violet-300" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="mt-12 grid gap-5 xl:grid-cols-3">
             {pricingPlans.map((plan, index) => (
               <Reveal key={plan.name} delay={0.04 + index * 0.05}>
@@ -114,8 +135,9 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
                         <p className="mt-3 text-sm leading-7 text-slate-700 dark:text-slate-200">{tier.discount}</p>
                         <ul className="mt-4 space-y-2.5">
                           {tier.sections.flatMap((section) => section.items).map((item) => (
-                            <li key={`${tier.name}-${item}`} className="text-sm leading-7 text-slate-700 dark:text-slate-200">
-                              {item}
+                            <li key={`${tier.name}-${item}`} className="flex items-start gap-3 text-sm leading-7 text-slate-700 dark:text-slate-200">
+                              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-500" />
+                              <span>{item}</span>
                             </li>
                           ))}
                         </ul>
@@ -138,7 +160,7 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
                 icon="gift"
                 tone="amber"
                 title="Rewards are designed as an incentive layer, not a payment shortcut."
-                description="That separation helps keep trip settlement clear while still leaving room for recognition and community incentives."
+                description="That separation helps keep trip settlement clear while still leaving room for recognition and community incentives. Policy details for rewards still live in the policy center."
               />
 
               <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -166,11 +188,14 @@ export function PricingPage({ initialTheme = "light" }: PricingPageProps) {
                     </p>
                   ))}
                 </div>
+                <p className="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-200">
+                  Rewards are reviewed separately from ride payment. For the full rules and trust framework around this, see the policy center.
+                </p>
                 <Link
                   href="/policies"
                   className="mt-6 inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-brand-300 hover:text-brand-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-brand-500/40 dark:hover:text-brand-200"
                 >
-                  Review Policies
+                  Open Policy Center
                 </Link>
               </aside>
             </Reveal>

@@ -1,5 +1,8 @@
+import { AnimatedHeroHeadline } from "@/components/landing/animated-hero-headline";
+import { Reveal } from "@/components/landing/reveal";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { RouteBackButton } from "@/components/landing/route-back-button";
+import { ScrollToTop } from "@/components/landing/scroll-to-top";
 import { SiteHeader } from "@/components/landing/site-header";
 import { dummyCommunities } from "@/constants/communities";
 import type { ThemeMode } from "@/constants/branding";
@@ -16,15 +19,16 @@ export function CommunitiesPage({ initialTheme = "light" }: CommunitiesPageProps
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader initialTheme={initialTheme} />
+      <ScrollToTop />
 
       <main>
-        <section className="hero-surface noise-overlay relative overflow-hidden pb-18 pt-14 md:pb-24 md:pt-20">
+        <section className="route-hero-section hero-surface noise-overlay relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/70 to-transparent dark:from-slate-950/60" />
           <div className="pointer-events-none absolute right-0 top-16 h-72 w-72 rounded-full bg-brand-300/20 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-12 h-56 w-56 rounded-full bg-amber-300/15 blur-3xl" />
 
           <div className="section-shell relative space-y-10">
-            <div className="space-y-5">
+            <Reveal className="space-y-5">
               <div>
                 <RouteBackButton fallbackHref="/access" />
               </div>
@@ -33,19 +37,20 @@ export function CommunitiesPage({ initialTheme = "light" }: CommunitiesPageProps
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">
                   Communities
                 </p>
-                <h1 className="font-display text-4xl font-extrabold leading-none tracking-tight text-slate-950 dark:text-white sm:text-5xl">
-                  Communities
-                  <span className="gradient-text"> and community score.</span>
-                </h1>
+                <AnimatedHeroHeadline
+                  className="mt-0 text-4xl leading-none sm:text-5xl"
+                  highlightedText="community score"
+                  lines={["Communities", "and community score."]}
+                />
                 <p className="max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
                   Review active customer counts, rider capacity, and current community scores across the directory.
                 </p>
               </div>
-            </div>
+            </Reveal>
 
             <div className="grid gap-5 lg:grid-cols-2">
               {dummyCommunities.map((community) => (
-                <article
+                <Reveal
                   key={community.name}
                   className="surface-panel rounded-[2rem] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-7"
                 >
@@ -92,7 +97,7 @@ export function CommunitiesPage({ initialTheme = "light" }: CommunitiesPageProps
                       </p>
                     </div>
                   </div>
-                </article>
+                </Reveal>
               ))}
             </div>
           </div>

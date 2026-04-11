@@ -6,7 +6,7 @@ import { getServerTheme } from "@/lib/theme/server";
 export const metadata: Metadata = {
   title: "Policy Center",
   description:
-    "Browse the full Kawing Ride policy framework, including terms, privacy, community rules, rider standards, reporting, and data retention.",
+    "Browse the full Kawing Ride policy framework, including terms, privacy, community rules, rider standards, rewards context, reporting, and data retention.",
   alternates: {
     canonical: "/policies",
   },

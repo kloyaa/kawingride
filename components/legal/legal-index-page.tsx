@@ -46,8 +46,8 @@ export function LegalIndexPage({ initialTheme = "light" }: LegalIndexPageProps) 
 
                 <p className="max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
                   These documents work together to explain how Kawing Ride supports private community ride
-                  coordination, what users are responsible for, how data is handled, and where the platform&apos;s safety
-                  and liability boundaries begin and end.
+                  coordination, what users are responsible for, how data is handled, how rewards fit into the platform,
+                  and where the platform&apos;s safety and liability boundaries begin and end.
                 </p>
 
                 <p className="max-w-2xl text-sm leading-7 text-slate-500 dark:text-slate-400">
@@ -64,6 +64,7 @@ export function LegalIndexPage({ initialTheme = "light" }: LegalIndexPageProps) 
                   {[
                     "Clarifies that Kawing Ride is a coordination platform, not a transport operator.",
                     "Aligns privacy, trust, moderation, and safety language across the product.",
+                    "Explains that rewards are reviewed separately from ride payment and platform access.",
                     "Gives website users and future mobile users a single, consistent source of policy truth.",
                   ].map((item) => (
                     <div
