@@ -84,7 +84,9 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
                       alt=""
                       width={228}
                       height={228}
+                      loading="lazy"
                       unoptimized
+                      sizes="(min-width: 640px) 120px, 96px"
                       className="h-auto w-full object-contain"
                     />
                   </div>

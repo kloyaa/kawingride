@@ -136,7 +136,9 @@ export default async function NotFound() {
                       alt=""
                       width={228}
                       height={228}
+                      loading="lazy"
                       unoptimized
+                      sizes="(min-width: 1024px) 176px, (min-width: 640px) 144px, 112px"
                       className="h-auto w-full rotate-[8deg] object-contain drop-shadow-[0_20px_30px_rgba(29,42,45,0.14)]"
                     />
                   </div>

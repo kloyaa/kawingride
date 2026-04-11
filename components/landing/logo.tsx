@@ -15,7 +15,9 @@ export function Logo({ inverted = false }: LogoProps) {
           alt="Kawing Ride logo"
           width={55}
           height={55}
+          priority
           unoptimized
+          sizes="44px"
           className="h-11 w-11 object-contain"
         />
       </span>

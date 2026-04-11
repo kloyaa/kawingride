@@ -84,7 +84,9 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
                       alt=""
                       width={640}
                       height={640}
+                      loading="lazy"
                       unoptimized
+                      sizes="(min-width: 1280px) 136px, (min-width: 640px) 96px, 80px"
                       className="h-auto w-full -rotate-[18deg] object-contain drop-shadow-[0_20px_34px_rgba(29,42,45,0.14)]"
                     />
                   </div>
