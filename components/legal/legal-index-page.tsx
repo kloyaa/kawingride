@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SiteFooter } from "@/components/landing/site-footer";
+import { RouteBackButton } from "@/components/landing/route-back-button";
 import { SiteHeader } from "@/components/landing/site-header";
 import { ScrollToTop } from "@/components/landing/scroll-to-top";
 import { type ThemeMode } from "@/constants/branding";
@@ -31,6 +32,10 @@ export function LegalIndexPage({ initialTheme = "light" }: LegalIndexPageProps) 
           <div className="section-shell relative">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
               <div className="space-y-5">
+                <div>
+                  <RouteBackButton />
+                </div>
+
                 <div className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/90 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-900 shadow-sm dark:border-brand-500/25 dark:bg-white/8 dark:text-brand-100">
                   Policy Center
                 </div>

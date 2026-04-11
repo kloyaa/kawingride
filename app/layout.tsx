@@ -31,11 +31,13 @@ export const metadata: Metadata = {
   },
   applicationName: APP_NAME,
   description:
-    "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
+    "A safety-first coordination platform for trusted local communities with private ride requests, personal errands, structured negotiation, and clearer accountability.",
   keywords: [
     "community rides",
     "local mobility",
     "private ride requests",
+    "personal requests",
+    "buying goods",
     "community transport",
     "rider coordination",
     "ride safety",
@@ -66,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${APP_NAME} | Private Community Ride Coordination`,
     description:
-      "Private ride requests for trusted local communities, with structured negotiation, optional safety updates, and clearer accountability.",
+      "Private ride requests and personal errands for trusted local communities, with structured negotiation, optional safety updates, and clearer accountability.",
     url: APP_DOMAIN,
     siteName: APP_NAME,
     type: "website",
@@ -84,7 +86,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${APP_NAME} | Private Community Ride Coordination`,
     description:
-      "A safety-first coordination platform for trusted local ride communities with private requests, structured negotiation, and clearer accountability.",
+      "A safety-first coordination platform for trusted local communities with private ride requests, personal errands, structured negotiation, and clearer accountability.",
     images: ["/twitter-image"],
   },
 };

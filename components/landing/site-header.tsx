@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -18,49 +18,7 @@ type SiteHeaderProps = {
 export function SiteHeader({ initialTheme = "light" }: SiteHeaderProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [homeActiveHref, setHomeActiveHref] = useState<string | null>("/#mission");
-
-  useEffect(() => {
-    if (pathname !== "/") {
-      return;
-    }
-
-    const sectionItems = navigationItems.filter((item) => item.href.startsWith("/#"));
-    const sections = sectionItems
-      .map((item) => {
-        const id = item.href.slice(2);
-        const element = document.getElementById(id);
-
-        return element ? { element, href: item.href } : null;
-      })
-      .filter((item): item is { element: HTMLElement; href: string } => item !== null);
-
-    if (sections.length === 0) {
-      return;
-    }
-
-    const updateActiveHref = () => {
-      const viewportAnchor = window.innerHeight * 0.28;
-      const currentSection = sections.findLast(({ element }) => element.getBoundingClientRect().top <= viewportAnchor);
-
-      setHomeActiveHref(currentSection?.href ?? sections[0]?.href ?? null);
-    };
-
-    updateActiveHref();
-    window.addEventListener("scroll", updateActiveHref, { passive: true });
-    window.addEventListener("resize", updateActiveHref);
-
-    return () => {
-      window.removeEventListener("scroll", updateActiveHref);
-      window.removeEventListener("resize", updateActiveHref);
-    };
-  }, [pathname]);
-
-  const activeHref = pathname === "/our-story"
-    ? "/our-story"
-    : pathname === "/"
-      ? (homeActiveHref ?? "/#mission")
-      : null;
+  const activeHref = pathname ?? "/";
 
   function getNavItemClasses(href: string, mobile = false) {
     const isActive = activeHref === href;

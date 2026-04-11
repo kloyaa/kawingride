@@ -69,7 +69,7 @@ export default function OpenGraphImage() {
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: "36px", fontWeight: 800 }}>{APP_NAME}</div>
               <div style={{ fontSize: "22px", color: ogImagePalette.accentText, fontWeight: 700 }}>
-                Private community ride coordination
+                Private ride and personal-request coordination
               </div>
             </div>
           </div>

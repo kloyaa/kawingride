@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 import type { IconType } from "react-icons";
 import {
+  IoArrowBack,
   IoAlertCircle,
   IoArrowDown,
   IoArrowForward,
@@ -26,6 +27,7 @@ import {
 
 export type IconName =
   | "alert"
+  | "arrow-left"
   | "arrow-down"
   | "arrow-right"
   | "bolt"
@@ -49,6 +51,7 @@ export type IconName =
 
 const icons: Record<IconName, IconType> = {
   alert: IoAlertCircle,
+  "arrow-left": IoArrowBack,
   "arrow-down": IoArrowDown,
   "arrow-right": IoArrowForward,
   bolt: IoFlash,

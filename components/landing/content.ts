@@ -116,14 +116,13 @@ export type LaunchArea = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  { href: "/#mission", label: "Mission" },
-  { href: "/#problem", label: "Problem" },
-  { href: "/#solution", label: "Solution" },
-  { href: "/#how-it-works", label: "Flow" },
-  { href: "/#trust", label: "Trust" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/", label: "Home" },
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/safety", label: "Safety" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/partnerships", label: "Partnerships" },
+  { href: "/updates", label: "Updates" },
   { href: "/our-story", label: "Our Story" },
-  { href: "/#faq", label: "FAQ" },
 ];
 
 export const missionStatement =

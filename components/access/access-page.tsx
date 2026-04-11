@@ -1,8 +1,8 @@
-import Link from "next/link";
 import Image from "next/image";
 
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
+import { RouteBackButton } from "@/components/landing/route-back-button";
 import { blobAssetPaths } from "@/constants/blob-assets";
 import type { ThemeMode } from "@/constants/branding";
 
@@ -27,12 +27,9 @@ export function AccessPage({ initialTheme = "light" }: AccessPageProps) {
           <div className="section-shell relative">
             <div className="grid gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start">
               <div className="space-y-6">
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/85 px-3.5 py-1.5 text-xs font-semibold text-brand-800 shadow-sm backdrop-blur dark:border-brand-500/20 dark:bg-slate-900/70 dark:text-brand-200"
-                >
-                  Back to home
-                </Link>
+                <div>
+                  <RouteBackButton />
+                </div>
 
                 <div className="space-y-4">
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">

@@ -95,7 +95,7 @@ If you believe your data privacy rights have been violated, you may also have th
 
 ## Privacy Contact
 
-For privacy-related questions, data rights requests, or concerns about how Kawing Ride handles personal data, contact [privacy@kawingride.com](mailto:privacy@kawingride.com).
+For privacy-related questions, data rights requests, or concerns about how Kawing Ride handles personal data, contact [{{PRIVACY_EMAIL}}](mailto:{{PRIVACY_EMAIL}}).
 
 ## Children and Restricted Use
 

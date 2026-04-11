@@ -10,6 +10,7 @@ import {
 } from "./content";
 import { FounderNoteCard } from "./founder-note-card";
 import { Reveal } from "./reveal";
+import { RouteBackButton } from "./route-back-button";
 import { ScrollToTop } from "./scroll-to-top";
 import { SectionHeader } from "./section-header";
 import { SiteFooter } from "./site-footer";
@@ -35,6 +36,12 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
 
           <div className="section-shell relative space-y-8">
             <Reveal>
+              <div className="mb-2">
+                <RouteBackButton />
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.02}>
               <FounderNoteCard attribution={founderNote.attribution} quote={founderNote.quote} />
             </Reveal>
 
@@ -55,10 +62,10 @@ export function AboutPage({ initialTheme = "light" }: AboutPageProps) {
 
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href="/#solution"
+                    href="/how-it-works"
                     className="inline-flex items-center gap-2 rounded-full bg-brand-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-900/10 transition hover:bg-brand-800"
                   >
-                    See the Product Flow
+                    See How It Works
                   </Link>
                   <Link
                     href="/access"

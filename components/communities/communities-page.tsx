@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { SiteFooter } from "@/components/landing/site-footer";
+import { RouteBackButton } from "@/components/landing/route-back-button";
 import { SiteHeader } from "@/components/landing/site-header";
 import { dummyCommunities } from "@/constants/communities";
 import type { ThemeMode } from "@/constants/branding";
@@ -26,12 +25,9 @@ export function CommunitiesPage({ initialTheme = "light" }: CommunitiesPageProps
 
           <div className="section-shell relative space-y-10">
             <div className="space-y-5">
-              <Link
-                href="/access"
-                className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/85 px-3.5 py-1.5 text-xs font-semibold text-brand-800 shadow-sm backdrop-blur dark:border-brand-500/20 dark:bg-slate-900/70 dark:text-brand-200"
-              >
-                Back to admin access
-              </Link>
+              <div>
+                <RouteBackButton fallbackHref="/access" />
+              </div>
 
               <div className="max-w-3xl space-y-4">
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700 dark:text-brand-300">

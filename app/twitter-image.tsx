@@ -74,11 +74,11 @@ export default function TwitterImage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "22px", maxWidth: "900px" }}>
             <div style={{ fontSize: "62px", lineHeight: 1.05, fontWeight: 800 }}>
-              Private ride coordination for trusted local communities.
+              Private ride and personal-request coordination for trusted local communities.
             </div>
             <div style={{ fontSize: "28px", lineHeight: 1.4, color: twitterImagePalette.bodyMuted }}>
               More privacy, clearer negotiation, optional safety updates, and stronger accountability
-              for customer, rider, and admin communities.
+              for customer, rider, admin, and community-led errand support.
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { ScrollToTop } from "@/components/landing/scroll-to-top";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
+import { RouteBackButton } from "@/components/landing/route-back-button";
 import { Icon } from "@/components/landing/icons";
 import { blobAssetPaths } from "@/constants/blob-assets";
 import { THEME_COOKIE_NAME, type ThemeMode } from "@/constants/branding";
@@ -28,6 +29,10 @@ export default async function NotFound() {
           <div className="section-shell relative">
             <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-14">
               <div className="space-y-6">
+                <div>
+                  <RouteBackButton />
+                </div>
+
                 <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/90 px-3.5 py-1.5 text-xs font-semibold text-amber-800 shadow-sm dark:border-amber-500/20 dark:bg-slate-900/70 dark:text-amber-200">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
                     <Icon name="warning" className="h-3.5 w-3.5" />
@@ -65,7 +70,7 @@ export default async function NotFound() {
                   {[
                     "Go back to the main product overview",
                     "Open the access request page",
-                    "Read the common questions first",
+                    "Open the request-flow guide",
                   ].map((item, index) => (
                     <div
                       key={item}
@@ -105,7 +110,7 @@ export default async function NotFound() {
                         {[
                           { href: "/", label: "Home", text: "See the full product overview" },
                           { href: "/access", label: "Access", text: "Start or continue your request" },
-                          { href: "/#faq", label: "FAQ", text: "Jump to the most common questions" },
+                          { href: "/how-it-works", label: "How It Works", text: "Open the full request-flow guide" },
                         ].map((item) => (
                           <Link
                             key={item.href}

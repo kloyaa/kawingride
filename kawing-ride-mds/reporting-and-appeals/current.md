@@ -59,7 +59,7 @@ Appeals should usually be submitted within 14 days after notice of the decision,
 
 An appeal should explain why the decision may have been wrong, incomplete, disproportionate, or based on new information that was not reasonably available during the initial review.
 
-For customer service questions related to a report, account issue, or appeal workflow, contact [customerservice@kawingride.com](mailto:customerservice@kawingride.com). If the issue is specifically about privacy or personal data handling, contact [privacy@kawingride.com](mailto:privacy@kawingride.com).
+For customer service questions related to a report, account issue, or appeal workflow, contact [{{CUSTOMER_SERVICE_EMAIL}}](mailto:{{CUSTOMER_SERVICE_EMAIL}}). If the issue is specifically about privacy or personal data handling, contact [{{PRIVACY_EMAIL}}](mailto:{{PRIVACY_EMAIL}}).
 
 ## Appeal Review Standards
 

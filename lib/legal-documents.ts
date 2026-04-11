@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import { APP_DOMAIN, APP_NAME } from "@/constants/branding";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export type LegalDocumentKey =
   | "terms"
@@ -289,8 +290,9 @@ export function getLegalDocumentVersionHref(key: LegalDocumentKey, version?: str
 export async function getLegalDocumentMarkdown(key: LegalDocumentKey, version?: string) {
   const versionDefinition = getLegalDocumentVersionDefinition(key, version);
   const fullPath = path.join(getLegalDocumentDirectoryPath(key), versionDefinition.fileName);
+  const markdown = await readFile(fullPath, "utf8");
 
-  return readFile(fullPath, "utf8");
+  return applySiteSettingsTokens(markdown);
 }
 
 export async function getLegalDocument(key: LegalDocumentKey, version?: string): Promise<LegalDocument> {
@@ -480,8 +482,8 @@ function buildLegalDocumentVersionDefinition(
   const markdown = readFileSync(path.join(getLegalDocumentDirectoryPath(key), fileName), "utf8");
 
   return {
-    changeSummary: extractLeadParagraph(markdown, isCurrent, version),
-    effectiveDate: extractEffectiveDate(markdown),
+    changeSummary: extractLeadParagraph(applySiteSettingsTokens(markdown), isCurrent, version),
+    effectiveDate: extractEffectiveDate(applySiteSettingsTokens(markdown)),
     fileName,
     isCurrent,
     version,
@@ -561,6 +563,18 @@ function normalizeSemver(value: string) {
 
 function getLegalDocumentDirectoryPath(key: LegalDocumentKey) {
   return path.join(LEGAL_DOCUMENTS_DIRECTORY, getLegalDocumentDefinition(key).directoryName);
+}
+
+function applySiteSettingsTokens(markdown: string) {
+  const siteSettings = getSiteSettings();
+
+  return markdown
+    .replaceAll("{{GENERAL_INQUIRY_EMAIL}}", siteSettings.generalInquiryEmail)
+    .replaceAll("{{CUSTOMER_SERVICE_EMAIL}}", siteSettings.customerServiceEmail)
+    .replaceAll("{{PRIVACY_EMAIL}}", siteSettings.privacyEmail)
+    .replaceAll("{{PARTNERSHIPS_EMAIL}}", siteSettings.partnershipsEmail)
+    .replaceAll("{{UPDATES_EMAIL}}", siteSettings.updatesEmail)
+    .replaceAll("{{EMERGENCY_ADMIN_MOBILE}}", siteSettings.emergencyAdminMobile);
 }
 
 function parseMarkdownDocument(markdown: string, title: string): LegalDocumentBlock[] {
