@@ -93,14 +93,7 @@ export function LegalDocumentPage({ document, initialTheme = "light" }: LegalDoc
                     download={downloadFileName}
                     className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-slate-800"
                   >
-                    Download TXT
-                  </a>
-                  <a
-                    href={downloadMarkdownHref}
-                    download={downloadMarkdownFileName}
-                    className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-5 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-slate-800"
-                  >
-                    Download MD
+                    Download
                   </a>
                   {isAdminRelatedDocument ? (
                     <Link

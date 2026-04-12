@@ -34,8 +34,14 @@ export const allowedServiceAreas: ServiceAreaRegion[] = [
         label: "Misamis Oriental",
         cities: [
           { id: "cagayan-de-oro-city", label: "Cagayan de Oro City" },
-          { id: "iligan-city", label: "Iligan City" },
           { id: "el-salvador-city", label: "El Salvador City" },
+        ],
+      },
+      {
+        id: "lanao-del-norte",
+        label: "Lanao del Norte",
+        cities: [
+          { id: "iligan-city", label: "Iligan City" }
         ],
       },
       {

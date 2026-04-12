@@ -107,7 +107,7 @@ export function LegalIndexPage({ initialTheme = "light" }: LegalIndexPageProps) 
                       download={getLegalDocumentDownloadFileName(document.key)}
                       className="inline-flex items-center rounded-full border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 transition hover:bg-brand-50 dark:border-brand-500/30 dark:bg-slate-950 dark:text-brand-200 dark:hover:bg-slate-800"
                     >
-                      Download TXT
+                      Download
                     </a>
                   </div>
                 </article>

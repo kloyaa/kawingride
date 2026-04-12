@@ -18,21 +18,21 @@ export type LegalDocumentKey =
 
 export type LegalDocumentBlock =
   | {
-      type: "divider";
-    }
+    type: "divider";
+  }
   | {
-      level: 2 | 3;
-      text: string;
-      type: "heading";
-    }
+    level: 2 | 3;
+    text: string;
+    type: "heading";
+  }
   | {
-      text: string;
-      type: "paragraph";
-    }
+    text: string;
+    type: "paragraph";
+  }
   | {
-      items: string[];
-      type: "list";
-    };
+    items: string[];
+    type: "list";
+  };
 
 type LegalDocumentVersionDefinition = {
   changeSummary: string;
@@ -209,7 +209,7 @@ const legalDocumentDefinitionsByKey = new Map(
   legalDocumentDefinitions.map((definition) => [definition.key, definition]),
 );
 
-const LEGAL_DOCUMENTS_DIRECTORY = path.join(process.cwd(), "kawing-ride-mds");
+const LEGAL_DOCUMENTS_DIRECTORY = path.join(process.cwd(), "documents");
 
 export function getAllLegalDocumentDefinitions() {
   return legalDocumentDefinitions;
